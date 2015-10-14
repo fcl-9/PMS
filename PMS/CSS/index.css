@@ -1,12 +1,23 @@
 @CHARSET "ISO-8859-1";
+@font-face {
+    font-family: "Edwardian Script";
+    src: url(../fonts/ITCEDSCR.TTF);
+}
 body{
+	background-color:#996633;
     margin-left:auto;
     margin-right:auto;
+	font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  	color: #222;
+}
+#menu{
+	font: 15px arial, sans-serif;
 }
 #header{
+	font-family: "Edwardian Script";
 	background-color:black;
 	color:white;
-	text-align:center;
+	text-align:left;
 	padding:5px;
 }
 
@@ -30,6 +41,25 @@ body{
 	color:white;
 	text-align:center;
 	padding:5px;
+	
+}
+h1{
+	font-family: "Edwardian Script";
+	font-size: 80px;
+}
+
+a.logo{
+	color: #FFFFFF ;
+	font-style: normal;
+	text-decoration: none;
+}
+
+a.menu{
+	color: #FFFFFF ;
+	font-style: normal;
+	text-decoration: none;
+	background-color: #663300;
+	text-transform: uppercase;
 }
 
 img{
@@ -37,11 +67,16 @@ img{
 	height: auto; 
 	display: block; 
 	margin-left: auto; 
-	margin-right: auto"; 
+	margin-right: auto; 
 			
 }
+
+table.menu{
+	table-layout: fixed;
+    width: 100%;
+}
 table, td, th {
-    border: 2px solid black;
+    border: none;
     border-collapse:collapse;
     margin-left:auto; 
     margin-right:auto;
