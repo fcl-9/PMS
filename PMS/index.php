@@ -26,6 +26,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/carousel.css" rel="stylesheet">
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
   </head>
 <!-- NAVBAR
 ================================================== -->
@@ -144,39 +145,71 @@
   
   <section id="reserva" class="reserva-section">
       <form action="" method="POST">
-            <label for="contribuinte">Contribuinte:</label>
+       <div class="row">
+          <div class="col-md-12"> 
+            <label for="contribuinte">Número de Contribuinte:</label> 
             <input type="text" name="contribuinte" id="contribuinte">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6"> 
             <label for="nome">Nome:</label>
             <input type="text" name="nome" id="nome">
+          </div>
+          <div class="col-md-6"> 
             <label for="apelido">Apelido:</label>
-            <input type="text" name="apelido" id="apelido">            
+            <input type="text" name="apelido" id="apelido">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">           
             <label for="email">Email:</label>
             <input type="email" name="email" id="email">
+          </div>
+          <div class="col-md-6">
             <label for="numero">Telefone:</label>
             <input type="tel"  name="numero" id="numero">
-            //Data
-            //hora
-
-      <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Número de Pessoas:  <span class="caret"></span></button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a >1 Pessoa</a></li>
-                <li><a >2 Pessoas</a></li>
-                <li><a >3 Pessoas</a></li>
-                <li><a >4 Pessoas</a></li>
-              </ul>
-      </div>
-
-      <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Número de Mesa: <span class="caret"></span></button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                <li><a>Mesa 1</a></li>
-                <li><a>Mesa 2</a></li>
-                <li><a>Mesa 3</a></li>
-                <li><a>Mesa 4</a></li>
-              </ul>
-      </div>
-        <input type="submit" value="Reservar">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="dropdown">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Número de Pessoas:  <span class="caret"></span></button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                      <li><a >1 Pessoa</a></li>
+                      <li><a >2 Pessoas</a></li>
+                      <li><a >3 Pessoas</a></li>
+                      <li><a >4 Pessoas</a></li>
+                    </ul>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="dropdown">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Número de Mesa: <span class="caret"></span></button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                      <li><a>Mesa 1</a></li>
+                      <li><a>Mesa 2</a></li>
+                      <li><a>Mesa 3</a></li>
+                      <li><a>Mesa 4</a></li>
+                    </ul>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <input type="submit" value="Reservar">
+          </div>
+        </div>
     </form>
    </section>
   
@@ -217,7 +250,7 @@
  	
 
     <!-- jQuery -->
-    <script src="/js/jquery.js"></script>
+    <script src="/js/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="/js/bootstrap.min.js"></script>
@@ -227,5 +260,19 @@
     <script src="/js/scrolling-nav.js"></script>
 
     <script src="/bootstrap/js/dropdown.js"></script>
+    <script src="/js/moment.js"></script>
+    <script src="/js/pt.js"></script>
+    <script src="/bootstrap/js/transition.js"></script>
+    <script src="/bootstrap/js/collapse.js"></script>
+    <script src="js/bootstrap-datetimepicker.min.js"></script>
+
+    <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker1').datetimepicker({
+                  format: "dd/mm/yyyy",
+                  startDate: "today"
+                });
+            });
+        </script>
   </body>
 </html>
