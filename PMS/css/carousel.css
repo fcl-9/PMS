@@ -64,6 +64,8 @@ html {
 }
 .carousel-inner > .item > img {
   height: 100%;
+  
+  width: 100%;
 }
 .fill{
 	width: 100%;
