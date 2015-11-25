@@ -144,7 +144,7 @@
   <hr class="featurette-divider">
   
   <section id="reserva" class="reserva-section">
-      <form action="" method="POST">
+      <form action="formulario.php" method="POST">
        <div class="row">
           <div class="col-md-4 form-group"> 
             <label for="contribuinte">Número de Contribuinte:</label> 
