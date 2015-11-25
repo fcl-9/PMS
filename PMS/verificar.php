@@ -11,8 +11,8 @@ $username = "b1d0197c9b0f56";
 $password = "455da09c";
 
 // Create connection
-$conn = mysqli_connect($servername, $username, $password) or die ("Erro na conexão à base de dados.");
-$db = mysqli_select_db("restaurante", $conn) or die ("Erro ao selecionar a base de dados.");
+$conn = mysql_connect($servername, $username, $password) or die ("Erro na conexão à base de dados.");
+$db = mysql_select_db("restaurante", $conn) or die ("Erro ao selecionar a base de dados.");
 
 /*
  * monta query em SQL para insercao
@@ -25,13 +25,13 @@ WHERE cliente.contribuinte=reserva.cliente_contribuinte and mesa_has_reserva.mes
     
 
 $query = "SELECT COUNT(mesa.numero), cliente.contribuinte FROM mesa, cliente, registado, reserva, mesa_has_reserva WHERE cliente.contribuinte=reserva.cliente_contribuinte and mesa_has_reserva.mesa_numero=mesa.numero";
-$dave= mysqli_query($query) or die(mysqli_error());
+$dave= mysql_query($query) or die(mysql_error());
 
 
 
 
 //*Percorre a base de dados para encontrar o resultado da Query´s
-while($row = mysqli_fetch_assoc($dave)){
+while($row = mysql_fetch_assoc($dave)){
     foreach($row as $cname => $cvalue){
 		if($cname=="COUNT(mesa.numero)") $cname="Mesa ocupada";
         print "$cname: <td>$cvalue\t </td>";

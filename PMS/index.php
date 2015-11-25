@@ -25,8 +25,8 @@
     <![endif]-->
 
     <!-- Custom styles for this template -->
-    <link href="css/carousel.css" rel="stylesheet">
-    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="/css/carousel.css" rel="stylesheet">
+     <link href="/css/bootstrap-datetimepicker.css" rel="stylesheet">
   </head>
 <!-- NAVBAR
 ================================================== -->
@@ -146,44 +146,44 @@
   <section id="reserva" class="reserva-section">
       <form action="" method="POST">
        <div class="row">
-          <div class="col-md-12"> 
+          <div class="col-md-4 form-group"> 
             <label for="contribuinte">Número de Contribuinte:</label> 
-            <input type="text" name="contribuinte" id="contribuinte">
+            <input type="text" class="form-control" name="contribuinte" id="contribuinte" placeholder="Número de Contribuinte">
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6"> 
+          <div class="col-md-6 form-group"> 
             <label for="nome">Nome:</label>
-            <input type="text" name="nome" id="nome">
+            <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome">
           </div>
-          <div class="col-md-6"> 
+          <div class="col-md-6 form-group"> 
             <label for="apelido">Apelido:</label>
-            <input type="text" name="apelido" id="apelido">
+            <input type="text" class="form-control" name="apelido" id="apelido" placeholder="Apelido">
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6">           
+          <div class="col-md-6 form-group">           
             <label for="email">Email:</label>
-            <input type="email" name="email" id="email">
+            <input type="email" class="form-control" name="email" id="email" placeholder="Email">
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 form-group">
             <label for="numero">Telefone:</label>
-            <input type="tel"  name="numero" id="numero">
+            <input type="tel" class="form-control"  name="numero" id="numero" placeholder="Telefone">
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4">
+          <div class='col-sm-4'>
             <div class="form-group">
                 <div class='input-group date' id='datetimepicker1'>
-                    <input type='text' class="form-control" />
+                    <input type='text' class="form-control" placeholder="Telefone" />
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="dropdown">
+        </div>
+        <div class="col-md-4 form-group">
+          <div class="dropdown">
                   <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Número de Pessoas:  <span class="caret"></span></button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                       <li><a >1 Pessoa</a></li>
@@ -193,7 +193,7 @@
                     </ul>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4 form-group">
             <div class="dropdown">
                   <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Número de Mesa: <span class="caret"></span></button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
@@ -207,7 +207,7 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            <input type="submit" value="Reservar">
+            <button type="submit" class="btn btn-default">Reservar</button>
           </div>
         </div>
     </form>
@@ -259,20 +259,21 @@
     <script src="/js/jquery.easing.min.js"></script>
     <script src="/js/scrolling-nav.js"></script>
 
-    <script src="/bootstrap/js/dropdown.js"></script>
     <script src="/js/moment.js"></script>
-    <script src="/js/pt.js"></script>
+    <script src="/bootstrap/js/dropdown.js"></script>
     <script src="/bootstrap/js/transition.js"></script>
     <script src="/bootstrap/js/collapse.js"></script>
-    <script src="js/bootstrap-datetimepicker.min.js"></script>
-
-    <script type="text/javascript">
+    <script type="text/javascript" src="/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="/js/locale/pt.js"></script>
+   
+<script type="text/javascript">
             $(function () {
                 $('#datetimepicker1').datetimepicker({
-                  format: "dd/mm/yyyy",
-                  startDate: "today"
+                  locale: 'pt',
+                  minDate :moment()
                 });
             });
         </script>
+
   </body>
 </html>
