@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Signin Template for Bootstrap</title>
+    <title>Restaurante</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/bootstrap/docs/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -29,12 +29,14 @@
   </head>
 
   <body>
-  <!-- NAVBAR
+
+<!-- NAVBAR
 ================================================== -->
+  <body>
     <div class="navbar-wrapper">
       <div class="container">
 
-        <nav class="navbar navbar-inverse navbar-static-top">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
           <div class="container">
             <div class="navbar-header">
               <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -43,25 +45,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="#">Project name</a>
+              <a class="navbar-brand" href="">Project name</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
-              <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li class="dropdown-header">Nav header</li>
-                    <li><a href="#">Separated link</a></li>
-                    <li><a href="#">One more separated link</a></li>
-                  </ul>
-                </li>
+              <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a class="page-scroll" href="index.php/#home">Home</a></li>
+                <li><a class="page-scroll" href="index.php/#reserva">Reservas</a></li>
+                <li><a href="login.php">Login</a></li>
+                <li><a class="page-scroll" href="index.php/#sobre">Sobre</a></li>
               </ul>
             </div>
           </div>
@@ -70,23 +61,33 @@
       </div>
     </div>
 
+
     <div class="container">
       <form class="form-signin" action="userpage.php" method="POST">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" name ="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Password" required>
+        <h2 class="form-signin-heading">Restaurante</h2>
+        <label for="inputNIF" class="sr-only">NIF</label>
+        <input type="email" id="inputNIF" name ="inputNIF" class="form-control" placeholder="Número de identificação fiscal" required autofocus>
+        <label for="inputPassword" class="sr-only">Palavra-Passe</label>
+        <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Palavra-Passe" required>
         <div class="checkbox">
           <label>
-            <input type="checkbox" value="remember-me"> Remember me
+            <input type="checkbox" value="remember-me"> Lembrar-me
           </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Iniciar sessão</button>
       </form>
 
     </div> <!-- /container -->
+    
 
+      ><div class="navbar-fixed-bottom">
+        <!-- FOOTER -->
+      	<footer>
+      	 <div class="text-center">
+	        <p>&copy; 2015c Company, In. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+    	</div>
+      </footer
+      </div>
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>

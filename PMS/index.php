@@ -174,35 +174,36 @@
         <div class="row">
           <div class='col-sm-6'>
             <div class="form-group">
-                <div class='input-group date' id='datetimepicker1'>
-                    <input type='text' class="form-control" placeholder="Telefone" />
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
+				<label for="datetimepicker1">Data e Hora</label>
+	                <div class='input-group date' id='datetimepicker1'>
+	                    <input type='text' class="form-control" placeholder="Telefone" />
+	                    <span class="input-group-addon">
+	                        <span class="glyphicon glyphicon-calendar"></span>
+	                    </span>
+	                </div>
             </div>
         </div>
         <div class="col-md-3 form-group">
-          <div class="dropdown">
-                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Número de Pessoas:  <span class="caret"></span></button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                      <li><a >1 Pessoa</a></li>
-                      <li><a >2 Pessoas</a></li>
-                      <li><a >3 Pessoas</a></li>
-                      <li><a >4 Pessoas</a></li>
-                    </ul>
-            </div>
+			<div class="form-group">
+			 <label for="selMesa">Número de Mesa:</label>
+			  <select class="form-control" id="selMesa">
+			    <option>Mesa 1</option>
+			    <option>Mesa 2</option>
+			    <option>Mesa 3</option>
+			    <option>Mesa 4</option>
+			  </select>
+			</div>
           </div>
           <div class="col-md-3 form-group">
-            <div class="dropdown">
-                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Número de Mesa: <span class="caret"></span></button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                      <li><a>Mesa 1</a></li>
-                      <li><a>Mesa 2</a></li>
-                      <li><a>Mesa 3</a></li>
-                      <li><a>Mesa 4</a></li>
-                    </ul>
-            </div>
+           	<div class="form-group">
+           	 <label for="selNumPes">Número de Pessoas:</label>
+  			  <select class="form-control" id="selNumPes">
+    			   	<option>1 Pessoa</option>
+ 				   	<option>2 Pessoas</option>
+ 				   	<option>3 Pessoas</option>
+    				<option>4 Pessoas</option>
+  				</select>
+			</div>
           </div>
         </div>
         <div class="row">
@@ -230,9 +231,9 @@
 
 
       <!-- FOOTER -->
-      <footer>
+      <footer >
         <p class="pull-right"><a href="#">Back to top</a></p>
-        <p>&copy; 2014 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+        <p>&copy; 2015 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
       </footer>
 
     </div><!-- /.container -->
