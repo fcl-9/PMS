@@ -172,7 +172,7 @@
           </div>
         </div>
         <div class="row">
-          <div class='col-sm-4'>
+          <div class='col-sm-6'>
             <div class="form-group">
                 <div class='input-group date' id='datetimepicker1'>
                     <input type='text' class="form-control" placeholder="Telefone" />
@@ -182,7 +182,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 form-group">
+        <div class="col-md-3 form-group">
           <div class="dropdown">
                   <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Número de Pessoas:  <span class="caret"></span></button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -193,7 +193,7 @@
                     </ul>
             </div>
           </div>
-          <div class="col-md-4 form-group">
+          <div class="col-md-3 form-group">
             <div class="dropdown">
                   <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"> Número de Mesa: <span class="caret"></span></button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
