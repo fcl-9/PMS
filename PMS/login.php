@@ -68,7 +68,7 @@
       <form class="form-signin" action="userpage.php" method="POST">
         <h2 class="form-signin-heading">Restaurante</h2>
         <label for="inputNIF" class="sr-only">NIF</label>
-        <input type="email" id="inputNIF" name ="inputNIF" class="form-control" placeholder="Número de identificação fiscal" required autofocus>
+        <input type="number" id="inputNIF" name ="inputNIF" class="form-control" placeholder="Número de identificação fiscal" required autofocus>
         <label for="inputPassword" class="sr-only">Palavra-Passe</label>
         <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Palavra-Passe" required>
         <div class="checkbox">
