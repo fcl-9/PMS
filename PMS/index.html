@@ -24,6 +24,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+
     <!-- Custom styles for this template -->
     <link href="/css/carousel.css" rel="stylesheet">
     <!-- CSS partilhado por todas as paginas-->
@@ -52,10 +53,11 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a class="page-scroll" href="#home">Home</a></li>
-                <li><a class="page-scroll" href="#reserva">Reservas</a></li>
-                <li><a href="login.php">Login</a></li>
-                <li><a class="page-scroll" href="#sobre">Sobre</a></li>
+                <li  class="active"><a href="#home" class="page-scroll" 	>Home    </a></li>
+                <li><a href="#reserva" class="page-scroll" 	>Reservas</a></li>
+                <li><a href="login.html"					>Login   </a></li>
+                <li><a href="#sobre" class="page-scroll"	>Sobre   
+                </a></li>
               </ul>
             </div>
           </div>
@@ -282,6 +284,11 @@
             });
         </script>
 
+
+    <!-- Script responsável pela mudança da nav bar que permite indicar ao user a secção onde este se encontra.-->
+    <script src="navBarAction.js"></script>
+
+    
     <!-- jQuery Bootstrap Form Validator -->
         <!-- <link rel="stylesheet" href="/formvalidation-master/vendor/bootstrap/css/bootstrap.css"/>-->
  	  <link rel="stylesheet" href="/formvalidation-master/dist/css/formValidation.css"/>
@@ -359,6 +366,17 @@ $(document).ready(function() {
                     }
                 }
             },
+             numerotel: {
+                validators: {
+                    digits: {
+                        message: 'O número de telefone só pode conter números.'
+                    },
+                    notEmpty: {
+                        message: 'Deve introduzir o seu número de telefone.'
+                    }
+                }
+            }
+
         }
     });
 });
