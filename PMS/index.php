@@ -26,7 +26,10 @@
 
     <!-- Custom styles for this template -->
     <link href="/css/carousel.css" rel="stylesheet">
+    <!-- CSS partilhado por todas as paginas-->
+    <link href="css/common.css" rel="stylesheet">
      <link href="/css/bootstrap-datetimepicker.css" rel="stylesheet">
+     <link rel='shortcut icon' type='image/x-icon' href='/images/favicon.png' />
   </head>
 <!-- NAVBAR
 ================================================== -->
