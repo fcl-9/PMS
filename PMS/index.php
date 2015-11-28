@@ -27,6 +27,11 @@
     <!-- Custom styles for this template -->
     <link href="/css/carousel.css" rel="stylesheet">
      <link href="/css/bootstrap-datetimepicker.css" rel="stylesheet">
+
+
+
+
+
   </head>
 <!-- NAVBAR
 ================================================== -->
@@ -144,11 +149,11 @@
   <hr class="featurette-divider">
   
   <section id="reserva" class="reserva-section">
-      <form action="formulario.php" method="POST">
+      <form id="form_reserva" action="formulario.php" method="POST">
        <div class="row">
           <div class="col-md-4 form-group"> 
             <label for="contribuinte">Número de Contribuinte:</label> 
-            <input type="text" class="form-control" name="contribuinte" id="contribuinte" placeholder="Número de Contribuinte">
+            <input type="number" class="form-control" name="contribuinte" id="contribuinte" placeholder="Número de Contribuinte">
           </div>
         </div>
         <div class="row">
@@ -157,8 +162,8 @@
             <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome">
           </div>
           <div class="col-md-6 form-group"> 
-            <label for="apelido">Apelido:</label>
-            <input type="text" class="form-control" name="apelido" id="apelido" placeholder="Apelido">
+            <label for="sobrenome">Sobrenome:</label>
+            <input type="text" class="form-control" name="sobrenome" id="sobrenome" placeholder="Sobrenome">
           </div>
         </div>
         <div class="row">
@@ -167,16 +172,16 @@
             <input type="email" class="form-control" name="email" id="email" placeholder="Email">
           </div>
           <div class="col-md-6 form-group">
-            <label for="numero">Telefone:</label>
-            <input type="tel" class="form-control"  name="numero" id="numero" placeholder="Telefone">
+            <label for="numerotel">Telefone:</label>
+            <input type="tel" class="form-control"  name="numerotel" id="numerotel" placeholder="Telefone">
           </div>
         </div>
         <div class="row">
           <div class='col-sm-6'>
             <div class="form-group">
-				<label for="datetimepicker1">Data e Hora</label>
-	                <div class='input-group date' id='datetimepicker1'>
-	                    <input type='text' class="form-control" placeholder="Telefone" />
+				<label for="datetimepicker1">Data e Hora: </label>
+	                <div class='input-group date' id='datetimepicker1' name="datetimepicker1">
+	                    <input type='text' class="form-control" name="datahora" placeholder="Data e Hora" />
 	                    <span class="input-group-addon">
 	                        <span class="glyphicon glyphicon-calendar"></span>
 	                    </span>
@@ -187,7 +192,8 @@
 			<div class="form-group">
 			 <label for="selMesa">Número de Mesa:</label>
 			  <select class="form-control" id="selMesa">
-			    <option>Mesa 1</option>
+			    <option></option>
+          <option>Mesa 1</option>
 			    <option>Mesa 2</option>
 			    <option>Mesa 3</option>
 			    <option>Mesa 4</option>
@@ -197,8 +203,9 @@
           <div class="col-md-3 form-group">
            	<div class="form-group">
            	 <label for="selNumPes">Número de Pessoas:</label>
-  			  <select class="form-control" id="selNumPes">
-    			   	<option>1 Pessoa</option>
+  			  <select class="form-control" id="selNumPes" name="selNumPes">
+    			  <option></option>
+            <option>1 Pessoa</option>
  				   	<option>2 Pessoas</option>
  				   	<option>3 Pessoas</option>
     				<option>4 Pessoas</option>
@@ -267,14 +274,96 @@
     <script type="text/javascript" src="/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="/js/locale/pt.js"></script>
    
-<script type="text/javascript">
+	<script type="text/javascript">
             $(function () {
                 $('#datetimepicker1').datetimepicker({
                   locale: 'pt',
-                  minDate :moment()
-                });
+                               });
             });
         </script>
+
+    <!-- jQuery Bootstrap Form Validator -->
+        <!-- <link rel="stylesheet" href="/formvalidation-master/vendor/bootstrap/css/bootstrap.css"/>-->
+ 	  <link rel="stylesheet" href="/formvalidation-master/dist/css/formValidation.css"/>
+  <script type="text/javascript" src="/formvalidation-master/dist/js/formValidation.js"></script>
+  	  <script type="text/javascript" src="/formvalidation-master/dist/js/framework/bootstrap.js"></script>
+ <script type="text/javascript" src="/formvalidation-master/vendor/bootstrap/js/bootstrap.min.js"></script> 
+    
+	<script type="text/javascript">
+$(document).ready(function() {
+     $('#form_reserva').formValidation({
+        message: 'This value is not valid',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            contribuinte: {
+                row: '.row',
+                validators: {
+                    notEmpty: {
+                        message: 'Deve introduzir o seu contribuinte.'
+                    }
+                }
+            },
+            sobrenome: {
+                row: '.col-md-6',
+                    message: 'O sobrenome não é válido.',
+                validators: {
+                    notEmpty: {
+                        message: 'Deve introduzir o seu sobrenome.'
+                    },
+                    stringLength: {
+                        min: 3,
+                        max: 30,
+                        message: 'O sobrenome deve conter pelo menos 3 carateres e um máximo de 30 carateres.'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9\.]+$/,
+                        message: 'O sobrenome só pode ter letras, numeros, pontos.'
+                    }
+                }
+            },
+            nome: {
+                message: 'O nome não é válido',
+                validators: {
+                    notEmpty: {
+                        message: 'Deve introduzir o seu nome.'
+                    },
+                    stringLength: {
+                        min: 3,
+                        max: 30,
+                        message: 'O nome deve conter pelo menos 3 carateres e um máximo de 30 carateres.'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\.]+$/,
+                        message: 'O nome só pode ter letras, numeros, pontos.'
+                    }
+                }
+            },
+            email: {
+                validators: {
+                    notEmpty: {
+                        message: 'Deve introduzir o seu endereço de email.'
+                    },
+                    emailAddress: {
+                        message: 'O endereço de email introduzido não é válido.'
+                    }
+                }
+            },
+            selNumPes: {
+                validators: {
+                    notEmpty: {
+                        message: 'Selecione o número de pessoas.'
+                    }
+                }
+            },
+        }
+    });
+});
+
+</script>
 
   </body>
 </html>
