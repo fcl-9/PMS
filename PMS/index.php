@@ -29,15 +29,7 @@
     <!-- CSS partilhado por todas as paginas-->
     <link href="css/common.css" rel="stylesheet">
      <link href="/css/bootstrap-datetimepicker.css" rel="stylesheet">
-<<<<<<< HEAD
      <link rel='shortcut icon' type='image/x-icon' href='/images/favicon.png' />
-=======
-
-
-
-
-
->>>>>>> origin/master
   </head>
 <!-- NAVBAR
 ================================================== -->
@@ -54,7 +46,9 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="">Project name</a>
+              <a class="navbar-brand" href="#">
+                <img alt="Brand" src="images\drawing2.png">
+              </a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav navbar-right">
