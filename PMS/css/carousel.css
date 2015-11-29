@@ -3,7 +3,7 @@
 /* Padding below the footer and lighter body text */
 
 body {
-  padding-top: 50px;
+  padding-top: 100px;
   padding-bottom: 40px;
   color: #5a5a5a;
   height: 100%;
@@ -57,7 +57,7 @@ html {
 -------------------------------------------------- */
 
 /* Center align the text within the three columns below the carousel */
-.marketing .col-lg-4 {
+.marketing .col-lg-6 {
   margin-bottom: 20px;
   text-align: center;
 }
@@ -70,11 +70,49 @@ html {
 }
 
 
+/* CUSTOMIZE THE NAVBAR
+-------------------------------------------------- */
+
+/* Special class on .container surrounding .navbar, used for positioning it into place. */
+.navbar-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
+}
+
+/* Flip around the padding for proper display in narrow viewports */
+.navbar-wrapper > .container {
+  padding-right: 0;
+  padding-left: 0;
+
+}
+.navbar-wrapper .navbar {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.navbar-wrapper .navbar .container {
+  width: auto;
+}
+.navbar{
+    min-height: 100px;
+}
+.navbar-nav>li>a {
+    padding-top: 65px;
+    padding-bottom: 15px;
+}
+.navbar-text{
+    float: none;
+    padding-bottom: 20px;
+    padding-top: 25px;
+}
+
 /* Featurettes
 ------------------------- */
 
 .featurette-divider {
-  /*margin: 80px 0; /* Space out the Bootstrap <hr> more */
+  margin: 150px 0; /* Space out the Bootstrap <hr> more */
 }
 
 /* Thin out the marketing headings */
@@ -121,15 +159,10 @@ html {
 }
 
 .reserva-section{
-
     height: 100%;
-    padding-top: 150px;
-    background: #fff;
 }
 .sobre-section{
-
     height: 100%;
-    padding-top: 150px;
     background: #fff;
 }
 
@@ -147,4 +180,25 @@ html {
 
 #reserva .telErroIcon .form-control-feedback{
    right: -30px;
+}
+
+ #map-container { 
+  height: 300px;
+  width:500px;
+ }
+ .footer{
+  padding-top: 40px;
+  padding-bottom: 40px;
+ }
+
+ .circle{
+  width: 140px;
+  height: 140px;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 80px;
+  line-height: 1.42;
+  border-radius: 70px;
+  color:#fff;
+  background-color: #5a5a5a;
 }
