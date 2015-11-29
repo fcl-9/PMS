@@ -140,3 +140,11 @@ html {
 #reserva .selectNumPess .form-control-feedback{
    right: -30px;
 }
+
+#reserva .errorIcon .form-control-feedback {
+    right: -30px;
+}
+
+#reserva .telErroIcon .form-control-feedback{
+   right: -30px;
+}
