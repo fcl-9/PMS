@@ -16,8 +16,6 @@
 
     <!-- Custom styles for this template -->
     <link href="css/login.css" rel="stylesheet">
-    <!-- CSS partilhado por todas as paginas-->
-    <link href="css/common.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -28,6 +26,13 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+
+
+<!-- Bootstrap CSS v3.0.0 or higher -->
+<link rel="stylesheet" href="css/bootstrap.min.css">
+
+
   </head>
 
   <body>
@@ -67,21 +72,32 @@
 
 
 
-    <div class="container">
-      <form class="form-signin" action="userpage.php" method="POST">
-        <h2 class="form-signin-heading">Restaurante</h2>
-        <label for="inputNIF" class="sr-only">NIF</label>
-        <input type="number" id="inputNIF" name ="inputNIF" class="form-control" placeholder="Número de identificação fiscal" required autofocus>
-        <label for="inputPassword" class="sr-only">Palavra-Passe</label>
-        <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Palavra-Passe" required>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="remember-me"> Lembrar-me
-          </label>
+    <div class="container col-centered">
+    <form id="form_login" action="userpage.html" method="POST">
+		<h2 class="form-signin-heading">Restaurante</h2>
+		<div class="row">
+          <div class="col-md-3  form-group ">
+            <label for="numerotel"></label></label><br>
+            <input type="text" class="form-control"  name="numerotel" id="numerotel" placeholder="Número telefone">
+          </div>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Iniciar sessão</button>
-      </form>
 
+    	<div class="row">
+          <div class="col-md-3 form-group"> 
+            <label for="inputPassword"></label> 
+            <input type="password" class="form-control" name="inputPassword" id="inputPassword" placeholder="Palavra passe">
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="col-md-3">
+            <button type="submit" class="btn btn-lg btn-primary btn-block">Iniciar Sessão</button> 
+          </div>
+
+        </div>
+
+    </form>
     </div> <!-- /container -->
     
 
@@ -99,5 +115,81 @@
   <!-- Script responsável pela mudança da nav bar que permite indicar ao user a secção onde este se encontra.-->
     <script src="navBarAction.js"></script>
 
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/bootstrap/docs/dist/js/bootstrap.min.js"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="/bootstrap/docs/assets/js/vendor/holder.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
+ 	
+
+    <!-- jQuery -->
+    <script src="/js/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/js/bootstrap.min.js"></script>
+
+
+    <!-- jQuery Bootstrap Form Validator -->
+ <link rel="stylesheet" href="/formvalidation-master/vendor/bootstrap/css/bootstrap.css"/>
+ <link rel="stylesheet" href="/formvalidation-master/dist/css/formValidation.css"/>
+ <script type="text/javascript" src="/formvalidation-master/dist/js/formValidation.js"></script>
+ <script type="text/javascript" src="/formvalidation-master/dist/js/framework/bootstrap.js"></script>
+ <script type="text/javascript" src="/formvalidation-master/vendor/bootstrap/js/bootstrap.min.js"></script> 
+
+
+    <!--Validação de input números de telefone plugin pro form validation-->
+<link rel="stylesheet" href="/formvalidation-master/vendor/intl-tel-input/build/css/intlTelInput.css" />
+<script src="/formvalidation-master/vendor/intl-tel-input/build/js/intlTelInput.min.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#form_login')
+        .find('[name="numerotel"]')
+            .intlTelInput({
+                utilsScript: '/formvalidation-master/vendor/intl-tel-input/lib/libphonenumber/build/utils.js',
+                autoPlaceholder: true,
+                defaultCountry:"pt",
+                onlyCountries: ['pt']
+            });
+
+     $('#form_login')
+        .formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            	inputPassword: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The password is required'
+                        },
+                        blank: {}
+                    }
+                },
+            numerotel: {
+                validators: {
+                        notEmpty: {
+                          message: 'Deve introduzir o seu número de telefone.'
+                        },
+                        callback: {
+                          message: 'O número de telefone introduzido não é válido.',
+                          callback: function(value, validator, $field) {
+                              return value === '' || $field.intlTelInput('isValidNumber');
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        .on('click', '.country-list', function() {$('#form_login').formValidation('revalidateField', 'numerotel');}); 
+});
+</script>
   </body>
 </html>
