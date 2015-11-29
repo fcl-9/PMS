@@ -175,7 +175,7 @@
           </div>
           <div class="col-md-6 form-group">
             <label for="numerotel">Telefone:</label>
-            <input type="tel" class="form-control"  name="numerotel" id="numerotel" placeholder="Telefone">
+            <input type="text" class="form-control"  name="numerotel" id="numerotel" placeholder="900 000 000">
           </div>
         </div>
         <div class="row">
@@ -298,7 +298,118 @@
   <script type="text/javascript" src="/formvalidation-master/dist/js/formValidation.js"></script>
   	  <script type="text/javascript" src="/formvalidation-master/dist/js/framework/bootstrap.js"></script>
  <script type="text/javascript" src="/formvalidation-master/vendor/bootstrap/js/bootstrap.min.js"></script> 
-    
+
+<!--Validação de input números de telefone plugin pro form validation-->
+<link rel="stylesheet" href="/formvalidation-master/vendor/intl-tel-input/build/css/intlTelInput.css" />
+<script src="/formvalidation-master/vendor/intl-tel-input/build/js/intlTelInput.min.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#form_reserva')
+        .find('[name="numerotel"]')
+            .intlTelInput({
+                utilsScript: '/formvalidation-master/vendor/intl-tel-input/lib/libphonenumber/build/utils.js',
+                autoPlaceholder: true,
+                defaultCountry:"pt",
+                onlyCountries: ['pt']
+            });
+
+     $('#form_reserva')
+        .formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+              contribuinte: {
+                row: '.row',
+                validators: {
+                    notEmpty: {
+                        message: 'Deve introduzir o seu contribuinte.'
+                    },
+                    stringLength: {
+                        min: 9,
+                        max: 9,
+                        message: 'O número de contribuinte deve conter exatamente 9 digitos'
+                    },
+                 } 
+              },
+               nome: {
+                message: 'O nome não é válido',
+                validators: {
+                    notEmpty: {
+                        message: 'Deve introduzir o seu nome.'
+                    },
+                    stringLength: {
+                        min: 3,
+                        max: 30,
+                        message: 'O nome deve conter pelo menos 3 carateres e um máximo de 30 carateres.'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\.]+$/,
+                        message: 'O nome só pode ter letras, numeros, pontos.'
+                    }
+                }
+            },
+            sobrenome: {
+                row: '.col-md-6',
+                    message: 'O sobrenome não é válido.',
+                validators: {
+                    notEmpty: {
+                        message: 'Deve introduzir o seu sobrenome.'
+                    },
+                    stringLength: {
+                        min: 3,
+                        max: 30,
+                        message: 'O sobrenome deve conter pelo menos 3 carateres e um máximo de 30 carateres.'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9\.]+$/,
+                        message: 'O sobrenome só pode ter letras, numeros, pontos.'
+                    }
+                }
+            },
+             email: {
+                validators: {
+                    notEmpty: {
+                        message: 'Deve introduzir o seu endereço de email.'
+                    },
+                    emailAddress: {
+                        message: 'O endereço de email introduzido não é válido.'
+                    }
+                }
+            },
+            selNumPes: {
+                validators: {
+                    notEmpty: {
+                        message: 'Selecione o número de pessoas.'
+                    }
+                }
+            },
+            numerotel: {
+                validators: {
+                        notEmpty: {
+                          message: 'Deve introduzir o seu número de telefone.'
+                        },
+                        callback: {
+                          message: 'O número de telefone introduzido não é válido.',
+                          callback: function(value, validator, $field) {
+                              return value === '' || $field.intlTelInput('isValidNumber');
+                            }
+                        }
+                    }
+                }
+            }
+        }).on('click', '.country-list', function() {
+            $('#form_reserva').formValidation('revalidateField', 'numerotel');
+        }); 
+});
+</script>
+<!--Fim dos plugin de validação-->
+
+<!--
 	<script type="text/javascript">
 $(document).ready(function() {
      $('#form_reserva').formValidation({
@@ -374,22 +485,11 @@ $(document).ready(function() {
                     }
                 }
             },
-             numerotel: {
-                validators: {
-                    digits: {
-                        message: 'O número de telefone só pode conter números.'
-                    },
-                    notEmpty: {
-                        message: 'Deve introduzir o seu número de telefone.'
-                    }
-                }
-            }
-
         }
     });
 });
 
 </script>
-
+-->
   </body>
 </html>
