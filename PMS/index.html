@@ -203,7 +203,7 @@
 			</div>
           </div>
           <div class="col-md-3 form-group">
-           	<div class="form-group">
+           	<div class="form-group selectNumPess">
            	 <label for="selNumPes">Número de Pessoas:</label>
   			  <select class="form-control" id="selNumPes" name="selNumPes">
     			  <option></option>
@@ -217,7 +217,8 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            <button type="submit" class="btn btn-default">Reservar</button>
+            <button type="submit" class="btn btn-default">Reservar</button> 
+            <button type="reset" class="btn btn-default">Reset</button>
           </div>
         </div>
     </form>
@@ -280,6 +281,8 @@
             $(function () {
                 $('#datetimepicker1').datetimepicker({
                   locale: 'pt',
+                  sideBySide:true,
+                  minDate: moment(),
                                });
             });
         </script>
@@ -311,7 +314,12 @@ $(document).ready(function() {
                 validators: {
                     notEmpty: {
                         message: 'Deve introduzir o seu contribuinte.'
-                    }
+                    },
+                    stringLength: {
+                        min: 9,
+                        max: 9,
+                        message: 'O número de contribuinte deve conter exatamente 9 digitos'
+                    },
                 }
             },
             sobrenome: {

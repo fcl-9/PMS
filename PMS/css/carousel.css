@@ -132,3 +132,11 @@ html {
     padding-top: 150px;
     background: #fff;
 }
+
+#reserva  .has-feedback .form-control-feedback {
+   right: -15px;
+}
+
+#reserva .selectNumPess .form-control-feedback{
+   right: -30px;
+}
