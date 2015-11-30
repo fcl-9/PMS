@@ -12,8 +12,12 @@
     <title>Restaurante</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="/bootstrap/docs/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/bootstrap/docs/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
+
+    
+<link rel="stylesheet" href="/formvalidation-master/dist/css/formValidation.css"/>
+ <link rel="stylesheet" href="/formvalidation-master/vendor/intl-tel-input/build/css/intlTelInput.css" />
     <!-- Custom styles for this template -->
     <link href="css/login.css" rel="stylesheet">
 
@@ -29,8 +33,8 @@
 
 
 
-<!-- Bootstrap CSS v3.0.0 or higher -->
-<link rel="stylesheet" href="css/bootstrap.min.css">
+<!-- Bootstrap CSS v3.0.0 or higher 
+<link rel="stylesheet" href="css/bootstrap.min.css">-->
 
 
   </head>
@@ -72,26 +76,32 @@
 
 
 
-    <div class="container col-centered">
+    <div class="container ">
     <form id="form_login" action="userpage.html" method="POST">
-		<h2 class="form-signin-heading">Restaurante</h2>
-		<div class="row">
-          <div class="col-md-3  form-group ">
+		<div class="row form-group">
+          <div class="col-sm-3 col-sm-offset-4">	
+          <h2 class="form-signin-heading ">Restaurante</h2>
+          </div>
+        </div>
+
+
+		<div class="row form-group">
+          <div class="col-sm-3 col-sm-offset-4">
             <label for="numerotel"></label></label><br>
             <input type="text" class="form-control"  name="numerotel" id="numerotel" placeholder="Número telefone">
           </div>
         </div>
 
-    	<div class="row">
-          <div class="col-md-3 form-group"> 
+    	<div class="row form-group">
+          <div class="col-sm-offset-4 col-sm-3"> 
             <label for="inputPassword"></label> 
             <input type="password" class="form-control" name="inputPassword" id="inputPassword" placeholder="Palavra passe">
           </div>
         </div>
 
 
-        <div class="row">
-          <div class="col-md-3">
+        <div class="row form-group">
+          <div class="col-sm-offset-4 col-sm-3">
             <button type="submit" class="btn btn-lg btn-primary btn-block">Iniciar Sessão</button> 
           </div>
 
@@ -107,7 +117,7 @@
       	 <div class="text-center">
 	        <p>&copy; 2015c Company, In. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
     	</div>
-      </footer
+      </footer>
       </div>
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
@@ -133,16 +143,15 @@
     <script src="/js/bootstrap.min.js"></script>
 
 
-    <!-- jQuery Bootstrap Form Validator -->
- <link rel="stylesheet" href="/formvalidation-master/vendor/bootstrap/css/bootstrap.css"/>
- <link rel="stylesheet" href="/formvalidation-master/dist/css/formValidation.css"/>
+    <!-- jQuery Bootstrap Form Validator
+ <link rel="stylesheet" href="/formvalidation-master/vendor/bootstrap/css/bootstrap.css"/> -->
+
  <script type="text/javascript" src="/formvalidation-master/dist/js/formValidation.js"></script>
  <script type="text/javascript" src="/formvalidation-master/dist/js/framework/bootstrap.js"></script>
  <script type="text/javascript" src="/formvalidation-master/vendor/bootstrap/js/bootstrap.min.js"></script> 
 
 
     <!--Validação de input números de telefone plugin pro form validation-->
-<link rel="stylesheet" href="/formvalidation-master/vendor/intl-tel-input/build/css/intlTelInput.css" />
 <script src="/formvalidation-master/vendor/intl-tel-input/build/js/intlTelInput.min.js"></script>
 
 <script type="text/javascript">
