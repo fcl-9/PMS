@@ -115,7 +115,7 @@ ul.alert-dropdown {
 @media(min-width:768px) {
     .side-nav {
         position: fixed;
-        top: 51px;
+        top: 100px;
         left: 225px;
         width: 225px;
         margin-left: -225px;
@@ -152,6 +152,9 @@ ul.alert-dropdown {
 
 .side-nav>li>ul>li>a:hover {
     color: #fff;
+}
+.navbar{
+    min-height: 100px;
 }
 
 
@@ -235,14 +238,42 @@ ul.alert-dropdown {
 }
 .botao{
     padding-bottom: 40px;
-    padding-left: 10px;
+    padding-left: 10px; 
 }
 .btn{
     padding-top: 15px;
     padding-bottom: 15px;
     padding-left: 30px;
     padding-right: 30px;
+    width: 240px;
 }
-.corpo{
+.corpo, .corpo-user{
     padding-top: 70px;
+}
+.buttons{
+    padding-left: 50px;
+}
+/*
+tr {
+width: 100%;
+display: inline-table;
+}
+
+table{
+ height:300px; 
+ width:100%;
+}
+tbody{
+  overflow-y: scroll;
+  height: 200px;
+  width: 100%;
+  position: absolute;
+}*/
+.table-responsive{
+    height:500px;
+    overflow: scroll;
+}
+
+.corpo{
+    padding-left: 225px;
 }
