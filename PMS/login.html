@@ -85,15 +85,15 @@
 			</div>
 		</div>
 
-		<div class="row form-group">
-          <div class="col-md-3 col-sm-offset-4">
+		<div class="row form-group telErroIcon">
+          <div class="col-md-3 col-sm-offset-4 form-group ">
             <label for="numerotel"></label></label><br>
             <input type="text" class="form-control"  name="numerotel" id="numerotel" placeholder="Número telefone">
           </div>
         </div>
 
-    	<div class="row form-group">
-          <div class="col-sm-offset-4 col-sm-3"> 
+    	<div class="row form-group passwdError">
+          <div class="col-sm-offset-4 col-sm-3 form-group"> 
             <label for="inputPassword"></label> 
             <input type="password" class="form-control" name="inputPassword" id="inputPassword" placeholder="Palavra passe">
           </div>
@@ -176,7 +176,7 @@
             	inputPassword: {
                     validators: {
                         notEmpty: {
-                            message: 'The password is required'
+                            message: 'Deve introduzir a sua password.'
                         },
                         blank: {}
                     }
