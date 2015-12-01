@@ -45,6 +45,13 @@ body {
     padding-top: 25px;
 }
 
+#form_login .telErroIcon .form-control-feedback {
+   right: -30px;
+}
+
+#form_login .passwdError .form-control-feedback {
+  right: -15px;
+}
 /*
 .#container {
   max-width: 330px;
