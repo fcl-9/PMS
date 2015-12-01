@@ -242,11 +242,10 @@ if (!$conn) {
  die("Connection failed: " . mysqli_connect_error());
 }
 
+$inputEmail = mysqli_real_escape_string($conn, $_POST['inputEmail']);
+$inputPassword = mysqli_real_escape_string($conn, $_POST['inputPassword']);
 
-$sql = "select cliente.email, cliente.passsword from cliente where cliente.email = \"{$_POST['inputEmail']}\" and cliente.passsword = \"{$_POST['inputPassword']}\"";
-
-
-//echo $sql;
+$sql = "SELECT email, passsword FROM cliente WHERE email LIKE '$inputEmail' AND passsword LIKE '$inputPassword'";
 
 $resultado = mysqli_query($conn, $sql);
 
@@ -255,10 +254,9 @@ if (mysqli_num_rows($resultado) > 0) {
 
 }
 else
-{		echo "entra";
-		header('login.php');
+{
+		include 'login.php';
 		exit();   
-
 }
 
 mysqli_close($conn);
