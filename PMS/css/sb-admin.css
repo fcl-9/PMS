@@ -153,6 +153,9 @@ ul.alert-dropdown {
 .side-nav>li>ul>li>a:hover {
     color: #fff;
 }
+.navbar{
+    min-height: 100px;
+}
 
 
 /* Flot Chart Containers */
@@ -244,8 +247,11 @@ ul.alert-dropdown {
     padding-right: 30px;
     width: 240px;
 }
-.corpo{
+.corpo, .corpo-user{
     padding-top: 70px;
+}
+.buttons{
+    padding-left: 50px;
 }
 /*
 tr {
