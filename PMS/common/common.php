@@ -14,7 +14,7 @@ function addCliente($link,$nome,$password,$numero,$apelido,$email)
 	$resultado = mysqli_query($link, $queryReserva);
 	if($resultado)
 	{
-		
+
 		return true;
 	}
 	else
@@ -26,28 +26,40 @@ function addCliente($link,$nome,$password,$numero,$apelido,$email)
 /*Função que permite aos clientes ou funcionários criar reservas.*/
 function addReserva($link,$numtel,$numPessoas,$numMesa,$data,$hora,$idFunc)
 {
-	$queryVerUser = 'SELECT cd.idcliente FROM cliente AS c WHERE c.telefone = '.$numero.' ';
+	if(empty($idFunc))
+	{
+		$idFunc = NULL;
+	}
+	$queryVerUser = 'SELECT c.idcliente FROM cliente AS c WHERE c.telefone = \''.$numtel.'\'';
 	$getId = mysqli_query($link,$queryVerUser);
 	if($getId)
 	{
-		$queryInsRes = 'INSERT INTO `reserva`(`idreserva`, `hora`, `data`, `funcionario_idfuncionario`, `cliente_idcliente`) VALUES (NULL,\''.$hora.'\',\''.$data.'\',\''.$idFunc.'\',\''.$getId.'\')';
-		$reservaDone = mysqli($link,$queryInsRes);
+		$idCli = mysqli_fetch_array($getId);
+		$queryInsRes = sprintf("INSERT INTO `reserva`(`idreserva`, `hora`, `data`, `funcionario_idfuncionario`, `cliente_idcliente`) VALUES (%s,%s,%s,%s,%s);",
+			NULL,
+			$hora,
+			$data,
+			$idFunc,
+			$idCli['idcliente']	
+			);
+		echo $queryInsRes;
+		$reservaDone = mysqli_query($link,$queryInsRes);
 		if($reservaDone)
 		{
 			//Encontra o id da mesa a adicionar
 			$queryAddMesa = 'SELECT numero FROM mesa WHERE numero ='.$numMesa;
-			$getIdMesa = mysqli($link,$queryAddMesa);
+			$getIdMesa = mysqli_query($link,$queryAddMesa);
 			if(!$getIdMesa)
 			{
-				echo 'Erro ao executar query '. mysqli_error($error);
+				echo 'Erro ao executar query #3'. mysqli_error($link);
 				die;
 			}
 			//Recebe o id da reserva feita neste momento
 			$getIdRes = 'SELECT id FROM reserva WHERE hora = '.$hora.' AND data ='.$data.' AND funcionario_id = '.$idFunc.' AND cliente_idcliente='.$getId.'';		 
-			$getIdRes = mysqli($link,$getIdRes);
+			$getIdRes = mysqli_query($link,$getIdRes);
 			if(!$getIdRes)
 			{
-				echo 'Erro ao executar query '. mysqli_error($error);
+				echo 'Erro ao executar query #4'. mysqli_error($link);
 				die;
 			}
 			//
@@ -55,22 +67,23 @@ function addReserva($link,$numtel,$numPessoas,$numMesa,$data,$hora,$idFunc)
 			$reservaFinish = mysqli_query($link,$queryMesaRes);
 			if($reservaFinish)
 			{
-				echo 'Erro ao executar query '. mysqli_error($error);
+				echo 'Erro ao executar query #7'. mysqli_error($link);
 				die;
 			}
 			echo 'RESERVA EFETUADA'; 
 		}
 		else
 		{
-			echo 'Erro ao executar query '. mysqli_error($error);
+			echo 'Erro ao executar query #5'. mysqli_error($link);
 			die;
 		}
 	}
 	else
 	{
-		echo 'Erro ao executar query '. mysqli_error($error);
+		echo 'Erro ao executar query  #6'. mysqli_error($link);
 		die;
 	}
+}
 	
 	/*Envia um email ao cliente recebe o assunto o corpo da mensagem, ainda o email do cliente.*/
 	function mailConfim($assunto,$corpoMsg,$emailCli)
@@ -105,7 +118,9 @@ function addReserva($link,$numtel,$numPessoas,$numMesa,$data,$hora,$idFunc)
  		 $array = array("data" => $data, "hora" => $hora);
  		 return $array;
 	}
-
-}
-
+	//Remove espaços dos números de telefone
+	function telefone($string)
+	{
+		return str_replace(' ','',$string);
+	}
 ?>
