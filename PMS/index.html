@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -9,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Carousel Template for Bootstrap</title>
+    <title>Restaurante</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/bootstrap/docs/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -143,13 +144,13 @@
   
   <section  id="reserva"class="reserva-section">  
   <hr  class="featurette-divider">
-      <form id="form_reserva" action="formulario.php" method="POST">
-       <div class="row">
+      <form id="form_reserva" action="form_reserva.php" method="POST">
+       <!--<div class="row">
           <div class="col-md-4 form-group"> 
             <label for="contribuinte">Número de Contribuinte:</label> 
             <input type="number" class="form-control" name="contribuinte" id="contribuinte" placeholder="Número de Contribuinte">
           </div>
-        </div>
+        </div>-->
         <div class="row">
           <div class="col-md-6 form-group"> 
             <label for="nome">Nome:</label>
@@ -185,12 +186,12 @@
         <div class="col-md-3 form-group">
 			<div class="form-group">
 			 <label for="selMesa">Número de Mesa:</label>
-			  <select class="form-control" id="selMesa">
+			  <select class="form-control" id="selMesa"  name="selMesa">
 			    <option></option>
-          <option>Mesa 1</option>
-			    <option>Mesa 2</option>
-			    <option>Mesa 3</option>
-			    <option>Mesa 4</option>
+          <option>1</option>
+			    <option>2</option>
+			    <option>3</option>
+			    <option>4</option>
 			  </select>
 			</div>
           </div>
@@ -199,13 +200,19 @@
            	 <label for="selNumPes">Número de Pessoas:</label>
   			  <select class="form-control" id="selNumPes" name="selNumPes">
     			  <option></option>
-            <option>1 Pessoa</option>
- 				   	<option>2 Pessoas</option>
- 				   	<option>3 Pessoas</option>
-    				<option>4 Pessoas</option>
+            <option>1</option>
+ 				   	<option>2</option>
+ 				   	<option>3</option>
+    				<option>4</option>
+    				<option>5</option>
+    				<option>6</option>
+    				<option>7</option>
+    				<option>8</option>
+    				<option>9</option>
   				</select>
 			</div>
           </div>
+          <p style="text-align:center;font-weight:bold;">Em caso de reservas superiores a 9 pessoas por favor, contacte-nos através de  291 525 372.</p>
         </div>
         <div class="row">
           <div class="col-md-12">
