@@ -144,7 +144,7 @@
   
   <section  id="reserva"class="reserva-section">  
   <hr  class="featurette-divider">
-      <form id="form_reserva" action="form_reserva.php" method="POST">
+      <form id="form_reserva" onsubmit="return false">
        <!--<div class="row">
           <div class="col-md-4 form-group"> 
             <label for="contribuinte">Número de Contribuinte:</label> 
@@ -176,7 +176,7 @@
             <div class="form-group errorIcon">
 				<label for="datetimepicker1">Data e Hora: </label>
 	                <div class='input-group date' id='datetimepicker1' name="datetimepicker1">
-	                    <input type='text' class="form-control" name="datahora" placeholder="Data e Hora" />
+	                    <input type='text' class="form-control" id="datahora" name="datahora" placeholder="Data e Hora" />
 	                    <span class="input-group-addon">
 	                        <span class="glyphicon glyphicon-calendar"></span>
 	                    </span>
@@ -215,8 +215,11 @@
           <p style="text-align:center;font-weight:bold;">Em caso de reservas superiores a 9 pessoas por favor, contacte-nos através de  291 525 372.</p>
         </div>
         <div class="row">
+          <div id="status_text" />
+        </div>
+        <div class="row">
           <div class="col-md-12">
-            <button type="submit" class="btn btn-default">Reservar</button> 
+            <button type="submit" id="btn_submit" name="submit" class="btn btn-default">Reservar</button> 
           </div>
         </div>
     </form>
@@ -300,7 +303,46 @@
             });
         </script>
 
+        <script type="text/javascript">
+        //on the click of the submit button 
+$("#btn_submit").click(function(){
+ //get the form values
+ var nome = $('#nome').val();     
+ var sobrenome = $('#sobrenome').val();     
+ var email = $('#email').val(); 
+ var numerotel = $('#numerotel').val();
+ var datahora = $('#datahora').val();
+ var selMesa = $('#selMesa').val();
+ var selNumPes = $('#selNumPes').val();
+ //make the postdata
+ var postData = 'nome='+nome+'&sobrenome='+sobrenome+'&email='+email+'&numerotel='+numerotel+'&datahora='+datahora+'&selMesa='+selMesa+'&selNumPes='+selNumPes;
 
+ //call your input.php script in the background, when it returns it will call the success function if the request was successful or the error one if there was an issue (like a 404, 500 or any other error status)
+
+ $.ajax({
+    url : "form_reserva.php",
+    type: "POST",
+    data : postData,
+    success: function(data,status, xhr)
+    {
+        //if success then just output the text to the status div then clear the form inputs to prepare for new data
+        $("#status_text").html(data);
+        $('#nome').val('');
+        $('#sobrenome').val('');
+        $('#email').val('');
+        $('#numerotel').val('');
+        $('#datahora').val('');
+        $('#selMesa').val('');
+        $('#selNumPes').val('');
+    },
+    error: function (jqXHR, status, errorThrown)
+    {
+        //if fail show error and server status
+        $("#status_text").html('there was an error ' + errorThrown + ' with status ' + textStatus);
+    }
+});
+
+        </script>
     <!-- Script responsável pela mudança da nav bar que permite indicar ao user a secção onde este se encontra.-->
     <!--<script src="navBarAction.js"></script>-->
 
