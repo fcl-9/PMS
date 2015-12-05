@@ -1,7 +1,9 @@
 <?php
 require_once('/common/database.php');
 require_once('/common/common.php');
-
+//Desativa commit automático, so no fim de todo o processo o utilizador 
+mysqli_autocommit($link,false);
+$flag = true;
 if(isset( $_POST['nome'], $_POST['sobrenome'], $_POST['email'],$_POST['numerotel'],$_POST['datahora'],$_POST['selMesa'],$_POST['selNumPes']))
 {
 
@@ -37,19 +39,27 @@ if(mysqli_num_rows($verUser) == 1)
 	if(!$reservaAnteriores)
 	{
 		echo 'Erro na query #1' . mysqli_error($link);
-		die;
+		mysqli_rollback($link);
+		//die;
 	}
 	if(mysqli_num_rows($reservaAnteriores) > 0)
 	{
 		//falha a reserva
 		echo 'Já tem uma reserva para a mesma hora e para o mesmo dia.';
 	}
-	//else
+	else
 	{	
-		addReserva($link,$numero,$numPessoas,$numMesa,$dateArray["data"],$dateArray["hora"],NULL);
 		//efetua a reserva && envia e-mail
-		echo 'RESERVA EFETUADA';
-
+		if(!addReserva($link,$numero,$numPessoas,$numMesa,$dateArray["data"],$dateArray["hora"],''))
+		{
+			mysqli_rollback($link);
+		}
+		else
+		{
+			mysqli_commit($link);
+			echo 'RESERVA EFETUADA';
+			//Falta mandar o mail com o link de confirmação para ativar a reserva.
+		}
 	}
 
 }
@@ -59,14 +69,21 @@ else
 	if(!addCliente($link,$nome,$password,$numero,$apelido,$email))
 	{
 		echo 'Erro na query #2' . mysqli_error($link);
-		die;
+		mysqli_rollback($link);
+		//die;
 	}
 	else
 	{
-		addReserva($link,$numero,$numPessoas,$numMesa,$dateArray["data"],$dateArray["hora"],NULL);
-		ECHO 'RESERVA EFETUADA';
-		//Por favor confirme o seu e-mail
-		//regista reserva e envia a senha e o 
+		if(!addReserva($link,$numero,$numPessoas,$numMesa,$dateArray["data"],$dateArray["hora"],''))
+		{
+			mysqli_rollback($link);
+		}
+		else
+		{
+			mysqli_commit($link);
+			echo 'RESERVA EFETUADA';
+			//Falta mandar o mail com o link de confirmação para ativar a reserva.
+		}
 
 	}
 }
