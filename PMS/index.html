@@ -13,23 +13,13 @@
     <title>Restaurante</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="/bootstrap/docs/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="/bootstrap/docs/assets/js/ie-emulation-modes-warning.js"></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="/css/carousel.css" rel="stylesheet">
     <link href="/css/bootstrap-datetimepicker.css" rel="stylesheet">
     <link rel='shortcut icon' type='image/x-icon' href='/images/favicon.png' />
+
   </head>
 <!-- NAVBAR
 ================================================== -->
@@ -261,31 +251,21 @@
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="/bootstrap/docs/dist/js/bootstrap.min.js"></script>
-    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
-    <script src="/bootstrap/docs/assets/js/vendor/holder.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="/bootstrap/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
- 	
-
-    <!-- jQuery -->
+    <!-- Placed at the end of the document so the pages load faster 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
     <script src="/js/jquery.min.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
     <script src="/js/bootstrap.min.js"></script>
-
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="/js/holder.min.js"></script>
+ 
     <!-- Scrolling Nav JavaScript -->
     <script src="/js/jquery.easing.min.js"></script>
     <script src="/js/scrolling-nav.js"></script>
-
+    <!--Traduz datapicker pra pt e data atual-->
     <script src="/js/moment.js"></script>
-    <script src="/bootstrap/js/dropdown.js"></script>
-    <script src="/bootstrap/js/transition.js"></script>
-    <script src="/bootstrap/js/collapse.js"></script>
-    <script type="text/javascript" src="/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="/js/locale/pt.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-datetimepicker.min.js"></script>
+    
    
   <script type="text/javascript">
             var date = new Date();
@@ -304,30 +284,24 @@
             });
         </script>
 
-   
-    <!-- Script responsável pela mudança da nav bar que permite indicar ao user a secção onde este se encontra.-->
-    <!--<script src="navBarAction.js"></script>-->
-
-    
-    <!-- jQuery Bootstrap Form Validator -->
-        <!-- <link rel="stylesheet" href="/formvalidation-master/vendor/bootstrap/css/bootstrap.css"/>-->
- <link rel="stylesheet" href="/formvalidation-master/dist/css/formValidation.css"/>
- <script type="text/javascript" src="/formvalidation-master/dist/js/formValidation.js"></script>
- <script type="text/javascript" src="/formvalidation-master/dist/js/framework/bootstrap.js"></script>
- <script type="text/javascript" src="/formvalidation-master/vendor/bootstrap/js/bootstrap.min.js"></script> 
-
+       
+ <!-- jQuery Bootstrap Form Validator -->
+ <link rel="stylesheet" href="/formvalidation/css/formValidation.css"/>
+ <script type="text/javascript" src="/formvalidation/js/formValidation.js"></script>
+ <script type="text/javascript" src="/formvalidation/js/framework/bootstrap.js"></script>
 <!--Validação de input números de telefone plugin pro form validation-->
-<link rel="stylesheet" href="/formvalidation-master/vendor/intl-tel-input/build/css/intlTelInput.css" />
-<script src="/formvalidation-master/vendor/intl-tel-input/build/js/intlTelInput.min.js"></script>
+<link rel="stylesheet" href="/formvalidation/css/intlTelInput.css" />
+<script src="/formvalidation/js/intlTelInput.min.js"></script>
+
+
 <script type="text/javascript">
   $(document).ready(function() {
     $('#form_reserva')
         .find('[name="numerotel"]')
             .intlTelInput({
-                utilsScript: '/formvalidation-master/vendor/intl-tel-input/lib/libphonenumber/build/utils.js',
+                utilsScript: '/formvalidation/js/utils.js',
                 autoPlaceholder: true,
                 defaultCountry:"pt",
-                onlyCountries: ['pt']
             });
 
      $('#form_reserva')
