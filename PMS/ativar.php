@@ -76,14 +76,14 @@ $flag = true;
 
 						$getDetails = mysqli_fetch_array($getDetails);
 
-						$corpoMsg = "Por favor comfirme a sua reserva através do endereço: ";
+						$corpoMsg = "Obrigado pela sua reserva. ";
 						$corpoMsg .= "A sua nova password de acesso é ".$password." utilize a nossa àrea de login se desejar efetuar alterações. ";
 						$corpoMsg .= "A sua reserva está agendada para o dia ".$getDetails['data']." pelas ".$getDetails['hora']." Agradecemos a sua preferência.";
 
 						mailConfim('Reserva agendada.',$corpoMsg, $emailSendInfo);
 
 						mysqli_commit($link);
-						//header( "refresh:3;url=index.html" );
+						header( "refresh:3;url=index.html" );
 					}
 				}
 			}

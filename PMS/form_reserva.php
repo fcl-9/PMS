@@ -74,7 +74,8 @@ if(mysqli_num_rows($verUser) == 1)
 				$idReserva = mysqli_fetch_array($getIdRes);
 
 				$url = sprintf( 'id=%s&email=%s&numTel=%s&idRes=%s',$idCli['idcliente'] ,md5($email), md5($numero),$idReserva['idreserva']);
-				$corpoMsg = "Por favor comfirme a sua reserva através do endereço: ";
+
+				$corpoMsg = "Por favor comfirme a sua reserva através do endereço: <br>";
 				$corpoMsg .= sprintf("http://localhost/ativar.php?%s",$url);
 				
 				mailConfim('Confirmação de Reserva Dom Petisco.',$corpoMsg,$email);
