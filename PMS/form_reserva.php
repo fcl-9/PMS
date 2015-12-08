@@ -57,8 +57,22 @@ if(mysqli_num_rows($verUser) == 1)
 		else
 		{
 			mysqli_commit($link);
-			echo 'RESERVA EFETUADA';
-			//Falta mandar o mail com o link de confirmação para ativar a reserva.
+			//Info from the user
+			$queryVerUser = 'SELECT c.idcliente FROM cliente AS c WHERE c.telefone = \''.$numero.'\'';
+			$getId = mysqli_query($link,$queryVerUser);
+			$idCli = mysqli_fetch_array($getId);
+
+			//info from the reservation
+			$getIdRes = "SELECT idreserva FROM reserva WHERE hora = '".$dateArray["hora"]."' AND data ='".$dateArray["data"]."' AND cliente_idcliente=".$idCli['idcliente']."";		 
+			$getIdRes = mysqli_query($link,$getIdRes);
+			$idReserva = mysqli_fetch_array($getIdRes);
+
+			$url = sprintf( 'id=%s&email=%s&numTel=%s&idRes=%s',$idCli['idcliente'] ,md5($email), md5($numero),$idReserva['idreserva']);
+			$corpoMsg = "Por favor comfirme a sua reserva através do endereço: ";
+			$corpoMsg .= sprintf("http://localhost/ativar.php?%s",$url);
+			
+			mailConfim('Confirmação de Reserva Dom Petisco.',$corpoMsg,$email);
+			//redirecionar para a página principal
 		}
 	}
 
@@ -81,8 +95,23 @@ else
 		else
 		{
 			mysqli_commit($link);
-			echo 'RESERVA EFETUADA';
-			//Falta mandar o mail com o link de confirmação para ativar a reserva.
+			//Info from the user
+			$queryVerUser = 'SELECT c.idcliente FROM cliente AS c WHERE c.telefone = \''.$numero.'\'';
+			$getId = mysqli_query($link,$queryVerUser);
+			$idCli = mysqli_fetch_array($getId);
+
+			//info from the reservation
+			$getIdRes = "SELECT idreserva FROM reserva WHERE hora = '".$dateArray["hora"]."' AND data ='".$dateArray["data"]."' AND cliente_idcliente=".$idCli['idcliente']."";		 
+			$getIdRes = mysqli_query($link,$getIdRes);
+			$idReserva = mysqli_fetch_array($getIdRes);
+			//Prepara link de confirmação
+			$url = sprintf( 'id=%s&email=%s&numTel=%s&idRes=%s',$idCli['idcliente'] ,md5($email), md5($numero),$idReserva['idreserva']);
+			$corpoMsg = "Por favor confirme a sua reserva atraves do endereço: ";
+			$corpoMsg .= sprintf("http://localhost/ativar.php?%s",$url);
+			
+			//envia link de confirmação.
+			mailConfim('Confirmacao de Reserva Dom Petisco.',$corpoMsg,$email);
+			//rederecionar para a página principal.
 		}
 
 	}
