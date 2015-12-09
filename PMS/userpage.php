@@ -58,7 +58,7 @@ session_start();
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
-                <p class="navbar-text" >Bem-Vindo(a), <?php echo $_SESSION['cliente_nome']; ?>!</p>
+                <p class="navbar-text" >Bem-Vindo(a), <?php echo $_SESSION['cliente_nome']." ".$_SESSION['cliente_sobrenome']; ?>!</p>
             </ul>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <!--<div class="collapse navbar-collapse navbar-ex1-collapse">
