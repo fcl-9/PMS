@@ -1,5 +1,11 @@
 <?php
+require_once('common/database.php');
+require_once('common/common.php');
 session_start();
+if(empty($_SESSION['cliente_id'])) 
+{
+    header("Location: login.php");
+}
 ?>
 <html lang="en">
 
@@ -11,7 +17,7 @@ session_start();
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin - Bootstrap Admin Template</title>
+    <title>Utilizador</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -58,27 +64,8 @@ session_start();
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
-                <p class="navbar-text" >Bem-Vindo(a), <?php echo $_SESSION['cliente_nome']." ".$_SESSION['cliente_sobrenome']; ?>!</p>
+                <p class="navbar-text" >Bem-Vindo(a), <?php echo $_SESSION['cliente_nome'] .' '. $_SESSION['cliente_sobrenome']; ?> !</p>
             </ul>
-            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-            <!--<div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li class="active">
-                        <a href="index.html"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span><i class="fa"></i> Alterar Reserva</a>
-                    </li>
-                    <li>
-                        <a href="charts.html"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span><i class="fa"></i> Cancelar Reserva</a>
-                    </li>
-                    <li>
-                        <a href="tables.html"><i class="fa fa-fw fa-user"></i> Alterar Dados do Cliente</a>
-                    </li>
-                    <li>
-                        <a href="forms.html"><i class="fa fa-fw fa-power-off"></i> Terminar Sessão</a>
-                    </li>
-               
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
         </nav>
 <div class="corpo-user">
         <div class="col-md-3 buttons" id="buttons">
@@ -100,7 +87,7 @@ session_start();
                 </div>
                 <div class="botao">            
 
-                        <a class="btn btn-danger" href="forms.html"><span class="glyphicon glyphicon-off"></span> Terminar Sessão</a>
+                        <a class="btn btn-danger" href="logout.php"><span class="glyphicon glyphicon-off"></span> Terminar Sessão</a>
 
                 </div>
             
@@ -198,14 +185,6 @@ session_start();
                    
              
                 </div>
-                <!-- /.row -->
-
-            </div>
-            <!-- FOOTER -->
-      <footer class="container text-center footer">
-         <p>&copy; 2015/2016 PMS GRUPO 2. &middot; </p>
-      </footer>
-        </div>
             <!-- /.container-fluid -->
 
         <!-- /#page-wrapper -->
@@ -229,40 +208,3 @@ session_start();
 </html>
 
 
-<?php
-/*
- * faz a conexao à base de dados
- * e seleciona a base de dados
- */
-$servername = "eu-cdbr-azure-west-c.cloudapp.net";
-$username = "b1d0197c9b0f56";
-$password = "455da09c";
-$db = "restaurante";
-
-// Create connection
-$conn = mysqli_connect($servername, $username, $password, $db);
-
-if (!$conn) {
- die("Connection failed: " . mysqli_connect_error());
-}
-
-$inputEmail = mysqli_real_escape_string($conn, $_POST['inputEmail']);
-$inputPassword = mysqli_real_escape_string($conn, $_POST['inputPassword']);
-
-$sql = "SELECT email, passsword FROM cliente WHERE email LIKE '$inputEmail' AND passsword LIKE '$inputPassword'";
-
-$resultado = mysqli_query($conn, $sql);
-
-if (mysqli_num_rows($resultado) > 0) {
-	echo "SUCESSO!\n";
-
-}
-else
-{
-		include 'login.php';
-		exit();   
-}
-
-mysqli_close($conn);
-
-?> 
