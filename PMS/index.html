@@ -158,7 +158,7 @@
           </div>
           <div class="col-md-6 form-group telErroIcon">
             <label for="numerotel">Telefone:</label></label><br>
-            <input type="text" class="form-control teste"  name="numerotel" id="numerotel" placeholder="900 000 000">
+            <input type="text" class="form-control teste"  name="numerotel" id="numerotel" placeholder="Número de telefone">
           </div>
         </div>
         <div class="row">
@@ -408,15 +408,18 @@
                 data: $form.serialize(),
                  success: function(data,status, xhr)
     {
-        //if success then just output the text to the status div then clear the form inputs to prepare for new data
-        $("#status_text").html(data);
+       
         $('#nome').val('');
         $('#sobrenome').val('');
         $('#email').val('');
         $('#numerotel').val('');
-        $('#datahora').val('');
+        //$('#datahora').val('');
         $('#selMesa').val('');
         $('#selNumPes').val('');
+        //Reset ao form
+        $('#form_reserva').data('formValidation').resetForm(); 
+ 		//if success then just output the text to the status div then clear the form inputs to prepare for new data
+        $("#status_text").html(data);
     },
     error: function (jqXHR, status, errorThrown)
     {

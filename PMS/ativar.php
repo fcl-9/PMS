@@ -55,12 +55,12 @@ $flag = true;
 					}
 					else
 					{
-						echo 'Reserva confirmada.';
+						echo 'Reserva confirmada. <br>';
 						//Gerar nova password e enviar por mail a password a hora o dia 
-						$password = random_password(8);
-						$updatePassword = 'UPDATE cliente SET password = '.$password.' WHERE idcliente = '.$id.'';	
-						$sucessPwd = mysqli_query($link,$updatePassword);
-						if($sucessPwd)
+						$queryGetPasswd = "SELECT password FROM cliente WHERE idcliente =".$id;
+						$sucessPwd = mysqli_query($link,$queryGetPasswd);
+						$password = mysqli_fetch_assoc($sucessPwd);
+						if(!$sucessPwd)
 						{
 							echo 'Erro ao executar query #10'. mysqli_error($link);
 							mysqli_rollback($link);
@@ -77,7 +77,8 @@ $flag = true;
 						$getDetails = mysqli_fetch_array($getDetails);
 
 						$corpoMsg = "Obrigado pela sua reserva. ";
-						$corpoMsg .= "A sua nova password de acesso é ".$password." utilize a nossa àrea de login se desejar efetuar alterações. ";
+						$corpoMsg .= "A sua palavra passe de acesso é ".$password['password']." utilize a nossa àrea de login se desejar efetuar alterações. ";
+						$corpoMsg .= "Caso deseje modificar a sua palavra passe pode faze-lo na sua àrea de cliente.";
 						$corpoMsg .= "A sua reserva está agendada para o dia ".$getDetails['data']." pelas ".$getDetails['hora']." Agradecemos a sua preferência.";
 
 						mailConfim('Reserva agendada.',$corpoMsg, $emailSendInfo);
