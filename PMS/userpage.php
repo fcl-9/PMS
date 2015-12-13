@@ -58,7 +58,7 @@ if(empty($_SESSION['cliente_id']))
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="index.php">
                 <img alt="Brand" src="images\drawing2.png">
               </a>
             </div>
@@ -71,18 +71,18 @@ if(empty($_SESSION['cliente_id']))
         <div class="col-md-3 buttons" id="buttons">
             
                 <div class="botao">
-                        <a  class="btn btn-primary" href="index.html"><span class="glyphicon glyphicon-refresh"></span> Alterar Reserva</a>
+                        <a  class="btn btn-primary" href="userpage_alterarserva.php"><span class="glyphicon glyphicon-refresh"></span> Alterar Reserva</a>
                 </div>
                 <div class="botao">
 
-                        <a class="btn btn-warning" href="charts.html"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
+                        <a class="btn btn-warning" href="#"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
 
                 </div >
             
             
                 <div class="botao">
 
-                        <a class="btn btn-success" href="tables.html"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
+                        <a class="btn btn-success" href="userpage_alteradados.php"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
 
                 </div>
                 <div class="botao">            

@@ -1,5 +1,35 @@
-<!DOCTYPE html>
+<?php
+require_once('common/database.php');
+require_once('common/common.php');
+session_start();
+if(isset($_SESSION['cliente_id']))
+{
+    $queryClient = 'SELECT * FROM cliente WHERE idcliente = '.$_SESSION['cliente_id'];
+    $getCli = mysqli_query($link, $queryClient);
+    if(!$getCli)
+    {
+      echo 'Erro Query #1' .mysqli_error($link);
+    }
+    else
+    { 
+      $data = mysqli_fetch_array($getCli);
+      $nome = $data['nome'];
+      $sobrenome = $data['sobrenome'];
+      $telefone = $data['telefone'];
+      $mail = $data['email'];
+    }
+    mysqli_close($link);
+}
+else
+{
+  $nome = '';
+  $sobrenome = '';
+  $telefone = '';
+  $mail = '';
+}
 
+?>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -144,21 +174,21 @@
         <div class="row">
           <div class="col-md-6 form-group"> 
             <label for="nome">Nome:</label>
-            <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome">
+            <input type="text" class="form-control" name="nome" id="nome" value="<?php echo $nome?>" placeholder="Nome" >
           </div>
           <div class="col-md-6 form-group"> 
             <label for="sobrenome">Sobrenome:</label>
-            <input type="text" class="form-control" name="sobrenome" id="sobrenome" placeholder="Sobrenome">
+            <input type="text" class="form-control" name="sobrenome" id="sobrenome" value="<?php echo $sobrenome ?>" placeholder="Sobrenome">
           </div>
         </div>
         <div class="row">
           <div class="col-md-6 form-group">           
             <label for="email">Email:</label>
-            <input type="email" class="form-control" name="email" id="email" placeholder="Email">
+            <input type="email" class="form-control" name="email" id="email" value="<?php echo $mail ?>" placeholder="Email">
           </div>
           <div class="col-md-6 form-group telErroIcon">
             <label for="numerotel">Telefone:</label></label><br>
-            <input type="text" class="form-control teste"  name="numerotel" id="numerotel" placeholder="Número de telefone">
+            <input type="text" class="form-control teste"  name="numerotel" id="numerotel" value="<?php echo $telefone ?>" placeholder="Número de telefone">
           </div>
         </div>
         <div class="row">

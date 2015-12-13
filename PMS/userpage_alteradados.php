@@ -1,5 +1,11 @@
 <?php
+require_once('common/database.php');
+require_once('common/common.php');
 session_start();
+if(empty($_SESSION['cliente_id'])) 
+{
+    header("Location: login.php");
+}
 ?>
 <html lang="en">
 
@@ -46,7 +52,7 @@ session_start();
     			<span class="icon-bar"></span>
     			<span class="icon-bar"></span>
     		</button>
-    		<a class="navbar-brand" href="#">
+    		<a class="navbar-brand" href="index.php">
     			<img alt="Brand" src="images\drawing2.png">
     		</a>
     	</div>
@@ -77,26 +83,28 @@ session_start();
         <div class="corpo-user">
         	<div class="col-md-3 buttons" id="buttons">
 
-        		<div class="botao">
-        			<a  class="btn btn-primary" href="index.html"><span class="glyphicon glyphicon-refresh"></span> Alterar Reserva</a>
-        		</div>
-        		<div class="botao">
+        		
+                <div class="botao">
+                        <a  class="btn btn-primary" href="userpage_alterarserva.php"><span class="glyphicon glyphicon-refresh"></span> Alterar Reserva</a>
+                </div>
+                <div class="botao">
 
-        			<a class="btn btn-warning" href="charts.html"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
+                        <a class="btn btn-warning" href="#"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
 
-        		</div >
+                </div >
+            
+            
+                <div class="botao">
 
+                        <a class="btn btn-success" href="userpage_alteradados.php"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
 
-        		<div class="botao">
+                </div>
+                <div class="botao">            
 
-        			<a class="btn btn-success" href="tables.html"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
+                        <a class="btn btn-danger" href="logout.php"><span class="glyphicon glyphicon-off"></span> Terminar Sessão</a>
 
-        		</div>
-        		<div class="botao">            
-
-        			<a class="btn btn-danger" href="forms.html"><span class="glyphicon glyphicon-off"></span> Terminar Sessão</a>
-
-        		</div>
+                </div>
+            
 
         	</div>
 

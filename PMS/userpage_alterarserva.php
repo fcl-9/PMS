@@ -1,5 +1,29 @@
 <?php
+require_once('common/database.php');
+require_once('common/common.php');
 session_start();
+if(empty($_SESSION['cliente_id'])) 
+{
+    header("Location: login.php");
+}
+else
+{
+    $queryClient = 'SELECT * FROM cliente WHERE idcliente = '.$_SESSION['cliente_id'];
+    $getCli = mysqli_query($link, $queryClient);
+    $data = mysqli_fetch_assoc($getCli);
+    $nome = $data['nome'];
+    $sobrenome = $data['sobrenome'];
+    $telefone = $data['telefone'];
+    $mail = $data['email'];
+    if(isset($_POST['cancel']))
+    {
+        header("Location: userpage.php");
+    }
+    elseif(isset($_POST['submit']))
+    {
+
+    }
+}
 ?>
 <html lang="en">
 
@@ -46,7 +70,7 @@ session_start();
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="index.php">
                 <img alt="Brand" src="images\drawing2.png">
               </a>
             </div>
@@ -77,26 +101,28 @@ session_start();
 <div class="corpo-user">
         <div class="col-md-3 buttons" id="buttons">
             
+               
                 <div class="botao">
-                        <a  class="btn btn-primary" href="index.html"><span class="glyphicon glyphicon-refresh"></span> Alterar Reserva</a>
+                        <a  class="btn btn-primary" href="userpage_alterarserva.php"><span class="glyphicon glyphicon-refresh"></span> Alterar Reserva</a>
                 </div>
                 <div class="botao">
 
-                        <a class="btn btn-warning" href="charts.html"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
+                        <a class="btn btn-warning" href="#"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
 
                 </div >
             
             
                 <div class="botao">
 
-                        <a class="btn btn-success" href="tables.html"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
+                        <a class="btn btn-success" href="userpage_alteradados.php"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
 
                 </div>
                 <div class="botao">            
 
-                        <a class="btn btn-danger" href="forms.html"><span class="glyphicon glyphicon-off"></span> Terminar Sessão</a>
+                        <a class="btn btn-danger" href="logout.php"><span class="glyphicon glyphicon-off"></span> Terminar Sessão</a>
 
                 </div>
+            
             
         </div>
        
@@ -105,34 +131,34 @@ session_start();
         <div class="col-md-9 container-fluid">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><i class="fa"></i>Alterar Reserva</h3>
+                    <h3 class="panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><i class="fa"></i> Alterar Reserva</h3>
                 </div>
                 <div class="panel-body">
                     <form id="alt_reserva" method="POST">
                         <div class="row">
                             <div class="col-md-4 form-group"> 
                                 <label for="reserva">Reserva:</label> 
-                                <input type="number" class="form-control" name="reserva" id="reserva" placeholder="ID Reserva" disabled>
+                                <input type="number" class="form-control" name="reserva" id="reserva" placeholder="ID Reserva" readonly="">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 form-group"> 
                                 <label for="nome">Nome:</label>
-                                <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome">
+                                <input type="text" class="form-control" name="nome" id="nome" value="<?php echo $nome ?>" placeholder="Nome"  readonly="">
                             </div>
                             <div class="col-md-6 form-group"> 
                                 <label for="sobrenome">Sobrenome:</label>
-                                <input type="text" class="form-control" name="sobrenome" id="sobrenome" placeholder="Sobrenome">
+                                <input type="text" class="form-control" name="sobrenome" id="sobrenome" value="<?php echo $sobrenome ?>" placeholder="Sobrenome" readonly="">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 form-group">           
                                 <label for="email">Email:</label>
-                                <input type="email" class="form-control" name="email" id="email" placeholder="Email">
+                                <input type="email" class="form-control" name="email" id="email" value="<?php echo $mail ?>" placeholder="Email" readonly="">
                             </div>
                             <div class="col-md-6 form-group telErroIcon">
                                 <label for="numerotel">Telefone:</label></label><br>
-                                <input type="text" class="form-control teste"  name="numerotel" id="numerotel" placeholder="Número telefone">
+                                <input type="text" class="form-control teste"  name="numerotel" value="<?php echo $telefone ?>" id="numerotel" placeholder="Número telefone" readonly="">
                             </div>
                         </div>
                         <div class="row">
@@ -175,12 +201,12 @@ session_start();
                                 <tr>
                                     <td>
                                         <div class="col-md-12">
-                                             <button type="submit" id="btn_submit" name="submit" class="btn btn-default">Concluir Reserva</button>                      
+                                             <button type="submit" id="validateButton" name="submit" class="btn btn-default">Concluir Reserva</button>                      
                                         </div>
                                     </td>
                                     <td>
                                         <div class="col-md-12">
-                                            <button type="submit" id="btn_submit" name="submit" class="btn btn-default">Cancelar</button> 
+                                            <button type="submit" id="btn_submit" name="cancel" class="btn btn-default">Cancelar</button> 
                                         </div>
                                     </td>
                                 </tr>
@@ -261,6 +287,10 @@ session_start();
      $('#alt_reserva')
         .formValidation({
             framework: 'bootstrap',
+            button: {
+                selector: '#validateButton',
+                disabled: 'disabled'
+            },            
             icon: {
                 valid: 'glyphicon glyphicon-ok',
                 invalid: 'glyphicon glyphicon-remove',
@@ -344,44 +374,9 @@ session_start();
                             }
                         }
                     }
-                }
+                },
             }
-        })
-        /*.on('click', '.country-list', function() {$('#form_reserva').formValidation('revalidateField', 'numerotel');});*/
-        .on('success.form.fv', function(e) {
-            // Prevent form submission
-            e.preventDefault();
-
-            var $form = $(e.target),
-                fv    = $form.data('formValidation');
-
-            // Use Ajax to submit form data
-            $.ajax({
-                url: "form_reserva.php",
-                type: 'POST',
-                data: $form.serialize(),
-                 success: function(data,status, xhr)
-    {
-       
-        $('#nome').val('');
-        $('#sobrenome').val('');
-        $('#email').val('');
-        $('#numerotel').val('');
-        //$('#datahora').val('');
-        $('#selMesa').val('');
-        $('#selNumPes').val('');
-        //Reset ao form
-        $('#form_reserva').data('formValidation').resetForm(); 
-        //if success then just output the text to the status div then clear the form inputs to prepare for new data
-        $("#status_text").html(data);
-    },
-    error: function (jqXHR, status, errorThrown)
-    {
-        //if fail show error and server status
-        $("#status_text").html('there was an error ' + errorThrown + ' with status ' + textStatus);
-    }
-            }); 
-            });
+        }).on('click', '.country-list', function() {$('#form_reserva').formValidation('revalidateField', 'numerotel');});
 });
 
 </script>
