@@ -6,6 +6,13 @@ if(empty($_SESSION['cliente_id']))
 {
     header("Location: login.php");
 }
+if(isset($_POST['cancelar'])) {
+    $queryCancelar = sprintf("
+        DELETE FROM reserva WHERE idreserva='%s'
+    ", mysqli_real_escape_string($link, $_POST['cancelar']));
+    echo $queryCancelar;
+    mysqli_query($link, $queryCancelar);
+}
 ?>
 <html lang="en">
 
@@ -73,12 +80,10 @@ if(empty($_SESSION['cliente_id']))
                 <div class="botao">
                         <a  class="btn btn-primary" href="userpage_alterarserva.php"><span class="glyphicon glyphicon-refresh"></span> Alterar Reserva</a>
                 </div>
+
                 <div class="botao">
-
-                        <a class="btn btn-warning" href="#"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
-
+                    <a class="btn btn-warning"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
                 </div >
-            
             
                 <div class="botao">
 
@@ -111,7 +116,7 @@ if(empty($_SESSION['cliente_id']))
                                         //con_close();
                                     }
                                     //echo mysqli_error($link) . "\n";
-                                    if($result):
+                                    if($result ):
                                 ?> 
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover table-striped">
@@ -122,7 +127,8 @@ if(empty($_SESSION['cliente_id']))
                                                 <th>Hora da Reserva</th>
                                                 <th>Número de Pessoas</th>
                                                 <th>Mesa</th>
-                                                <th>Selecionada</th>
+                                                <th>Alterar</th>
+                                                <th>Cancelar</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -133,7 +139,18 @@ if(empty($_SESSION['cliente_id']))
                                                 <td><?php echo $row['hora']; ?></td>
                                                 <td><?php echo $row['num_pessoas']; ?></td>
                                                 <td><?php echo $row['mesa_numero']; ?></td>
-                                                <td><input type="checkbox"></td>
+                                                <td>
+                                                    <form id='alterar_reserva' method='POST'>
+                                                        <input type='hidden' name='alterar' value=<?php echo "'" . $row['id'] . "'"; ?> />
+                                                        <input type="submit" value='Alterar' />
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form id='cancelar_reserva' method='POST'>
+                                                        <input type='hidden' name='cancelar' value=<?php echo "'" . $row['id'] . "'"; ?> />
+                                                        <input type="submit" value='Cancelar' />
+                                                    </form>
+                                                </td>
                                             </tr>
                                             <?php endwhile; ?>
                                         </tbody>
