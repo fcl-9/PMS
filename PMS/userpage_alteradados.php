@@ -15,6 +15,7 @@ else
 	$sobrenome = $data['sobrenome'];
 	$telefone = $data['telefone'];
 	$mail = $data['email'];
+	$password = $data['password'];
 
 	if(isset($_POST['cancel']))
 	{
@@ -131,17 +132,18 @@ else
         					<h3 class="panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><i class="fa"></i> Alterar Dados Cliente</h3>
         				</div>
         				<div class="panel-body">
-        					<form id="alt_dados"  method="POST">
+        					<form id="alt_dados"  method="POST">	
         						<div class="row">
         							<div class="col-md-6 form-group"> 
         								<label for="nome">Nome:</label>
-        								<input type="text" class="form-control" name="nome" id="nome" value="<?php echo $nome ?>" placeholder="Nome" disabled>
+        								<input type="text" class="form-control" name="nome" id="nome" value="<?php echo $nome ?>" placeholder="Nome"  readonly="">
         							</div>
         							<div class="col-md-6 form-group"> 
         								<label for="sobrenome">Sobrenome:</label>
-        								<input type="text" class="form-control" name="sobrenome" id="sobrenome" value="<?php echo $sobrenome ?>" placeholder="Sobrenome" disabled>
+        								<input type="text" class="form-control" name="sobrenome" id="sobrenome" value="<?php echo $sobrenome ?>" placeholder="Sobrenome"  readonly="">
         							</div>
         						</div>
+        						
         						<div class="row">
         							<div class="col-md-6 form-group">           
         								<label for="email">Email:</label>
@@ -155,7 +157,7 @@ else
         						<div class="row">
         							<div class="col-md-6 form-group">
         								<label for="numerotel">Palavra Passe:</label></label><br>
-        								<input type="text" class="form-control"  name="password" id="password" placeholder="Palavra Passe">
+        								<input type="password" class="form-control"  name="password" id="password" value="<?php echo $password ?>"placeholder="Palavra Passe">
         							</div>
         						</div>
         					</div>
@@ -166,11 +168,11 @@ else
         				{
         					mysqli_autocommit($link,false);
         					$corpoMsg = "Os seus dados foram alterados. ";
-        					if($_POST['numerotel'] != $telefone )
+        					if(telefone($_POST['numerotel']) != $telefone )
         					{
         						$corpoMsg .= " O seu novo número de telefone é: ".$_POST['numerotel']." utilize-o para fazer login. ";
 
-								$uTelef = 'UPDATE cliente SET telefone='.$_POST['numerotel'].' WHERE idcliente ='.$_SESSION['cliente_id'] ;
+        						$uTelef = 'UPDATE cliente SET telefone='.$_POST['numerotel'].' WHERE idcliente ='.$_SESSION['cliente_id'] ;
         						$utelefSuc = mysqli_query($link,$uTelef);
         						if(!$utelefSuc)
         						{
@@ -185,23 +187,23 @@ else
         					{
         						$corpoMsg .= "A sua nova password é : " . $_POST['password'] . " deverá utiliza-la no seu próximo login. ";
         						
-							 	$uPassword = 'UPDATE cliente SET password=\''.$_POST['password'].'\' WHERE idcliente ='.$_SESSION['cliente_id'] ;
+        						$uPassword = 'UPDATE cliente SET password=\''.$_POST['password'].'\' WHERE idcliente ='.$_SESSION['cliente_id'] ;
 
-							 	$uPwdSucess = mysqli_query($link,$uPassword);
-							 	if(!$uPwdSucess)
-							 	{
-							 		echo 'Erro na query #2 Altera dados.';
+        						$uPwdSucess = mysqli_query($link,$uPassword);
+        						if(!$uPwdSucess)
+        						{
+        							echo 'Erro na query #2 Altera dados.';
         							mysqli_rollback($link);
-							 	}
-							 }
-							
-							if($_POST['email'] != $mail)
+        						}
+        					}
+        					
+        					if($_POST['email'] != $mail)
         					{
-								$corpoMsg .= " O seu novo email é: " . $_POST['email'];
+        						$corpoMsg .= " O seu novo email é: " . $_POST['email'];
 								//Altera o email para um novo mail
-								$mail  = $_POST['email'];
+        						$mail  = $_POST['email'];
 
-							 	$uMail = 'UPDATE cliente SET email=\''.$_POST['email'].'\' WHERE idcliente ='.$_SESSION['cliente_id'] ;
+        						$uMail = 'UPDATE cliente SET email=\''.$_POST['email'].'\' WHERE idcliente ='.$_SESSION['cliente_id'] ;
         						$uMailSuc = mysqli_query($link,$uMail);
         						if(!$uMailSuc)
         						{
@@ -210,7 +212,7 @@ else
         						}
         						else
         						{
-									mailConfim('Os seus novos dados.',$corpoMsg, $mail);
+        							mailConfim('Os seus novos dados.',$corpoMsg, $mail);
         							echo "Irá receber um email no seu novo email, com os seus novos dados.";
         							mysqli_commit($link);
         							echo "<meta http-equiv='refresh' content='5'>";
@@ -224,7 +226,7 @@ else
 
         						mysqli_commit($link);        	
         						echo "<meta http-equiv='refresh' content='5'>";
-        										
+        						
         					}
         					else
         					{
@@ -237,12 +239,12 @@ else
         					<tr>
         						<td>
         							<div class="col-md-12">
-        								<button type="submit" id="btn_submit" name="submit" class="btn btn-default">Alterar Dados</button>                      
+        								<button type="submit" id="validateButton" name="submit" class="btn btn-default">Alterar Dados</button>                      
         							</div>
         						</td>
         						<td>
         							<div class="col-md-12">
-        								<button type="submit" id="btn_submit" name="cancel" class="btn btn-default">Cancelar</button> 
+        							      <button type="submit" id="btn_submit" name="cancel" class="btn btn-default">Cancelar</button> 
         							</div>
         						</td>
         					</tr>
@@ -274,6 +276,114 @@ else
     <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
     <script src="../js/holder.min.js"></script>
 
-</body>
+    <!-- Scrolling Nav JavaScript -->
+    <script src="../js/jquery.easing.min.js"></script>
+    <script src="../js/scrolling-nav.js"></script>
+    <!--Traduz datapicker pra pt e data atual-->
+    <script src="../js/moment.js"></script>
+    <script type="text/javascript" src="../js/locale/pt.js"></script>
+    <script type="text/javascript" src="../js/bootstrap-datetimepicker.min.js"></script>
 
+
+<!-- jQuery Bootstrap Form Validator -->
+<link rel="stylesheet" href="/formvalidation/css/formValidation.css"/>
+<script type="text/javascript" src="/formvalidation/js/formValidation.js"></script>
+<script type="text/javascript" src="/formvalidation/js/framework/bootstrap.js"></script>
+<!--Validação de input números de telefone plugin pro form validation-->
+<link rel="stylesheet" href="/formvalidation/css/intlTelInput.css" />
+<script src="/formvalidation/js/intlTelInput.min.js"></script>
+
+
+   <script type="text/javascript">
+      $(document).ready(function() {
+        $('#alt_dados')
+        .find('[name="numerotel"]')
+        .intlTelInput({
+            utilsScript: '../formvalidation/js/utils.js',
+            autoPlaceholder: true,
+            defaultCountry:"pt",
+        });
+
+        $('#alt_dados')
+        .formValidation({
+            framework: 'bootstrap',
+            button: {
+                selector: '#validateButton',
+                disabled: 'disabled'
+            },            
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            nome: {
+                message: 'O nome não é válido',
+                validators: {
+                    notEmpty: {
+                        message: 'Deve introduzir o seu nome.'
+                    },
+                    stringLength: {
+                        min: 3,
+                        max: 30,
+                        message: 'O nome deve conter pelo menos 3 carateres e um máximo de 30 carateres.'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\.]+$/,
+                        message: 'O nome só pode ter letras, numeros, pontos.'
+                    }
+                }
+            },
+            sobrenome: {
+                row: '.col-md-6',
+                message: 'O sobrenome não é válido.',
+                validators: {
+                    notEmpty: {
+                        message: 'Deve introduzir o seu sobrenome.'
+                    },
+                    stringLength: {
+                        min: 3,
+                        max: 30,
+                        message: 'O sobrenome deve conter pelo menos 3 carateres e um máximo de 30 carateres.'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9\.]+$/,
+                        message: 'O sobrenome só pode ter letras, numeros, pontos.'
+                    }
+                }
+            },
+            email: {
+                validators: {
+                    notEmpty: {
+                        message: 'Deve introduzir o seu endereço de email.'
+                    },
+                    emailAddress: {
+                        message: 'O endereço de email introduzido não é válido.'
+                    }
+                }
+            },
+            numerotel: {
+                validators: {
+                    notEmpty: {
+                      message: 'Deve introduzir o seu número de telefone.'
+                  },
+                  callback: {
+                      message: 'O número de telefone introduzido não é válido.',
+                      callback: function(value, validator, $field) {
+                          return value === '' || $field.intlTelInput('isValidNumber');
+                      }
+                  }
+              }
+          },
+      }
+  }).on('click', '.country-list', function() {$('#form_reserva').formValidation('revalidateField', 'numerotel');
+});
+});
+
+</script>
+
+
+
+</body>
 </html>
+
