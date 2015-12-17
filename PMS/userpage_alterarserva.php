@@ -269,21 +269,27 @@ else
     <script type="text/javascript" src="/js/bootstrap-datetimepicker.min.js"></script>
     
 
-    <script type="text/javascript">
+     <script type="text/javascript">
         var datestring = <?php echo json_encode(juntaDataHora($getReservaDados['data'],$getReservaDados['hora'])); ?>;
-        var date = new Date(datestring);
-        $(function () {
-            $('#datetimepicker1').datetimepicker({
-              locale: 'pt',
-              format: 'YYYY-MM-DD HH:mm',
-              minDate:  date,
-              enabledHours: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
-              sideBySide:true}).on('changeDate', function(e) {
+            var date = new Date(datestring);
+            var dateToday = new Date();
+            dateToday.setMinutes(date.getMinutes() + 50);
+
+            $(function () {
+                $('#datetimepicker1').datetimepicker({
+                  locale: 'pt',
+                  format: 'YYYY-MM-DD HH:mm',
+                  useCurrent: false,
+                  minDate: dateToday,
+                  defaultDate:  date,
+                  enabledHours: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+                  sideBySide:true}).on('changeDate', function(e) {
                   // Revalidate the date field
-                  $('#dateRangeForm').formValidation('revalidateField', 'datahora');
-              });
-          });
-    </script>
+                 $('#dateRangeForm').formValidation('revalidateField', 'datahora');
+        });
+            });
+        </script>
+
 
 
 </body>
