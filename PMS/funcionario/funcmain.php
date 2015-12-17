@@ -90,7 +90,7 @@ if(empty($_SESSION['funcionario_id']))
                         </ul>
                     </li>
                     <li>
-                        <a href="forms.html"><i class="fa fa-fw fa-power-off"></i> Terminar Sessão</a>
+                        <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Terminar Sessão</a>
                     </li>
                
                 </ul>
