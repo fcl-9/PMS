@@ -4,7 +4,22 @@ require_once('common/common.php');
 session_start();
 if(empty($_SESSION['cliente_id'])) 
 {
-    header("Location: login.php");
+	header("Location: login.php");
+}
+else
+{
+	$queryClient = 'SELECT * FROM cliente WHERE idcliente = '.$_SESSION['cliente_id'];
+	$getCli = mysqli_query($link, $queryClient);
+	$data = mysqli_fetch_assoc($getCli);
+	$nome = $data['nome'];
+	$sobrenome = $data['sobrenome'];
+	$telefone = $data['telefone'];
+	$mail = $data['email'];
+
+	if(isset($_POST['cancel']))
+	{
+		header("Location: userpage.php");
+	}
 }
 ?>
 <html lang="en">
@@ -84,27 +99,27 @@ if(empty($_SESSION['cliente_id']))
         	<div class="col-md-3 buttons" id="buttons">
 
         		
-                <div class="botao">
-                        <a  class="btn btn-primary" href="userpage_alterarserva.php"><span class="glyphicon glyphicon-refresh"></span> Alterar Reserva</a>
-                </div>
-                <div class="botao">
+        		<div class="botao">
+        			<a  class="btn btn-primary" href="userpage_alterarserva.php"><span class="glyphicon glyphicon-refresh"></span> Alterar Reserva</a>
+        		</div>
+        		<div class="botao">
 
-                        <a class="btn btn-warning" href="#"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
+        			<a class="btn btn-warning" href="#"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
 
-                </div >
-            
-            
-                <div class="botao">
+        		</div >
 
-                        <a class="btn btn-success" href="userpage_alteradados.php"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
 
-                </div>
-                <div class="botao">            
+        		<div class="botao">
 
-                        <a class="btn btn-danger" href="logout.php"><span class="glyphicon glyphicon-off"></span> Terminar Sessão</a>
+        			<a class="btn btn-success" href="userpage_alteradados.php"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
 
-                </div>
-            
+        		</div>
+        		<div class="botao">            
+
+        			<a class="btn btn-danger" href="logout.php"><span class="glyphicon glyphicon-off"></span> Terminar Sessão</a>
+
+        		</div>
+
 
         	</div>
 
@@ -116,25 +131,25 @@ if(empty($_SESSION['cliente_id']))
         					<h3 class="panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><i class="fa"></i> Alterar Dados Cliente</h3>
         				</div>
         				<div class="panel-body">
-        					<form id="alt_dados" method="POST">
+        					<form id="alt_dados"  method="POST">
         						<div class="row">
         							<div class="col-md-6 form-group"> 
         								<label for="nome">Nome:</label>
-        								<input type="text" class="form-control" name="nome" id="nome" placeholder="Nome" disabled>
+        								<input type="text" class="form-control" name="nome" id="nome" value="<?php echo $nome ?>" placeholder="Nome" disabled>
         							</div>
         							<div class="col-md-6 form-group"> 
         								<label for="sobrenome">Sobrenome:</label>
-        								<input type="text" class="form-control" name="sobrenome" id="sobrenome" placeholder="Sobrenome" disabled>
+        								<input type="text" class="form-control" name="sobrenome" id="sobrenome" value="<?php echo $sobrenome ?>" placeholder="Sobrenome" disabled>
         							</div>
         						</div>
         						<div class="row">
         							<div class="col-md-6 form-group">           
         								<label for="email">Email:</label>
-        								<input type="email" class="form-control" name="email" id="email" placeholder="Email">
+        								<input type="email" class="form-control" name="email" id="email" value="<?php echo $mail ?>" placeholder="Email">
         							</div>
         							<div class="col-md-6 form-group telErroIcon">
         								<label for="numerotel">Telefone:</label></label><br>
-        								<input type="text" class="form-control teste"  name="numerotel" id="numerotel" placeholder="Número telefone">
+        								<input type="text" class="form-control teste"  name="numerotel" id="numerotel" value="<?php echo $telefone?>" placeholder="Número telefone">
         							</div>
         						</div>
         						<div class="row">
@@ -144,27 +159,100 @@ if(empty($_SESSION['cliente_id']))
         							</div>
         						</div>
         					</div>
-        					</div>
-        					<table>
-        						<tr>
-        							<td>
-        								<div class="col-md-12">
-        									<button type="submit" id="btn_submit" name="submit" class="btn btn-default">Concluir Reserva</button>                      
-        								</div>
-        							</td>
-        							<td>
-        								<div class="col-md-12">
-        									<button type="submit" id="btn_submit" name="submit" class="btn btn-default">Cancelar</button> 
-        								</div>
-        							</td>
-        						</tr>
-        					</table>
         				</div>
-        			</form>
-        		</div>
+
+        				<?php
+        				if(isset($_POST['submit']))
+        				{
+        					mysqli_autocommit($link,false);
+        					$corpoMsg = "Os seus dados foram alterados. ";
+        					if($_POST['numerotel'] != $telefone )
+        					{
+        						$corpoMsg .= " O seu novo número de telefone é: ".$_POST['numerotel']." utilize-o para fazer login. ";
+
+								$uTelef = 'UPDATE cliente SET telefone='.$_POST['numerotel'].' WHERE idcliente ='.$_SESSION['cliente_id'] ;
+        						$utelefSuc = mysqli_query($link,$uTelef);
+        						if(!$utelefSuc)
+        						{
+        							echo 'Erro na query #1 Altera dados.';
+        							mysqli_rollback($link);
+        						}
+        					}	
+        					if(empty($_POST['password']))
+        					{
+        					}
+        					else
+        					{
+        						$corpoMsg .= "A sua nova password é : " . $_POST['password'] . " deverá utiliza-la no seu próximo login. ";
+        						
+							 	$uPassword = 'UPDATE cliente SET password=\''.$_POST['password'].'\' WHERE idcliente ='.$_SESSION['cliente_id'] ;
+
+							 	$uPwdSucess = mysqli_query($link,$uPassword);
+							 	if(!$uPwdSucess)
+							 	{
+							 		echo 'Erro na query #2 Altera dados.';
+        							mysqli_rollback($link);
+							 	}
+							 }
+							
+							if($_POST['email'] != $mail)
+        					{
+								$corpoMsg .= " O seu novo email é: " . $_POST['email'];
+								//Altera o email para um novo mail
+								$mail  = $_POST['email'];
+
+							 	$uMail = 'UPDATE cliente SET email=\''.$_POST['email'].'\' WHERE idcliente ='.$_SESSION['cliente_id'] ;
+        						$uMailSuc = mysqli_query($link,$uMail);
+        						if(!$uMailSuc)
+        						{
+        							echo 'Erro na query #3 Altera dados.';
+        							mysqli_rollback($link);
+        						}
+        						else
+        						{
+									mailConfim('Os seus novos dados.',$corpoMsg, $mail);
+        							echo "Irá receber um email no seu novo email, com os seus novos dados.";
+        							mysqli_commit($link);
+        							echo "<meta http-equiv='refresh' content='5'>";
+
+        						}
+        					}
+        					else if($_POST['numerotel'] != $telefone ||isset($_POST['password']))
+        					{	
+        						mailConfim('Os seus novos dados.',$corpoMsg, $_POST['email']);
+        						echo "Irá receber um email com os seus novos dados.";
+
+        						mysqli_commit($link);        	
+        						echo "<meta http-equiv='refresh' content='5'>";
+        										
+        					}
+        					else
+        					{
+        						echo "Não ocorreram modificações. ";
+        					}
+
+        				}
+        				?>	
+        				<table>
+        					<tr>
+        						<td>
+        							<div class="col-md-12">
+        								<button type="submit" id="btn_submit" name="submit" class="btn btn-default">Alterar Dados</button>                      
+        							</div>
+        						</td>
+        						<td>
+        							<div class="col-md-12">
+        								<button type="submit" id="btn_submit" name="cancel" class="btn btn-default">Cancelar</button> 
+        							</div>
+        						</td>
+        					</tr>
+        				</table>
+        			</div>
+        		</form>
         	</div>
         </div>
     </div>
+</div>
 </div>
 <!-- /.container-fluid -->
 
