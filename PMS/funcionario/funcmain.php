@@ -1,4 +1,13 @@
-
+<?php
+require('../common/database.php');
+require('../common/common.php');
+session_start();
+if(empty($_SESSION['funcionario_id']))
+{
+    echo '<p>Não tem autorização para aceder a esta página.</p> ';  
+    header( "refresh:6;url=/login.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,7 +60,7 @@
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
-                <p class="navbar-text" >Bem-Vindo(a), John Smith!</p>
+                <p class="navbar-text" >Bem-Vindo(a),  <?php echo $_SESSION['funcionario_nome']; ?>!</p>
             </ul>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -89,22 +98,8 @@
             <!-- /.navbar-collapse -->
         </nav>
 <div class="corpo">
-
-<?php
-	require_once("../common/common.php");
-	require_once("../common/database.php");
-	//require_once("../funcionario/login.php");
-	session_start();
-	if(empty($_SESSION['funcionario_id']))
-	{
-?>
-		<p>Não tem autorização para aceder a esta página.</p>	
-		<?php header( "refresh:6;url=/login.php" ); ?>
 <?php	
-	}
-	else
-	{
-		//if($_REQUEST["estado"] == "")
+	
 		
 			$query_reservas = "SELECT * FROM reserva";
 			$result_reservas = mysqli_query($link, $query_reservas);
@@ -122,16 +117,23 @@
 			{
 ?>
 			
-				<table>
+                <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><i class="fa"></i> Reservas Efetuadas</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover table-striped">
 				 <thead>
-				  <tr>
-				   <th>Número de Reserva</th>
-				   <th>Cliente</th>
-				   <th>data</th>
-				   <th>hora</th>
-				   <th>Número de pessoas</th>
-				   <th>Mesa</th>
-				  </tr>
+                  <tr class="info">
+                  <th>Número da Reserva</th>
+                  <th>Cliente</th>
+                  <th>Data da Reserva</th>
+                  <th>Hora da Reserva</th>
+                  <th>Número de Pessoas</th>
+                  <th>Mesa</th>
+                  <th>Selecionada</th>
+                  </tr>
 				 </thead>
 			 
 				 <tbody>
@@ -154,12 +156,22 @@
 								<td> <?php echo $array_listareserva["hora"] ?></td>
 								<td> <?php echo $array_listareserva["capacidade"] ?></td>
 								<td> <?php echo $array_listareserva["numero"] ?></td>
-					           </tr>
+					            <td><input type="radio"></td>
+                               </tr>
 <?php							
 }
-            
+?>
+ </tbody>
+                                    </table>
+                                </div>
+                                
+                        </div>
+                   
+             
+                
+<?php            
 				}
-			}
+			
 ?>			
 
 								
