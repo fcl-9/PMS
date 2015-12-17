@@ -119,4 +119,10 @@ function addReserva($link,$numtel,$numPessoas,$numMesa,$data,$hora,$idFunc)
 	{
 		return str_replace(' ','',$string);
 	}
+
+	function juntaDataHora($data,$hora)
+	{
+		$dataHora = $data.' '.$hora;
+		return substr($dataHora,0,-3);
+	}
 ?>
