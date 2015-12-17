@@ -6,6 +6,13 @@ if(empty($_SESSION['cliente_id']))
 {
     header("Location: login.php");
 }
+if(isset($_POST['cancelar'])) {
+    $queryCancelar = sprintf("
+        DELETE FROM reserva WHERE idreserva='%s'
+    ", mysqli_real_escape_string($link, $_POST['cancelar']));
+    echo $queryCancelar;
+    mysqli_query($link, $queryCancelar);
+}
 ?>
 <html lang="en">
 
@@ -73,12 +80,10 @@ if(empty($_SESSION['cliente_id']))
                 <div class="botao">
                         <a  class="btn btn-primary" href="userpage_alterarserva.php"><span class="glyphicon glyphicon-refresh"></span> Alterar Reserva</a>
                 </div>
+
                 <div class="botao">
-
-                        <a class="btn btn-warning" href="#"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
-
+                    <a class="btn btn-warning"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
                 </div >
-            
             
                 <div class="botao">
 
@@ -100,6 +105,19 @@ if(empty($_SESSION['cliente_id']))
                                 <h3 class="panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><i class="fa"></i> Reservas Efetuadas</h3>
                             </div>
                             <div class="panel-body">
+                                <?php
+                                    $query = sprintf("
+                                        SELECT DISTINCT idreserva AS id, hora, data, cliente_idcliente, num_pessoas, mesa_numero
+                                        FROM reserva, reserva_has_mesa 
+                                        WHERE cliente_idcliente = '%s' AND reserva_idreserva = idreserva", mysqli_real_escape_string($link, $_SESSION['cliente_id']));
+                                    $result = mysqli_query($link, $query);
+                                    if (!$result) {
+                                        die("Query error: " . mysqli_error($link));
+                                        //con_close();
+                                    }
+                                    //echo mysqli_error($link) . "\n";
+                                    if($result ):
+                                ?> 
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover table-striped">
                                         <thead>
@@ -109,77 +127,38 @@ if(empty($_SESSION['cliente_id']))
                                                 <th>Hora da Reserva</th>
                                                 <th>Número de Pessoas</th>
                                                 <th>Mesa</th>
-                                                <th>Selecionada</th>
+                                                <th>Alterar</th>
+                                                <th>Cancelar</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <?php while($row = mysqli_fetch_assoc($result)): ?>
                                             <tr>
-                                                <td>3326</td>
-                                                <td>10/21/2013</td>
-                                                <td>3:29 PM</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td><input type="checkbox"></td>
+                                                <td><?php echo $row['id']; ?></td>
+                                                <td><?php echo $row['data']; ?></td>
+                                                <td><?php echo $row['hora']; ?></td>
+                                                <td><?php echo $row['num_pessoas']; ?></td>
+                                                <td><?php echo $row['mesa_numero']; ?></td>
+                                                <td>
+                                                    <form id='alterar_reserva' method='POST'>
+                                                        <input type='hidden' name='alterar' value=<?php echo "'" . $row['id'] . "'"; ?> />
+                                                        <input type="submit" value='Alterar' />
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form id='cancelar_reserva' method='POST'>
+                                                        <input type='hidden' name='cancelar' value=<?php echo "'" . $row['id'] . "'"; ?> />
+                                                        <input type="submit" value='Cancelar' />
+                                                    </form>
+                                                </td>
                                             </tr>
-                                            <tr class="info">
-                                                <td>3325</td>
-                                                <td>10/21/2013</td>
-                                                <td>3:20 PM</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td><input type="checkbox"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>3324</td>
-                                                <td>10/21/2013</td>
-                                                <td>3:03 PM</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td><input type="checkbox"></td>
-                                            </tr>
-                                            <tr class="info">
-                                                <td>3323</td>
-                                                <td>10/21/2013</td>
-                                                <td>3:00 PM</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td><input type="checkbox"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>3322</td>
-                                                <td>10/21/2013</td>
-                                                <td>2:49 PM</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td><input type="checkbox"></td>
-                                            </tr>
-                                            <tr class="info">
-                                                <td>3321</td>
-                                                <td>10/21/2013</td>
-                                                <td>2:23 PM</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td><input type="checkbox"></td>
-                                            </tr>
-                                            <tr >
-                                                <td>3320</td>
-                                                <td>10/21/2013</td>
-                                                <td>2:15 PM</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td><input type="checkbox"></td>
-                                            </tr>
-                                            <tr class="info">
-                                                <td>3319</td>
-                                                <td>10/21/2013</td>
-                                                <td>2:13 PM</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td><input type="checkbox"></td>
-                                            </tr>
+                                            <?php endwhile; ?>
                                         </tbody>
                                     </table>
                                 </div>
+                                <?php else: ?>
+                                <div><p>Não tem reservas.</p></div>
+                            <?php endif; ?>
                                 
                         </div>
                    
