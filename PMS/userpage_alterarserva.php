@@ -8,6 +8,36 @@ if(empty($_SESSION['cliente_id']))
 }
 else
 {
+	if(empty($_POST['alterar']) && empty($_POST['alt_reserva']))
+	{
+		  header("Location: userpage.php");
+	}
+	elseif(isset($_POST['alt_reserva']))
+	{
+ 		 header("Location: userpage.php?id=alterSuccess");
+	}
+	else
+	{
+		$queryGetDataReservas = 'SELECT * FROM reserva_has_mesa WHERE reserva_idreserva ='.$_POST['alterar'];
+		$resultDataReser = mysqli_query($link,$queryGetDataReservas);
+		if(!$resultDataReser)
+		{
+			echo "Erro na query #2";
+		}
+		else
+		{
+			$resultDataReser = mysqli_fetch_assoc($resultDataReser);
+			$numMesa = $resultDataReser['mesa_numero'];
+			$numPessoas = $resultDataReser['num_pessoas'] ;
+
+			$queryReserva = 'SELECT * FROM reserva WHERE idreserva = '.$_POST['alterar'];
+			$getReservaDados = mysqli_query($link,$queryReserva);
+			if(!$getReservaDados)
+			{echo 'Erro na query #4';}
+			$getReservaDados = mysqli_fetch_assoc($getReservaDados);
+			$horamarcada = juntaDataHora($getReservaDados['data'],$getReservaDados['hora']);
+		}
+	}
     $queryClient = 'SELECT * FROM cliente WHERE idcliente = '.$_SESSION['cliente_id'];
     $getCli = mysqli_query($link, $queryClient);
     $data = mysqli_fetch_assoc($getCli);
@@ -15,14 +45,7 @@ else
     $sobrenome = $data['sobrenome'];
     $telefone = $data['telefone'];
     $mail = $data['email'];
-    if(isset($_POST['cancel']))
-    {
-        header("Location: userpage.php");
-    }
-    elseif(isset($_POST['submit']))
-    {
-
-    }
+    
 }
 ?>
 <html lang="en">
@@ -45,7 +68,7 @@ else
 
     <!-- Custom Fonts -->
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
+    <link href="/css/bootstrap-datetimepicker.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -100,17 +123,16 @@ else
         </nav>
         <div class="corpo-user">
             <div class="col-md-3 buttons" id="buttons">
-
+            <!--
 
                 <div class="botao">
                     <a  class="btn btn-primary" href="userpage_alterarserva.php"><span class="glyphicon glyphicon-refresh"></span> Alterar Reserva</a>
-                </div>
+                </div>-->
                 <div class="botao">
 
-                    <a class="btn btn-warning" href="#"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
+                    <a class="btn btn-warning" href="userpage.php?id="><span class="glyphicon glyphicon-remove"></span> Voltar</a>
 
                 </div >
-
 
                 <div class="botao">
 
@@ -138,7 +160,7 @@ else
                                 <div class="row">
                                     <div class="col-md-4 form-group"> 
                                         <label for="reserva">Reserva:</label> 
-                                        <input type="number" class="form-control" name="reserva" id="reserva" placeholder="ID Reserva" readonly="">
+                                        <input type="number" class="form-control" name="reserva" id="reserva" value="<?php echo $_POST['alterar']?>" placeholder="ID Reserva" readonly="">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -177,11 +199,11 @@ else
                                         <div class="form-group">
                                             <label for="selMesa">Número de Mesa:</label>
                                             <select class="form-control" id="selMesa">
-                                                <option></option>
-                                                <option>Mesa 1</option>
-                                                <option>Mesa 2</option>
-                                                <option>Mesa 3</option>
-                                                <option>Mesa 4</option>
+                                                <option><?php echo $numMesa ?></option>
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
                                             </select>
                                         </div>
                                     </div>
@@ -189,11 +211,11 @@ else
                                         <div class="form-group selectNumPess">
                                             <label for="selNumPes">Número de Pessoas:</label>
                                             <select class="form-control" id="selNumPes" name="selNumPes">
-                                                <option></option>
-                                                <option>1 Pessoa</option>
-                                                <option>2 Pessoas</option>
-                                                <option>3 Pessoas</option>
-                                                <option>4 Pessoas</option>
+                                                <option><?php echo $numPessoas ?></option>
+                                                <option>1 </option>
+                                                <option>2 </option>
+                                                <option>3 </option>
+                                                <option>4 </option>
                                             </select>
                                         </div>
                                     </div>
@@ -201,12 +223,12 @@ else
                                         <tr>
                                             <td>
                                                 <div class="col-md-12">
-                                                   <button type="submit" id="validateButton" name="submit" class="btn btn-default">Concluir Reserva</button>                      
+                                                   <button type="submit" id="submt" name="alt_reserva" value="alterado" class="btn btn-default">Concluir Reserva</button>                      
                                                </div>
                                            </td>
                                            <td>
                                             <div class="col-md-12">
-                                                <button type="submit" id="btn_submit" name="cancel" class="btn btn-default">Cancelar</button> 
+                                               <!-- <button type="submit" id="btn_submit" name="cancel" class="btn btn-default">Cancelar</button> -->
                                             </div>
                                         </td>
                                     </tr>
@@ -233,24 +255,23 @@ else
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
-    <script src="../js/jquery.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
     <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
-    <script src="../js/holder.min.js"></script>
+    <script src="/js/holder.min.js"></script>
 
     <!-- Scrolling Nav JavaScript -->
-    <script src="../js/jquery.easing.min.js"></script>
-    <script src="../js/scrolling-nav.js"></script>
+    <script src="/js/jquery.easing.min.js"></script>
+    <script src="/js/scrolling-nav.js"></script>
     <!--Traduz datapicker pra pt e data atual-->
-    <script src="../js/moment.js"></script>
-    <script type="text/javascript" src="../js/locale/pt.js"></script>
-    <script type="text/javascript" src="../js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/js/moment.js"></script>
+    <script type="text/javascript" src="/js/locale/pt.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-datetimepicker.min.js"></script>
     
 
     <script type="text/javascript">
-        var date = new Date();
-        date.setMinutes(date.getMinutes() + 50);
-
+        var datestring = <?php echo json_encode(juntaDataHora($getReservaDados['data'],$getReservaDados['hora'])); ?>;
+        var date = new Date(datestring);
         $(function () {
             $('#datetimepicker1').datetimepicker({
               locale: 'pt',
@@ -265,122 +286,6 @@ else
     </script>
 
 
-    <!-- jQuery Bootstrap Form Validator -->
-    <link rel="stylesheet" href="../formvalidation/css/formValidation.css"/>
-    <script type="text/javascript" src="../formvalidation/js/formValidation.js"></script>
-    <script type="text/javascript" src="../formvalidation/js/framework/bootstrap.js"></script>
-    <!--Validação de input números de telefone plugin pro form validation-->
-    <link rel="stylesheet" href="../formvalidation/css/intlTelInput.css" />
-    <script src="../formvalidation/js/intlTelInput.min.js"></script>
-
-
-    <script type="text/javascript">
-      $(document).ready(function() {
-        $('#alt_reserva')
-        .find('[name="numerotel"]')
-        .intlTelInput({
-            utilsScript: '../formvalidation/js/utils.js',
-            autoPlaceholder: true,
-            defaultCountry:"pt",
-        });
-
-        $('#alt_reserva')
-        .formValidation({
-            framework: 'bootstrap',
-            button: {
-                selector: '#validateButton',
-                disabled: 'disabled'
-            },            
-            icon: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-              contribuinte: {
-                row: '.row',
-                validators: {
-                    notEmpty: {
-                        message: 'Deve introduzir o seu contribuinte.'
-                    },
-                    stringLength: {
-                        min: 9,
-                        max: 9,
-                        message: 'O número de contribuinte deve conter exatamente 9 digitos'
-                    },
-                } 
-            },
-            nome: {
-                message: 'O nome não é válido',
-                validators: {
-                    notEmpty: {
-                        message: 'Deve introduzir o seu nome.'
-                    },
-                    stringLength: {
-                        min: 3,
-                        max: 30,
-                        message: 'O nome deve conter pelo menos 3 carateres e um máximo de 30 carateres.'
-                    },
-                    regexp: {
-                        regexp: /^[a-zA-Z0-9_\.]+$/,
-                        message: 'O nome só pode ter letras, numeros, pontos.'
-                    }
-                }
-            },
-            sobrenome: {
-                row: '.col-md-6',
-                message: 'O sobrenome não é válido.',
-                validators: {
-                    notEmpty: {
-                        message: 'Deve introduzir o seu sobrenome.'
-                    },
-                    stringLength: {
-                        min: 3,
-                        max: 30,
-                        message: 'O sobrenome deve conter pelo menos 3 carateres e um máximo de 30 carateres.'
-                    },
-                    regexp: {
-                        regexp: /^[a-zA-Z0-9\.]+$/,
-                        message: 'O sobrenome só pode ter letras, numeros, pontos.'
-                    }
-                }
-            },
-            email: {
-                validators: {
-                    notEmpty: {
-                        message: 'Deve introduzir o seu endereço de email.'
-                    },
-                    emailAddress: {
-                        message: 'O endereço de email introduzido não é válido.'
-                    }
-                }
-            },
-            selNumPes: {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecione o número de pessoas.'
-                    }
-                }
-            },
-            numerotel: {
-                validators: {
-                    notEmpty: {
-                      message: 'Deve introduzir o seu número de telefone.'
-                  },
-                  callback: {
-                      message: 'O número de telefone introduzido não é válido.',
-                      callback: function(value, validator, $field) {
-                          return value === '' || $field.intlTelInput('isValidNumber');
-                      }
-                  }
-              }
-          },
-      }
-  }).on('click', '.country-list', function() {$('#form_reserva').formValidation('revalidateField', 'numerotel');
-});
-});
-
-</script>
 </body>
 
 </html>

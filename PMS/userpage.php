@@ -77,14 +77,14 @@ if(isset($_POST['cancelar'])) {
 <div class="corpo-user">
         <div class="col-md-3 buttons" id="buttons">
             
-                <div class="botao">
-                        <a  class="btn btn-primary" href="userpage_alterarserva.php"><span class="glyphicon glyphicon-refresh"></span> Alterar Reserva</a>
+              <div class="botao">
+                        <a  class="btn btn-primary" href="index.php#reserva"><span class="glyphicon glyphicon-refresh"></span> Reservar </a>
                 </div>
 
-                <div class="botao">
+          <!--        <div class="botao">
                     <a class="btn btn-warning"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
                 </div >
-            
+            -->
                 <div class="botao">
 
                         <a class="btn btn-success" href="userpage_alteradados.php"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
@@ -106,10 +106,14 @@ if(isset($_POST['cancelar'])) {
                             </div>
                             <div class="panel-body">
                                 <?php
+                                    if($_GET['id'] == 'alterSuccess')
+                                    {
+                                        echo "A sua reserva foi alterada";
+                                    }
                                     $query = sprintf("
                                         SELECT DISTINCT idreserva AS id, hora, data, cliente_idcliente, num_pessoas, mesa_numero
                                         FROM reserva, reserva_has_mesa 
-                                        WHERE cliente_idcliente = '%s' AND reserva_idreserva = idreserva", mysqli_real_escape_string($link, $_SESSION['cliente_id']));
+                                        WHERE cliente_idcliente = '%s' AND ativo = 1 AND reserva_idreserva = idreserva", mysqli_real_escape_string($link, $_SESSION['cliente_id']));
                                     $result = mysqli_query($link, $query);
                                     if (!$result) {
                                         die("Query error: " . mysqli_error($link));
@@ -140,13 +144,13 @@ if(isset($_POST['cancelar'])) {
                                                 <td><?php echo $row['num_pessoas']; ?></td>
                                                 <td><?php echo $row['mesa_numero']; ?></td>
                                                 <td>
-                                                    <form id='alterar_reserva' method='POST'>
+                                                    <form id='alterar_reserva'action="userpage_alterarserva.php" method='POST'>
                                                         <input type='hidden' name='alterar' value=<?php echo "'" . $row['id'] . "'"; ?> />
                                                         <input type="submit" value='Alterar' />
                                                     </form>
                                                 </td>
                                                 <td>
-                                                    <form id='cancelar_reserva' method='POST'>
+                                                    <form id='cancelar_reserva'  method='POST'>
                                                         <input type='hidden' name='cancelar' value=<?php echo "'" . $row['id'] . "'"; ?> />
                                                         <input type="submit" value='Cancelar' />
                                                     </form>

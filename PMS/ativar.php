@@ -84,14 +84,14 @@ $flag = true;
 						mailConfim('Reserva agendada.',$corpoMsg, $emailSendInfo);
 
 						mysqli_commit($link);
-						header( "refresh:3;url=index.html" );
+						header( "refresh:3;url=index.php" );
 					}
 				}
 			}
 			else
 			{
 				echo 'Reserva já se encontra validada.';
-				header( "refresh:3;url=index.html" );
+				header( "refresh:3;url=index.php" );
 			}
 		}
 		else

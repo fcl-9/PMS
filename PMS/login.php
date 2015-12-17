@@ -5,7 +5,7 @@ require('/common/common.php');
 session_start();
 if(isset($_SESSION['cliente_id'])) 
 {
-	header("Location: userpage.php");
+	header("Location: userpage.php?id=");
 }
 if(isset($_POST['numerotel'],$_POST['inputPassword'])){
 	$numerotel = mysql_real_escape_string($_POST['numerotel']);
@@ -38,7 +38,7 @@ if(isset($_POST['numerotel'],$_POST['inputPassword'])){
 	}
 
 	if(isset($_SESSION['cliente_id'])) {
-		header("Location: userpage.php");
+		header("Location: userpage.php?id=");
 	}
 }
 include('login.html');

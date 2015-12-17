@@ -19,7 +19,7 @@ else
 
 	if(isset($_POST['cancel']))
 	{
-		header("Location: userpage.php");
+		header("Location: userpage.php?id=");
 	}
 }
 ?>
@@ -43,7 +43,7 @@ else
 
 	<!-- Custom Fonts -->
 	<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
+	<link href="/css/bootstrap-datetimepicker.css" rel="stylesheet">
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -98,14 +98,14 @@ else
         </nav>
         <div class="corpo-user">
         	<div class="col-md-3 buttons" id="buttons">
-
+<!--
         		
         		<div class="botao">
         			<a  class="btn btn-primary" href="userpage_alterarserva.php"><span class="glyphicon glyphicon-refresh"></span> Alterar Reserva</a>
-        		</div>
+        		</div>-->
         		<div class="botao">
 
-        			<a class="btn btn-warning" href="#"><span class="glyphicon glyphicon-remove"></span> Cancelar Reserva</a>
+        			<a class="btn btn-warning" href="userpage.php?id="><span class="glyphicon glyphicon-remove"></span> Voltar</a>
 
         		</div >
 
@@ -157,7 +157,7 @@ else
         						<div class="row">
         							<div class="col-md-6 form-group">
         								<label for="numerotel">Palavra Passe:</label></label><br>
-        								<input type="password" class="form-control"  name="password" id="password" value="<?php echo $password ?>"placeholder="Palavra Passe">
+        								<input type="password" class="form-control"  name="password" id="password" placeholder="Palavra Passe">
         							</div>
         						</div>
         					</div>
@@ -166,6 +166,7 @@ else
         				<?php
         				if(isset($_POST['submit']))
         				{
+    						
         					mysqli_autocommit($link,false);
         					$corpoMsg = "Os seus dados foram alterados. ";
         					if(telefone($_POST['numerotel']) != $telefone )
@@ -197,7 +198,11 @@ else
         						}
         					}
         					
-        					if($_POST['email'] != $mail)
+                            if(empty($_POST['password']) && $_POST['email'] == $mail && $_POST['numerotel'] == $telefone)
+                            {
+                                echo 'Os seus dados não foram alterados.';
+                            }
+        					else if($_POST['email'] != $mail)
         					{
         						$corpoMsg .= " O seu novo email é: " . $_POST['email'];
 								//Altera o email para um novo mail
@@ -219,7 +224,7 @@ else
 
         						}
         					}
-        					else if($_POST['numerotel'] != $telefone ||isset($_POST['password']))
+        					else if($_POST['numerotel'] != $telefone || isset($_POST['password']))
         					{	
         						mailConfim('Os seus novos dados.',$corpoMsg, $_POST['email']);
         						echo "Irá receber um email com os seus novos dados.";
@@ -228,11 +233,6 @@ else
         						echo "<meta http-equiv='refresh' content='5'>";
         						
         					}
-        					else
-        					{
-        						echo "Não ocorreram modificações. ";
-        					}
-
         				}
         				?>	
         				<table>
@@ -244,7 +244,7 @@ else
         						</td>
         						<td>
         							<div class="col-md-12">
-        							      <button type="submit" id="btn_submit" name="cancel" class="btn btn-default">Cancelar</button> 
+        							     <!-- <button type="submit" id="btn_submit" name="cancel" class="btn btn-default">Cancelar</button> -->
         							</div>
         						</td>
         					</tr>
@@ -290,97 +290,6 @@ else
 <script type="text/javascript" src="/formvalidation/js/formValidation.js"></script>
 <script type="text/javascript" src="/formvalidation/js/framework/bootstrap.js"></script>
 <!--Validação de input números de telefone plugin pro form validation-->
-<link rel="stylesheet" href="/formvalidation/css/intlTelInput.css" />
-<script src="/formvalidation/js/intlTelInput.min.js"></script>
-
-
-   <script type="text/javascript">
-      $(document).ready(function() {
-        $('#alt_dados')
-        .find('[name="numerotel"]')
-        .intlTelInput({
-            utilsScript: '../formvalidation/js/utils.js',
-            autoPlaceholder: true,
-            defaultCountry:"pt",
-        });
-
-        $('#alt_dados')
-        .formValidation({
-            framework: 'bootstrap',
-            button: {
-                selector: '#validateButton',
-                disabled: 'disabled'
-            },            
-            icon: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-            nome: {
-                message: 'O nome não é válido',
-                validators: {
-                    notEmpty: {
-                        message: 'Deve introduzir o seu nome.'
-                    },
-                    stringLength: {
-                        min: 3,
-                        max: 30,
-                        message: 'O nome deve conter pelo menos 3 carateres e um máximo de 30 carateres.'
-                    },
-                    regexp: {
-                        regexp: /^[a-zA-Z0-9_\.]+$/,
-                        message: 'O nome só pode ter letras, numeros, pontos.'
-                    }
-                }
-            },
-            sobrenome: {
-                row: '.col-md-6',
-                message: 'O sobrenome não é válido.',
-                validators: {
-                    notEmpty: {
-                        message: 'Deve introduzir o seu sobrenome.'
-                    },
-                    stringLength: {
-                        min: 3,
-                        max: 30,
-                        message: 'O sobrenome deve conter pelo menos 3 carateres e um máximo de 30 carateres.'
-                    },
-                    regexp: {
-                        regexp: /^[a-zA-Z0-9\.]+$/,
-                        message: 'O sobrenome só pode ter letras, numeros, pontos.'
-                    }
-                }
-            },
-            email: {
-                validators: {
-                    notEmpty: {
-                        message: 'Deve introduzir o seu endereço de email.'
-                    },
-                    emailAddress: {
-                        message: 'O endereço de email introduzido não é válido.'
-                    }
-                }
-            },
-            numerotel: {
-                validators: {
-                    notEmpty: {
-                      message: 'Deve introduzir o seu número de telefone.'
-                  },
-                  callback: {
-                      message: 'O número de telefone introduzido não é válido.',
-                      callback: function(value, validator, $field) {
-                          return value === '' || $field.intlTelInput('isValidNumber');
-                      }
-                  }
-              }
-          },
-      }
-  }).on('click', '.country-list', function() {$('#form_reserva').formValidation('revalidateField', 'numerotel');
-});
-});
-
-</script>
 
 
 
