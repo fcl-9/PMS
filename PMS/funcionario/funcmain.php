@@ -101,6 +101,8 @@ if(empty($_SESSION['funcionario_id']))
 <?php	
 	
 		
+	$querydata="SELECT CURDATE()";
+	$result_data= mysqli_query($link, $querydata);
 			$query_reservas = "SELECT * FROM reserva";
 			$result_reservas = mysqli_query($link, $query_reservas);
 			if(!$result_reservas)
@@ -138,8 +140,10 @@ if(empty($_SESSION['funcionario_id']))
 			 
 				 <tbody>
 <?php
-						$query_listareserva = "SELECT DISTINCT * FROM cliente, reserva, reserva_has_mesa, mesa WHERE reserva.cliente_idcliente=cliente.idcliente and reserva_has_mesa.reserva_idreserva=reserva.idreserva  and reserva_has_mesa.mesa_numero=mesa.numero and reserva.ativo='1'";
-														
+
+    $data=mysqli_fetch_array($result_data)[0];
+						$query_listareserva = "SELECT DISTINCT * FROM cliente, reserva, reserva_has_mesa, mesa WHERE reserva.cliente_idcliente=cliente.idcliente and reserva_has_mesa.reserva_idreserva=reserva.idreserva  and reserva_has_mesa.mesa_numero=mesa.numero and reserva.ativo='1' and reserva.data=\"".$data."\"";
+												
 						$result_listareserva = mysqli_query($link, $query_listareserva);
 				if(!$result_listareserva)
 			{
