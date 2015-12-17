@@ -1,4 +1,13 @@
 
+<?php
+require('../common/database.php');
+require('../common/common.php');
+session_start();
+if(empty($_SESSION['funcionario_id']))
+{
+    header("Location: login.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,7 +60,7 @@
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
-                <p class="navbar-text" >Bem-Vindo(a), John Smith!</p>
+                <p class="navbar-text" >Bem-Vindo(a), <?php echo $_SESSION['funcionario_nome']; ?>!</p>
             </ul>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
