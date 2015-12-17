@@ -57,7 +57,7 @@
             			<span class="icon-bar"></span>
             			<span class="icon-bar"></span>
             		</button>
-            		<a class="navbar-brand" href="#">
+            		<a class="navbar-brand" href="funcmain.php">
             			<img alt="Brand" src="..\images\drawing2.png">
             		</a>
             	</div>

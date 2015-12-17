@@ -4,8 +4,7 @@ require('../common/common.php');
 session_start();
 if(empty($_SESSION['funcionario_id']))
 {
-    echo '<p>Não tem autorização para aceder a esta página.</p> ';  
-    header( "refresh:6;url=/login.php");
+    header("Location: login.php");
 }
 ?>
 <!DOCTYPE html>
@@ -69,7 +68,7 @@ if(empty($_SESSION['funcionario_id']))
                         <a href="javascript:;" data-toggle="collapse" data-target="#adicionar"><span class="glyphicon glyphicon-plus"></span></i> Adicionar <i class="fa fa-fw fa-caret-down"></i></a>
                         <ul id="adicionar" class="collapse">
                             <li>
-                                <a href="#">Reserva</a>
+                                <a href="funcaddreserva.php">Reserva</a>
                             </li>
                         </ul>
                     </li>
