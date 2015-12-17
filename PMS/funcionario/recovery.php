@@ -29,7 +29,9 @@ if(isset($_POST['numerotel'])){
 					echo $array_result["nome"]." enviamos um e-mail para ".$array_result["email"]." para recuperares a tua senha.";
                    
 				   
-$assunto = "Recuperar a sua senha\n"."A sua palavra passe de acesso é <strong>".$passe."</strong> utilize a nossa área de login se desejar efetuar alterações.\n"."Agradecemos a sua preferência.";
+$assunto = "Recuperar a sua senha\n";
+$corpoMsg = "A sua palavra passe de acesso é ".$passe." utilize a nossa área de login se desejar efetuar alterações.\n"."Agradecemos a sua preferência.";
+
 
 function mailConfima($assunto,$corpoMsg,$emailSendInfo)
 	{
@@ -54,6 +56,7 @@ function mailConfima($assunto,$corpoMsg,$emailSendInfo)
 		    echo "Erro ao gerar o email de confirmação. Por favor contacte a gerência " . $mail->ErrorInfo;
 		} else {
 		    echo "Foi enviado um email com um link de confirmação.";
+			header( "refresh:6;url=painel-admin.php" );
 		}
 	}	
 				   
