@@ -1,3 +1,47 @@
+<?php
+require('../common/database.php');
+require('../common/common.php');
+session_start();
+if(isset($_SESSION['funcionario_id'])) 
+{
+  header("Location: funcmain.php");
+}
+if(isset($_POST['numerotel'],$_POST['inputPassword']))
+{
+  $numerotel = mysqli_real_escape_string($link, $_POST['numerotel']);
+  $inputPassword = mysqli_real_escape_string($link, $_POST['inputPassword']);
+
+  $numerotel = stripslashes($numerotel);
+  $inputPassword = stripslashes($inputPassword);
+
+  $numerotel = telefone($numerotel);
+
+  $queryValidaLogin = "SELECT * FROM funcionario WHERE telefone LIKE '$numerotel' AND password LIKE '$inputPassword'";
+  $result = mysqli_query($link, $queryValidaLogin);
+  if($result)
+  {
+    if(mysqli_num_rows($result) == 1)
+    { 
+      $row = mysqli_fetch_assoc($result);
+      $_SESSION['funcionario_id'] = $row['idfuncionario'];
+      $_SESSION['funcionario_nome'] = $row['nome'];
+      
+    }
+    else
+    {
+      echo "Os campos que introduziram estão incorretas. Certifique-se que colocou os campos corretos.";
+    }
+  }
+  else{
+    echo "Erro na query".mysqli_error($link);
+    die;
+  }
+
+  if(isset($_SESSION['funcionario_id'])) {
+    header("Location: funcmain.php");
+  }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
