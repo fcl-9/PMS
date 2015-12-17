@@ -1,11 +1,11 @@
-
 <?php
 require('../common/database.php');
 require('../common/common.php');
 session_start();
 if(empty($_SESSION['funcionario_id']))
 {
-    header("Location: login.php");
+    echo '<p>Não tem autorização para aceder a esta página.</p> ';  
+    header( "refresh:6;url=/login.php");
 }
 ?>
 <!DOCTYPE html>
@@ -60,7 +60,7 @@ if(empty($_SESSION['funcionario_id']))
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
-                <p class="navbar-text" >Bem-Vindo(a), <?php echo $_SESSION['funcionario_nome']; ?>!</p>
+                <p class="navbar-text" >Bem-Vindo(a),  <?php echo $_SESSION['funcionario_nome']; ?>!</p>
             </ul>
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -98,49 +98,87 @@ if(empty($_SESSION['funcionario_id']))
             <!-- /.navbar-collapse -->
         </nav>
 <div class="corpo">
+<?php	
+	
+		
+	$querydata="SELECT CURDATE()";
+	$result_data= mysqli_query($link, $querydata);
+			$query_reservas = "SELECT * FROM reserva";
+			$result_reservas = mysqli_query($link, $query_reservas);
+			if(!$result_reservas)
+			{
+				echo mysqli_error($link);
+			}
+			
+			if (mysqli_num_rows($result_reservas) == 0)
+			{
+		echo "Não tem reservas para o dia de hoje";
 
+			}
+			else
+			{
+?>
+			
+                <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><i class="fa"></i> Reservas Efetuadas</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover table-striped">
+				 <thead>
+                  <tr class="info">
+                  <th>Número da Reserva</th>
+                  <th>Cliente</th>
+                  <th>Data da Reserva</th>
+                  <th>Hora da Reserva</th>
+                  <th>Número de Pessoas</th>
+                  <th>Mesa</th>
+                  <th>Selecionada</th>
+                  </tr>
+				 </thead>
+			 
+				 <tbody>
+<?php
 
+    $data=mysqli_fetch_array($result_data)[0];
+						$query_listareserva = "SELECT DISTINCT * FROM cliente, reserva, reserva_has_mesa, mesa WHERE reserva.cliente_idcliente=cliente.idcliente and reserva_has_mesa.reserva_idreserva=reserva.idreserva  and reserva_has_mesa.mesa_numero=mesa.numero and reserva.ativo='1' and reserva.data=\"".$data."\"";
+												
+						$result_listareserva = mysqli_query($link, $query_listareserva);
+				if(!$result_listareserva)
+			{
+				echo mysqli_error($link);
+			}
+						
+						
+							while($array_listareserva = mysqli_fetch_array($result_listareserva))
+							{
+?>								<tr>
+								<td> <?php echo $array_listareserva["idreserva"] ?></td>
+								<td> <?php echo $array_listareserva["nome"] ?> </td>
+								<td> <?php echo $array_listareserva["data"] ?></td>
+								<td> <?php echo $array_listareserva["hora"] ?></td>
+								<td> <?php echo $array_listareserva["capacidade"] ?></td>
+								<td> <?php echo $array_listareserva["numero"] ?></td>
+					            <td><input type="radio"></td>
+                               </tr>
+<?php							
+}
+?>
+ </tbody>
+                                    </table>
+                                </div>
+                                
+                        </div>
+                   
+             
+                
+<?php            
+				}
+			
+?>			
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+								
 
 </div>
                 <!-- /.row -->
