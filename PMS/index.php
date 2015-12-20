@@ -7,7 +7,7 @@ if(isset($_POST['ver_disponibilidade']))
   $getHoraForm = converteDataHora($_POST['datahora']);
   $numPplReserva = $_POST['selNumPes'];
           //Verifica se existem reservas a esta hora.
-  $existeReserva = 'SELECT * FROM reserva WHERE hora = \''.$getHoraForm['hora'].'\' AND data = \''.$getHoraForm['data'].'\'';
+ /* $existeReserva = 'SELECT * FROM reserva WHERE hora = \''.$getHoraForm['hora'].'\' AND data = \''.$getHoraForm['data'].'\'';
   $existeReserva =  mysqli_query($link,$existeReserva);
   if(!$existeReserva)
   {
@@ -16,12 +16,17 @@ if(isset($_POST['ver_disponibilidade']))
   else
   {
     if(mysqli_num_rows($existeReserva) > 0)
-    {
+    {*/
       //Verifica se as mesas que ainda estão disponiveis permitem que um utilizador possa utilizar essas  mesas.
       //Verifica se existem mesas disponiveis apesar de já existirem reservas.
-      $mesasLivres = 'SELECT mesa_numero FROM reserva_has_mesa as rhm, reserva as r, mesa as m WHERE  r.hora = \''.$getHoraForm['hora'].'\' AND r.data = \''.$getHoraForm['data'].'\' AND  rhm.reserva_idreserva != r.idreserva AND m.numero = rhm.mesa_numero AND m.capacidade = '.$numPplReserva;
+      $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$getHoraForm['hora']."' AND r.data ='".$getHoraForm['data']."' AND rhm.reserva_idreserva = r.idreserva)";
       $mesasLivres = mysqli_query($link, $mesasLivres);
-      if(mysqli_num_rows($mesasLivres) > 0)
+      $capacidadeDisponivel = 0;
+      while($row = mysqli_fetch_assoc($mesasLivres))
+      {
+         $capacidadeDisponivel =  $capacidadeDisponivel + $row['capacidade'];
+      }
+      if($capacidadeDisponivel >= $_POST['selNumPes'])
       {
            header("Location: form_reserva.php");
       }
@@ -35,13 +40,13 @@ if(isset($_POST['ver_disponibilidade']))
         <?php
 
       }
-    }
+    /*}
     else
     {
       //Se não existem reservas então vou permitir reserva.
       header("Location: form_reserva.php");
     }
-  }
+  }*/
 }
 
 
