@@ -123,14 +123,10 @@ else
         </nav>
         <div class="corpo-user">
             <div class="col-md-3 buttons" id="buttons">
-            <!--
-
-                <div class="botao">
-                    <a  class="btn btn-primary" href="userpage_alterarserva.php"><span class="glyphicon glyphicon-refresh"></span> Alterar Reserva</a>
-                </div>-->
+         
                 <div class="botao">
 
-                    <a class="btn btn-warning" href="userpage.php?id="><span class="glyphicon glyphicon-remove"></span> Voltar</a>
+                    <a class="btn btn-warning" href="userpage.php?id="><span class="glyphicon glyphicon-home"></span> Voltar</a>
 
                 </div >
 

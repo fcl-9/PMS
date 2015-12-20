@@ -160,7 +160,7 @@ if(isset($_POST['cancelar'])) {
                         <td>
                             <form id='cancelar_reserva' method='POST'>
                                 <input type='hidden' name='cancelar' value=<?php echo "'" . $array_listareserva['idreserva'] . "'"; ?> />
-                                <input type="submit" value='Cancelar' />
+                                <input type="submit" onclick="return confirm('Tem a certeza que deseja cancelar esta reserva ?');" value='Cancelar' />
                             </form>
                         </td>
                     </tr>

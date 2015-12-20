@@ -76,25 +76,6 @@ else
     	<ul class="nav navbar-right top-nav">
     		<p class="navbar-text" >Bem-Vindo(a), <?php echo $_SESSION['cliente_nome']; ?>!</p>
     	</ul>
-    	<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-            <!--<div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li class="active">
-                        <a href="index.html"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span><i class="fa"></i> Alterar Reserva</a>
-                    </li>
-                    <li>
-                        <a href="charts.html"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span><i class="fa"></i> Cancelar Reserva</a>
-                    </li>
-                    <li>
-                        <a href="tables.html"><i class="fa fa-fw fa-user"></i> Alterar Dados do Cliente</a>
-                    </li>
-                    <li>
-                        <a href="forms.html"><i class="fa fa-fw fa-power-off"></i> Terminar Sessão</a>
-                    </li>
-               
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
         </nav>
         <div class="corpo-user">
         	<div class="col-md-3 buttons" id="buttons">
@@ -105,7 +86,7 @@ else
         		</div>-->
         		<div class="botao">
 
-        			<a class="btn btn-warning" href="userpage.php?id="><span class="glyphicon glyphicon-remove"></span> Voltar</a>
+        			<a class="btn btn-warning" href="userpage.php?id="><span class="glyphicon glyphicon-home"></span> Voltar</a>
 
         		</div >
 
@@ -161,7 +142,7 @@ else
         							</div>
         						</div>
         					</div>
-        				</div>
+
 
         				<?php
         				if(isset($_POST['submit']))
@@ -241,16 +222,13 @@ else
         							<div class="col-md-12">
         								<button type="submit" id="validateButton" name="submit" class="btn btn-default">Alterar Dados</button>                      
         							</div>
-        						</td>
-        						<td>
-        							<div class="col-md-12">
-        							     <!-- <button type="submit" id="btn_submit" name="cancel" class="btn btn-default">Cancelar</button> -->
-        							</div>
+
         						</td>
         					</tr>
         				</table>
         			</div>
         		</form>
+                   </div>
         	</div>
         </div>
     </div>

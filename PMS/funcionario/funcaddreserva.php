@@ -68,6 +68,9 @@
             	<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             	<div class="collapse navbar-collapse navbar-ex1-collapse">
             		<ul class="nav navbar-nav side-nav">
+                         <li>
+                            <a href="funcmain.php"><span class="glyphicon glyphicon-home"></span> Voltar Atrás</a>
+                         </li>
             			 <li>
                             <a href="funcaddreserva.php"><span class="glyphicon glyphicon-plus"></span> Adicionar Reserva</a>
                          </li>
@@ -316,11 +319,6 @@
                                     <td>
                                         <div class="col-md-12">
                                             <button type="submit" id="btn_submit" name="submit" class="btn btn-default">Concluir Reserva</button>     					
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="col-md-12">
-                                            <button type="submit" id="btn_submit" name="submit" class="btn btn-default">Cancelar</button> 
                                         </div>
                                     </td>
                                 </tr>
