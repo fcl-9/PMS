@@ -68,34 +68,12 @@
             	<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             	<div class="collapse navbar-collapse navbar-ex1-collapse">
             		<ul class="nav navbar-nav side-nav">
-            			<li>
-            				<a href="javascript:;" data-toggle="collapse" data-target="#adicionar"><span class="glyphicon glyphicon-plus"></span></i> Adicionar <i class="fa fa-fw fa-caret-down"></i></a>
-            				<ul id="adicionar" class="collapse">
-            					<li>
-            						<a href="#">Reserva</a>
-            					</li>
-            				</ul>
-            			</li>
-            			<li>
-            				<a href="javascript:;" data-toggle="collapse" data-target="#alterar"><span class="glyphicon glyphicon-refresh"></span></i> Alterar <i class="fa fa-fw fa-caret-down"></i></a>
-            				<ul id="alterar" class="collapse">
-            					<li>
-            						<a href="funcalterareserva.php">Reserva</a>
-            					</li>
-            				</ul>
-            			</li>
-            			<li>
-            				<a href="javascript:;" data-toggle="collapse" data-target="#remover"><span class="glyphicon glyphicon-remove"></span></i> Remover <i class="fa fa-fw fa-caret-down"></i></a>
-            				<ul id="remover" class="collapse">
-            					<li>
-            						<a href="#">Reserva</a>
-            					</li>
-            				</ul>
-            			</li>
-            			<li>
-            				<a href="forms.html"><i class="fa fa-fw fa-power-off"></i> Terminar Sessão</a>
-            			</li>
-
+            			 <li>
+                            <a href="funcaddreserva.php"><span class="glyphicon glyphicon-plus"></span> Adicionar Reserva</a>
+                         </li>
+                         <li>
+                             <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Terminar Sessão</a>
+                         </li>
             		</ul>
             	</div>
             	<!-- /.navbar-collapse -->

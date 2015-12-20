@@ -6,6 +6,13 @@ if(empty($_SESSION['funcionario_id']))
 {
     header("Location: login.php");
 }
+if(isset($_POST['cancelar'])) {
+    $queryCancelar = sprintf("
+        DELETE FROM reserva WHERE idreserva='%s'
+    ", mysqli_real_escape_string($link, $_POST['cancelar']));
+    echo $queryCancelar;
+    mysqli_query($link, $queryCancelar);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,29 +72,8 @@ if(empty($_SESSION['funcionario_id']))
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav">
                 <li>
-                    <a href="javascript:;" data-toggle="collapse" data-target="#adicionar"><span class="glyphicon glyphicon-plus"></span></i> Adicionar <i class="fa fa-fw fa-caret-down"></i></a>
-                    <ul id="adicionar" class="collapse">
-                        <li>
-                            <a href="funcaddreserva.php">Reserva</a>
-                        </li>
-                    </ul>
+                    <a href="funcaddreserva.php"><span class="glyphicon glyphicon-plus"></span> Adicionar Reserva</a>
                 </li>
-                <li>
-                    <a href="javascript:;" data-toggle="collapse" data-target="#alterar"><span class="glyphicon glyphicon-refresh"></span></i> Alterar <i class="fa fa-fw fa-caret-down"></i></a>
-                    <ul id="alterar" class="collapse">
-                        <li>
-                            <a href="#">Reserva</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                 <a href="javascript:;" data-toggle="collapse" data-target="#remover"><span class="glyphicon glyphicon-remove"></span></i> Remover <i class="fa fa-fw fa-caret-down"></i></a>
-                 <ul id="remover" class="collapse">
-                    <li>
-                        <a href="#">Reserva</a>
-                    </li>
-                </ul>
-            </li>
             <li>
                 <a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Terminar Sessão</a>
             </li>
@@ -133,7 +119,8 @@ if(empty($_SESSION['funcionario_id']))
                           <th>Hora da Reserva</th>
                           <th>Número de Pessoas</th>
                           <th>Mesa</th>
-                          <th>Selecionada</th>
+                          <th>Alterar</th>
+                          <th>Cancelar</th>
                       </tr>
                   </thead>
 
@@ -159,7 +146,23 @@ if(empty($_SESSION['funcionario_id']))
                         <td> <?php echo $array_listareserva["hora"] ?></td>
                         <td> <?php echo $array_listareserva["capacidade"] ?></td>
                         <td> <?php echo $array_listareserva["numero"] ?></td>
-                        <td><input type="radio" name="selecionado"></td>
+                        <td>
+                            <form id='alterar_reserva' action='funcalterareserva.php' method='POST'>
+                                <input type='hidden' name='idReserva' value=<?php echo "'" . $array_listareserva['idreserva'] . "'"; ?> />
+                                <input type='hidden' name='idCliente' value=<?php echo "'" . $array_listareserva['cliente_idcliente'] . "'"; ?> />
+                                <input type='hidden' name='data' value=<?php echo "'" . $array_listareserva['data'] . "'"; ?> />
+                                <input type='hidden' name='numPessoas' value=<?php echo "'" . $array_listareserva['capacidade'] . "'"; ?> />
+                                <input type='hidden' name='numMesa' value=<?php echo "'" . $array_listareserva['numero'] . "'"; ?> />
+                                <input type='hidden' name='hora' value=<?php echo "'" . $array_listareserva['hora'] . "'"; ?> />
+                                <input type="submit" value='Alterar' />
+                            </form>
+                        </td>
+                        <td>
+                            <form id='cancelar_reserva' method='POST'>
+                                <input type='hidden' name='cancelar' value=<?php echo "'" . $array_listareserva['idreserva'] . "'"; ?> />
+                                <input type="submit" value='Cancelar' />
+                            </form>
+                        </td>
                     </tr>
                     <?php							
                 }

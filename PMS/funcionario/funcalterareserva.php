@@ -1,4 +1,26 @@
+<?php
+require_once('../common/database.php');
+require_once('../common/common.php');
+session_start();
+if(empty($_SESSION['funcionario_id'])) 
+{
+    header("Location: login.php");
+}
+else
+{
+    $queryClient = 'SELECT * FROM cliente WHERE idcliente = '.$_POST['idCliente'];
+    $getCli = mysqli_query($link, $queryClient);
+    $data = mysqli_fetch_assoc($getCli);
+    $nome = $data['nome'];
+    $sobrenome = $data['sobrenome'];
+    $telefone = $data['telefone'];
+    $mail = $data['email'];
+    if(isset($_POST['submit']))
+    {
 
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,6 +53,7 @@
         <link rel='shortcut icon' type='image/x-icon' href='../images/favicon.png' />
 
         <link href="../css/bootstrap-datetimepicker.css" rel="stylesheet">
+        
 
     </head>
 
@@ -102,27 +125,27 @@
     					<div class="row">
     						<div class="col-md-4 form-group"> 
     							<label for="reserva">Reserva:</label> 
-    							<input type="number" class="form-control" name="reserva" id="reserva" placeholder="ID Reserva" disabled>
+    							<input type="number" class="form-control" name="reserva" id="reserva" value="<?php echo $_POST['idReserva'] ?>" placeholder="ID Reserva" readonly="">
     						</div>
     					</div>
     					<div class="row">
     						<div class="col-md-6 form-group"> 
     							<label for="nome">Nome:</label>
-    							<input type="text" class="form-control" name="nome" id="nome" placeholder="Nome">
+    							<input type="text" class="form-control" name="nome" id="nome" value="<?php echo $nome ?>" placeholder="Nome" readonly="">
     						</div>
     						<div class="col-md-6 form-group"> 
     							<label for="sobrenome">Sobrenome:</label>
-    							<input type="text" class="form-control" name="sobrenome" id="sobrenome" placeholder="Sobrenome">
+    							<input type="text" class="form-control" name="sobrenome" id="sobrenome" value="<?php echo $sobrenome ?>" placeholder="Sobrenome" readonly="">
     						</div>
     					</div>
     					<div class="row">
     						<div class="col-md-6 form-group">           
     							<label for="email">Email:</label>
-    							<input type="email" class="form-control" name="email" id="email" placeholder="Email">
+    							<input type="email" class="form-control" name="email" id="email" value="<?php echo $mail ?>" placeholder="Email" readonly="">
     						</div>
     						<div class="col-md-6 form-group telErroIcon">
     							<label for="numerotel">Telefone:</label></label><br>
-    							<input type="text" class="form-control teste"  name="numerotel" id="numerotel" placeholder="Número telefone">
+    							<input type="text" class="form-control teste"  name="numerotel" id="numerotel" value="<?php echo $telefone ?>" placeholder="Número telefone" readonly="">
     						</div>
     					</div>
     					<div class="row">
@@ -141,11 +164,11 @@
     							<div class="form-group">
     								<label for="selMesa">Número de Mesa:</label>
     								<select class="form-control" id="selMesa">
-    									<option></option>
-    									<option>Mesa 1</option>
-    									<option>Mesa 2</option>
-    									<option>Mesa 3</option>
-    									<option>Mesa 4</option>
+    									<option selected="selected"><?php echo $_POST['numMesa'];?></option>
+    									<option>1</option>
+    									<option>2</option>
+    									<option>3</option>
+    									<option>4</option>
     								</select>
     							</div>
     						</div>
@@ -153,11 +176,11 @@
     							<div class="form-group selectNumPess">
     								<label for="selNumPes">Número de Pessoas:</label>
     								<select class="form-control" id="selNumPes" name="selNumPes">
-    									<option></option>
-    									<option>1 Pessoa</option>
-    									<option>2 Pessoas</option>
-    									<option>3 Pessoas</option>
-    									<option>4 Pessoas</option>
+    									<option selected="selected"><?php echo $_POST['numPessoas'];?></option>
+    									<option>1</option>
+    									<option>2</option>
+    									<option>3</option>
+    									<option>4</option>
     								</select>
     							</div>
     						</div>
@@ -205,16 +228,19 @@
     <script type="text/javascript" src="../js/locale/pt.js"></script>
     <script type="text/javascript" src="../js/bootstrap-datetimepicker.min.js"></script>
     
-   
-  <script type="text/javascript">
-            var date = new Date();
-            date.setMinutes(date.getMinutes() + 50);
+   <script type="text/javascript">
+            var datestring = <?php echo json_encode(juntaDataHora($_POST['data'],$_POST['hora'])); ?>;
+            var date = new Date(datestring);
+            var dateToday = new Date();
+            dateToday.setMinutes(date.getMinutes() + 50);
 
             $(function () {
                 $('#datetimepicker1').datetimepicker({
                   locale: 'pt',
                   format: 'YYYY-MM-DD HH:mm',
-                  minDate:  date,
+                  useCurrent: false,
+                  minDate: dateToday,
+                  defaultDate:  date,
                   enabledHours: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
                   sideBySide:true}).on('changeDate', function(e) {
                   // Revalidate the date field
@@ -222,6 +248,7 @@
         });
             });
         </script>
+  
 
        
  <!-- jQuery Bootstrap Form Validator -->
