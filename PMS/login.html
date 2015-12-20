@@ -1,28 +1,28 @@
 
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../favicon.ico">
 
-    <title>Restaurante</title>
+  <title>Restaurante</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet"/>  
-	<link rel="stylesheet" href="/formvalidation/css/formValidation.css"/>
-	<link rel="stylesheet" href="/formvalidation/css/intlTelInput.css" />
-    <!-- Custom styles for this template -->
-    <link href="/css/login.css" rel="stylesheet">
+  <!-- Bootstrap core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet"/>  
+  <link rel="stylesheet" href="/formvalidation/css/formValidation.css"/>
+  <link rel="stylesheet" href="/formvalidation/css/intlTelInput.css" />
+  <!-- Custom styles for this template -->
+  <link href="/css/login.css" rel="stylesheet">
 
 </head>
-  <body>
+<body>
 
 <!-- NAVBAR
-================================================== -->
+  ================================================== -->
   <body>
     <div class="navbar-wrapper">
       <div class="container">
@@ -42,10 +42,10 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav navbar-right">
-                <li><a href="index.html#home" class="page-scroll"     >Home    </a></li>
-                <li><a href="index.html#reserva" class="page-scroll"  >Reservas</a></li>
+                <li><a href="index.php#home" class="page-scroll"     >Home    </a></li>
+                <li><a href="index.php#reserva" class="page-scroll"  >Reservas</a></li>
                 <li class="active"><a href="login.html"                    >Login   </a></li>
-                <li><a href="index.html#sobre" class="page-scroll"    >Sobre   </a></li>
+                <li><a href="index.php#sobre" class="page-scroll"    >Sobre   </a></li>
               </ul>
             </div>
           </div>
@@ -56,48 +56,47 @@
 
 
     <div class="container ">
-    <form id="form_login" method="POST">
-
-
-		<div class="row form-group">
-          <div class="col-sm-3 col-sm-offset-4">
-			<h2 class="form-signin-heading">Restaurante</h2>
-			</div>
-		</div>
-
-		<div class="row form-group telErroIcon">
-          <div class="col-md-3 col-sm-offset-4 form-group ">
-            <label for="numerotel"></label></label><br>
-            <input type="text" class="form-control"  name="numerotel" id="numerotel" placeholder="Número telefone">
-          </div>
-        </div>
-
-    	<div class="row form-group passwdError">
-          <div class="col-sm-offset-4 col-sm-3 form-group"> 
-            <label for="inputPassword"></label> 
-            <input type="password" class="form-control" name="inputPassword" id="inputPassword" placeholder="Palavra passe">
-          </div>
-        </div>
+      <form id="form_login" method="POST">
 
 
         <div class="row form-group">
-          <div class="col-sm-offset-4 col-sm-3">
-            <button type="submit" class="btn btn-lg btn-primary btn-block">Iniciar Sessão</button> 
-          </div>
+          <div class="col-sm-3 col-sm-offset-4">
+           <h2 class="form-signin-heading">Restaurante</h2>
+         </div>
+       </div>
 
+       <div class="row form-group telErroIcon">
+        <div class="col-md-3 col-sm-offset-4 form-group ">
+          <label for="numerotel"></label></label><br>
+          <input type="text" class="form-control"  name="numerotel" id="numerotel" placeholder="Número telefone">
+        </div>
+      </div>
+
+      <div class="row form-group passwdError">
+        <div class="col-sm-offset-4 col-sm-3 form-group"> 
+          <label for="inputPassword"></label> 
+          <input type="password" class="form-control" name="inputPassword" id="inputPassword" placeholder="Palavra passe">
+        </div>
+      </div>
+
+      <div class="row form-group passwdError">
+        <div class="col-sm-offset-4 col-sm-3 form-group"> 
+          
+          <a href="recover.html">Esqueceu a palavra passe ?</a>
+        </div>
+      </div>
+      <div class="row form-group">
+        <div class="col-sm-offset-4 col-sm-3">
+          <button type="submit" class="btn btn-lg btn-primary btn-block">Iniciar Sessão</button> 
         </div>
 
-    </form>
-    </div> <!-- /container -->
-    
-
-      <div class="navbar-fixed-bottom">
-        
-      	<!-- FOOTER -->
-      <footer class="container text-center footer">
-         <p>&copy; 2015/2016 PMS GRUPO 2. &middot; </p>
-      </footer>
       </div>
+
+    </form>
+  </div> <!-- /container -->
+  
+
+  <!-- FOOTER -->
 
 
     <!-- Bootstrap core JavaScript
@@ -109,58 +108,58 @@
     <script src="/js/holder.min.js"></script>
 
     <!-- jQuery Bootstrap Form Validator
-	<link rel="stylesheet" href="/formvalidation-master/vendor/bootstrap/css/bootstrap.css"/> -->
+    <link rel="stylesheet" href="/formvalidation-master/vendor/bootstrap/css/bootstrap.css"/> -->
 
- 	<script type="text/javascript" src="/formvalidation/js/formValidation.js"></script>
- <script type="text/javascript" src="/formvalidation/js/framework/bootstrap.js"></script>
+    <script type="text/javascript" src="/formvalidation/js/formValidation.js"></script>
+    <script type="text/javascript" src="/formvalidation/js/framework/bootstrap.js"></script>
 
     <!--Validação de input números de telefone plugin pro form validation-->
-<script src="/formvalidation/js/intlTelInput.min.js"></script>
+    <script src="/formvalidation/js/intlTelInput.min.js"></script>
 
-<script type="text/javascript">
-  $(document).ready(function() {
-    $('#form_login')
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('#form_login')
         .find('[name="numerotel"]')
-            .intlTelInput({
-                utilsScript: '/formvalidation/js/utils.js',
-                autoPlaceholder: true,
-                defaultCountry:"pt"
-            });
+        .intlTelInput({
+          utilsScript: '/formvalidation/js/utils.js',
+          autoPlaceholder: true,
+          defaultCountry:"pt"
+        });
 
-     $('#form_login')
+        $('#form_login')
         .formValidation({
-            framework: 'bootstrap',
-            icon: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-            	inputPassword: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Deve introduzir a sua password.'
-                        },
-                        blank: {}
-                    }
-                },
-            numerotel: {
-                validators: {
-                        notEmpty: {
-                          message: 'Deve introduzir o seu número de telefone.'
-                        },
-                        callback: {
-                          message: 'O número de telefone introduzido não é válido.',
-                          callback: function(value, validator, $field) {
-                              return value === '' || $field.intlTelInput('isValidNumber');
-                            }
-                        }
-                    }
-                }
+          framework: 'bootstrap',
+          icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+          },
+          fields: {
+           inputPassword: {
+            validators: {
+              notEmpty: {
+                message: 'Deve introduzir a sua password.'
+              },
+              blank: {}
             }
-        })
+          },
+          numerotel: {
+            validators: {
+              notEmpty: {
+                message: 'Deve introduzir o seu número de telefone.'
+              },
+              callback: {
+                message: 'O número de telefone introduzido não é válido.',
+                callback: function(value, validator, $field) {
+                  return value === '' || $field.intlTelInput('isValidNumber');
+                }
+              }
+            }
+          }
+        }
+      })
         .on('click', '.country-list', function() {$('#form_login').formValidation('revalidateField', 'numerotel');}); 
-});
+      });
 </script>
-  </body>
+</body>
 </html>

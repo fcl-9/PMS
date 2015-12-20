@@ -103,7 +103,7 @@ function addReserva($link,$numtel,$numPessoas,$numMesa,$data,$hora,$idFunc)
 	 	if(!$mail->Send()) {
 		    echo "Erro ao gerar o email de confirmação. Por favor contacte a gerência " . $mail->ErrorInfo;
 		} else {
-		    echo "Foi enviado um email com um link de confirmação.";
+		  //  echo "Foi enviado um email com um link de confirmação.";
 		}
 	}
 	/*Converte a data e a hora do datapicker para uma base de dados.*/
