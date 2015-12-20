@@ -22,13 +22,33 @@ if(isset($_POST['ver_disponibilidade']))
       $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$getHoraForm['hora']."' AND r.data ='".$getHoraForm['data']."' AND rhm.reserva_idreserva = r.idreserva)";
       $mesasLivres = mysqli_query($link, $mesasLivres);
       $capacidadeDisponivel = 0;
+      $contaMesasJuntas = 0;
       while($row = mysqli_fetch_assoc($mesasLivres))
       {
          $capacidadeDisponivel =  $capacidadeDisponivel + $row['capacidade'];
+         if($row['capacidade'] >= $_POST['selNumPes'])
+          {
+            $precisoJuntar = 0;
+          }
+          else
+          {
+            $precisoJuntar = 1;
+          }
       }
       if($capacidadeDisponivel >= $_POST['selNumPes'])
       {
-           header("Location: form_reserva.php");
+        ?>
+          <form id="form" action="formreserva.php" method="POST">
+          <input type="hidden" name="data" value=<?php echo $getHoraForm['data'];?>>
+          <input type="hidden" name="hora" value=<?php echo $getHoraForm['hora'];?>>
+          <input type="hidden" name="selNumPes" value=<?php echo $_POST['selNumPes'];?>>
+          <input type="hidden" name="juntar" value=<?php echo $precisoJuntar;?>>
+        </form>
+        <script>
+          document.getElementById('form').submit();
+        </script>
+        <?php
+           //header("Location: formreserva.php");
       }
       else
       {

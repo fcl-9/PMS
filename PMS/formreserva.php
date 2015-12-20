@@ -18,7 +18,7 @@ if(isset($_SESSION['cliente_id']))
     $telefone = $data['telefone'];
     $mail = $data['email'];
   }
-  mysqli_close($link);
+  
 }
 else
 {
@@ -27,7 +27,10 @@ else
   $telefone = '';
   $mail = '';
 }
-
+if(empty($_POST))
+{
+  header("Location: index.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -66,16 +69,16 @@ else
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="#">
+              <a class="navbar-brand" href="index.php">
                 <img alt="Brand" src="images\drawing2.png">
               </a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav navbar-right">
                 <li  class="active"><a href="#home" class="page-scroll" 	>Home    </a></li>
-                <li><a href="#reserva" class="page-scroll" 	>Reservas</a></li>
+                <li><a href="index.php#reserva" class="page-scroll" 	>Reservas</a></li>
                 <li><a href="login.php"					>Login   </a></li>
-                <li><a href="#sobre" class="page-scroll"	>Sobre   
+                <li><a href="index.php#sobre" class="page-scroll"	>Sobre   
                 </a></li>
               </ul>
             </div>
@@ -87,7 +90,7 @@ else
 
     <!-- START THE FEATURETTES -->
 
-    <section  id="reserva"class="reserva-section">  
+    <section class="container"  id="reserva"class="reserva-section">  
       <!--Padding de cima vem do css-->
       <hr  class="featurette-divider-minpadding">
 
@@ -118,65 +121,106 @@ else
               <div class="form-group errorIcon">
                 <label for="datetimepicker1">Data e Hora: </label>
                 <div class='input-group date' id='datetimepicker1' name="datetimepicker1">
-                 <input type='text' class="form-control" id="datahora" name="datahora" placeholder="Data e Hora" />
-                 <span class="input-group-addon">
-                   <span class="glyphicon glyphicon-calendar"></span>
-                 </span>
-               </div>
-             </div>
-           </div>
-           <div class="col-md-3 form-group">
-             <div class="form-group">
-              <label for="selMesa">Número de Mesa:</label>
-              <select class="form-control" id="selMesa"  name="selMesa">
-               <option></option>
-               <option>1</option>
-               <option>2</option>
-               <option>3</option>
-               <option>4</option>
-             </select>
-             </div>
-         <div class="col-md-3 form-group">
-          <div class="form-group selectNumPess">
-           <label for="selNumPes">Número de Pessoas:</label>
-           <select class="form-control" id="selNumPes" name="selNumPes">
-             <option></option>
-             <option>1</option>
-             <option>2</option>
-             <option>3</option>
-             <option>4</option>
-             <option>5</option>
-             <option>6</option>
-             <option>7</option>
-             <option>8</option>
-             <option>9</option>
-           </select>
-         </div>
-       </div>
-       
-         </div>
-       <p style="text-align:center;font-weight:bold;">Em caso de reservas superiores a 9 pessoas por favor, contacte-nos através de  291 525 372.</p>
-     </div>
-     <div class="row">
-      <div id="status_text" />
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <button type="submit" id="btn_submit" name="submit" class="btn btn-default">Reservar</button> 
+                  <input type='text' class="form-control" id="datahora" name="datahora" placeholder="Data e Hora" readonly=""/>
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 form-group">
+              <div class="form-group">
+                <label for="selMesa">Número de Mesa:</label>
+                <?php
+                  if($_POST["juntar"] == 1)
+                  {
+                    $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$_POST['hora']."' AND r.data ='".$_POST['data']."' AND rhm.reserva_idreserva = r.idreserva)";
+                    $mesasLivres = mysqli_query($link, $mesasLivres);
+                    $capacidadeJuntas = 0;
+                    $mesasJuntas = array();
+                    $indiceMesas = 0;
+                    if(!$mesasLivres)
+                    {
+                      echo 'ERRO '.mysqli_error($link).'<br>';
+                    }
+                    while($row = mysqli_fetch_assoc($mesasLivres))
+                    {
+                      if($capacidadeJuntas < $_POST['selNumPes'])
+                      {
+                        $capacidadeJuntas = $capacidadeJuntas + $row['capacidade'];
+                        $mesasJuntas[$indiceMesas] = $row['numero'];
+                        $indiceMesas++;
+                      }
+                    }
+                    echo 'As caraterísticas da sua reserva não lhe permitem selecionar a mesa. No entanto se continuar com a sua reserva serão juntas as seguintes mesas: ';
+                    for($i = 0; $i < count($mesasJuntas); $i++)
+                    {
+                      if($i == count($mesasJuntas) - 1)
+                      {
+                        echo $mesasJuntas[$i].'.';
+                      }
+                      else
+                      {
+                        echo $mesasJuntas[$i].', ';
+                      }  
+                    }
+                    $arrayString = serialize($mesasJuntas);
+                    echo '<input type="hidden" name="selMesa" value="'.$arrayString.'">';
+                  }
+                  else
+                  {
+                ?>
+                    <select class="form-control" id="selMesa"  name="selMesa">
+                    <option></option>
+                      <?php
+                        $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$_POST['hora']."' AND r.data ='".$_POST['data']."' AND rhm.reserva_idreserva = r.idreserva)";
+                        $mesasLivres = mysqli_query($link, $mesasLivres);
+                        if(!$mesasLivres)
+                        {
+                          echo 'ERRO '.mysqli_error($link).'<br>';
+                        }
+                        while($row = mysqli_fetch_assoc($mesasLivres))
+                        {
+                          if($row['capacidade'] >= $_POST['selNumPes'])
+                          {
+                            echo '<option>'.$row['numero'].'</option>';
+
+                          }
+                        }
+                        mysqli_close($link);
+                      ?>
+                    </select>
+                <?php
+                  }
+                ?>
+              </div>
+            </div>
+            <div class="col-md-3 form-group">
+              <div class="form-group selectNumPess">
+                <label for="selNumPes">Número de Pessoas:</label>
+                <select class="form-control" id="selNumPes" name="selNumPes" readonly="">
+                  <option><?php echo $_POST["selNumPes"];?></option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row"> 
+            <p style="text-align:center;font-weight:bold;">Em caso de reservas superiores a 9 pessoas por favor, contacte-nos através de  291 525 372.</p>
+          </div>
+          <div class="row">
+            <div id="status_text" ></div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <button type="submit" id="btn_submit" name="submit" class="btn btn-default">Reservar</button> 
+            </div>
+          </div>
+        </form>
       </div>
-    </div>
-  </form>
-
-</div>
-<div class="container col-md-6">
-  <div class="row">                                       
-    <div class="col-sm-8">
-      <img class="img-responsive" src="/images/numeros_mesa.png" />
-    </div>                  
-  </div>
-</div>
-
-</section>
+      <div class="col-md-6">
+          <img class="img-responsive" src="/images/numeros_mesa.png" />
+      </div>
+    </section>
 
 <!-- /END THE FEATURETTES -->
 <!-- FOOTER -->
@@ -184,7 +228,6 @@ else
  <p>&copy; 2015/2016 PMS GRUPO 2. &middot; </p>
 </footer>
 
-</div><!-- /.container -->
 
 
 
@@ -208,20 +251,19 @@ else
     
 
     <script type="text/javascript">
-      var date = new Date();
-      date.setMinutes(date.getMinutes() + 50);
+    var date = <?php echo json_encode(juntaDataHora($_POST['data'],$_POST['hora'])); ?>;
 
-      $(function () {
-        $('#datetimepicker1').datetimepicker({
-          locale: 'pt',
-          format: 'YYYY-MM-DD HH:mm',
-          minDate:  date,
-          enabledHours: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
-          sideBySide:true}).on('changeDate', function(e) {
+    $(function () {
+      $('#datetimepicker1').datetimepicker({
+        locale: 'pt',
+        format: 'YYYY-MM-DD HH:mm',
+        minDate:  date,
+        enabledHours: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        sideBySide:true}).on('changeDate', function(e) {
                   // Revalidate the date field
                   $('#dateRangeForm').formValidation('revalidateField', 'datahora');
                 });
-        });
+      });
     </script>
 
 
@@ -235,104 +277,104 @@ else
 
 
     <script type="text/javascript">
-      $(document).ready(function() {
-        $('#form_reserva')
-        .find('[name="numerotel"]')
-        .intlTelInput({
-          utilsScript: '/formvalidation/js/utils.js',
-          autoPlaceholder: true,
-          defaultCountry:"pt",
-        });
+    $(document).ready(function() {
+      $('#form_reserva')
+      .find('[name="numerotel"]')
+      .intlTelInput({
+        utilsScript: '/formvalidation/js/utils.js',
+        autoPlaceholder: true,
+        defaultCountry:"pt",
+      });
 
-        $('#form_reserva')
-        .formValidation({
-          framework: 'bootstrap',
-          icon: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
+      $('#form_reserva')
+      .formValidation({
+        framework: 'bootstrap',
+        icon: {
+          valid: 'glyphicon glyphicon-ok',
+          invalid: 'glyphicon glyphicon-remove',
+          validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+          contribuinte: {
+            row: '.row',
+            validators: {
+              notEmpty: {
+                message: 'Deve introduzir o seu contribuinte.'
+              },
+              stringLength: {
+                min: 9,
+                max: 9,
+                message: 'O número de contribuinte deve conter exatamente 9 digitos'
+              },
+            } 
           },
-          fields: {
-            contribuinte: {
-              row: '.row',
-              validators: {
-                notEmpty: {
-                  message: 'Deve introduzir o seu contribuinte.'
-                },
-                stringLength: {
-                  min: 9,
-                  max: 9,
-                  message: 'O número de contribuinte deve conter exatamente 9 digitos'
-                },
-              } 
-            },
-            nome: {
-              message: 'O nome não é válido',
-              validators: {
-                notEmpty: {
-                  message: 'Deve introduzir o seu nome.'
-                },
-                stringLength: {
-                  min: 3,
-                  max: 30,
-                  message: 'O nome deve conter pelo menos 3 carateres e um máximo de 30 carateres.'
-                },
-                regexp: {
-                  regexp: /^[a-zA-Z0-9_\.]+$/,
-                  message: 'O nome só pode ter letras, numeros, pontos.'
-                }
+          nome: {
+            message: 'O nome não é válido',
+            validators: {
+              notEmpty: {
+                message: 'Deve introduzir o seu nome.'
+              },
+              stringLength: {
+                min: 3,
+                max: 30,
+                message: 'O nome deve conter pelo menos 3 carateres e um máximo de 30 carateres.'
+              },
+              regexp: {
+                regexp: /^[a-zA-Z0-9_\.]+$/,
+                message: 'O nome só pode ter letras, numeros, pontos.'
               }
-            },
-            sobrenome: {
-              row: '.col-md-6',
-              message: 'O sobrenome não é válido.',
-              validators: {
-                notEmpty: {
-                  message: 'Deve introduzir o seu sobrenome.'
-                },
-                stringLength: {
-                  min: 3,
-                  max: 30,
-                  message: 'O sobrenome deve conter pelo menos 3 carateres e um máximo de 30 carateres.'
-                },
-                regexp: {
-                  regexp: /^[a-zA-Z0-9\.]+$/,
-                  message: 'O sobrenome só pode ter letras, numeros, pontos.'
-                }
+            }
+          },
+          sobrenome: {
+            row: '.col-md-6',
+            message: 'O sobrenome não é válido.',
+            validators: {
+              notEmpty: {
+                message: 'Deve introduzir o seu sobrenome.'
+              },
+              stringLength: {
+                min: 3,
+                max: 30,
+                message: 'O sobrenome deve conter pelo menos 3 carateres e um máximo de 30 carateres.'
+              },
+              regexp: {
+                regexp: /^[a-zA-Z0-9\.]+$/,
+                message: 'O sobrenome só pode ter letras, numeros, pontos.'
               }
-            },
-            email: {
-              validators: {
-                notEmpty: {
-                  message: 'Deve introduzir o seu endereço de email.'
-                },
-                emailAddress: {
-                  message: 'O endereço de email introduzido não é válido.'
-                }
+            }
+          },
+          email: {
+            validators: {
+              notEmpty: {
+                message: 'Deve introduzir o seu endereço de email.'
+              },
+              emailAddress: {
+                message: 'O endereço de email introduzido não é válido.'
               }
-            },
-            selNumPes: {
-              validators: {
-                notEmpty: {
-                  message: 'Selecione o número de pessoas.'
-                }
+            }
+          },
+          selNumPes: {
+            validators: {
+              notEmpty: {
+                message: 'Selecione o número de pessoas.'
               }
-            },
-            numerotel: {
-              validators: {
-                notEmpty: {
-                  message: 'Deve introduzir o seu número de telefone.'
-                },
-                callback: {
-                  message: 'O número de telefone introduzido não é válido.',
-                  callback: function(value, validator, $field) {
-                    return value === '' || $field.intlTelInput('isValidNumber');
-                  }
+            }
+          },
+          numerotel: {
+            validators: {
+              notEmpty: {
+                message: 'Deve introduzir o seu número de telefone.'
+              },
+              callback: {
+                message: 'O número de telefone introduzido não é válido.',
+                callback: function(value, validator, $field) {
+                  return value === '' || $field.intlTelInput('isValidNumber');
                 }
               }
             }
           }
-        })
+        }
+      })
 /*.on('click', '.country-list', function() {$('#form_reserva').formValidation('revalidateField', 'numerotel');});*/
 .on('success.form.fv', function(e) {
             // Prevent form submission
@@ -376,23 +418,23 @@ else
 <!--Google Maps Plugin load-->
 <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <script>  
-  function init_map() {
-    var var_location = new google.maps.LatLng(32.659110, -16.924339);
-    var var_mapoptions = {
-      center: var_location,
-      zoom: 17
-    };
-    var var_marker = new google.maps.Marker({
-      position: var_location,
-      map: var_map,
-      title:"Venice"});
+function init_map() {
+  var var_location = new google.maps.LatLng(32.659110, -16.924339);
+  var var_mapoptions = {
+    center: var_location,
+    zoom: 17
+  };
+  var var_marker = new google.maps.Marker({
+    position: var_location,
+    map: var_map,
+    title:"Venice"});
 
-    var var_map = new google.maps.Map(document.getElementById("map-container"),
-      var_mapoptions);
+  var var_map = new google.maps.Map(document.getElementById("map-container"),
+    var_mapoptions);
 
-    var_marker.setMap(var_map); 
-  }
-  google.maps.event.addDomListener(window, 'load', init_map);
+  var_marker.setMap(var_map); 
+}
+google.maps.event.addDomListener(window, 'load', init_map);
 </script>
 
 
