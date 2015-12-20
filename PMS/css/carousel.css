@@ -202,3 +202,8 @@ html {
   color:#fff;
   background-color: #5a5a5a;
 }
+
+.featurette-divider-minpadding{
+  padding-top: 10px;
+}
+
