@@ -185,12 +185,6 @@ if(isset($_POST['cancelar'])) {
 </div>
 <!-- /.row -->
 
-</div>
-<!-- FOOTER -->
-<footer class="container text-center footer">
-   <p>&copy; 2015/2016 PMS GRUPO 2. &middot; </p>
-</footer>
-</div>
 <!-- /.container-fluid -->
 
 <!-- /#page-wrapper -->

@@ -86,10 +86,8 @@ if(isset($_POST['numerotel'],$_POST['inputPassword']))
             </div>
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav navbar-right">
-                <li><a href="index.html#home" class="page-scroll"     >Home    </a></li>
-                <li><a href="index.html#reserva" class="page-scroll"  >Reservas</a></li>
-                <li class="active"><a href="login.html"                    >Login   </a></li>
-                <li><a href="index.html#sobre" class="page-scroll"    >Sobre   </a></li>
+                <li><a href="../index.php#home" class="page-scroll"     >Home    </a></li>
+                <li class="active"><a href="index.php"                    >Login   </a></li>
               </ul>
             </div>
           </div>
@@ -100,7 +98,7 @@ if(isset($_POST['numerotel'],$_POST['inputPassword']))
 
 
     <div class="container ">
-    <form id="form_login" action="login.php" method="POST">
+    <form id="form_login" action="index.php" method="POST">
 
 
 		<div class="row form-group">
