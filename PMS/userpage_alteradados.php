@@ -76,9 +76,9 @@ else
     	<ul class="nav navbar-right top-nav">
     		<p class="navbar-text" >Bem-Vindo(a), <?php echo $_SESSION['cliente_nome']; ?>!</p>
     	</ul>
-        </nav>
-        <div class="corpo-user">
-        	<div class="col-md-3 buttons" id="buttons">
+    </nav>
+    <div class="corpo-user">
+    	<div class="col-md-3 buttons" id="buttons">
 <!--
         		
         		<div class="botao">
@@ -110,25 +110,26 @@ else
         		<div class="col-md-9 container-fluid">
         			<div class="panel panel-default">
         				<div class="panel-heading">
+
         					<h3 class="panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><i class="fa"></i> Alterar Dados Cliente</h3>
         				</div>
         				<div class="panel-body">
-        					<form id="alt_dados"  method="POST">	
+        					<form id="alt_dados" method="POST">	
         						<div class="row">
         							<div class="col-md-6 form-group"> 
         								<label for="nome">Nome:</label>
-        								<input type="text" class="form-control" name="nome" id="nome" value="<?php echo $nome ?>" placeholder="Nome"  readonly="">
+        								<input type="text" class="form-control" name="nome" id="nome" value="<?php echo $nome ?>" placeholder="Nome"  >
         							</div>
         							<div class="col-md-6 form-group"> 
         								<label for="sobrenome">Sobrenome:</label>
-        								<input type="text" class="form-control" name="sobrenome" id="sobrenome" value="<?php echo $sobrenome ?>" placeholder="Sobrenome"  readonly="">
+        								<input type="text" class="form-control" name="sobrenome" id="sobrenome" value="<?php echo $sobrenome ?>" placeholder="Sobrenome" >
         							</div>
         						</div>
         						
         						<div class="row">
         							<div class="col-md-6 form-group">           
         								<label for="email">Email:</label>
-        								<input type="email" class="form-control" name="email" id="email" value="<?php echo $mail ?>" placeholder="Email">
+        								<input type="text" class="form-control" name="email" id="email" value="<?php echo $mail ?>" placeholder="Email">
         							</div>
         							<div class="col-md-6 form-group telErroIcon">
         								<label for="numerotel">Telefone:</label></label><br>
@@ -137,103 +138,105 @@ else
         						</div>
         						<div class="row">
         							<div class="col-md-6 form-group">
-        								<label for="numerotel">Palavra Passe:</label></label><br>
-        								<input type="password" class="form-control"  name="password" id="password" placeholder="Palavra Passe">
+        								<label for="password">Palavra Passe:</label></label><br>
+        								<input type="text" class="form-control"  name="password" id="password" placeholder="Palavra Passe" >
         							</div>
         						</div>
         					</div>
+        					<table>
+        						<tr>
 
+        							<?php
+        							if(isset($_POST['submitButton_Alt']))
+        							{
 
-        				<?php
-        				if(isset($_POST['submit']))
-        				{
-    						
-        					mysqli_autocommit($link,false);
-        					$corpoMsg = "Os seus dados foram alterados. ";
-        					if(telefone($_POST['numerotel']) != $telefone )
-        					{
-        						$corpoMsg .= " O seu novo número de telefone é: ".$_POST['numerotel']." utilize-o para fazer login. ";
+        								mysqli_autocommit($link,false);
+        								$corpoMsg = "Os seus dados foram alterados. ";
+        								if(telefone($_POST['numerotel']) != $telefone )
+        								{
+        									$corpoMsg .= " O seu novo número de telefone é: ".$_POST['numerotel']." utilize-o para fazer login. ";
 
-        						$uTelef = 'UPDATE cliente SET telefone='.$_POST['numerotel'].' WHERE idcliente ='.$_SESSION['cliente_id'] ;
-        						$utelefSuc = mysqli_query($link,$uTelef);
-        						if(!$utelefSuc)
-        						{
-        							echo 'Erro na query #1 Altera dados.';
-        							mysqli_rollback($link);
-        						}
-        					}	
-        					if(empty($_POST['password']))
-        					{
-        					}
-        					else
-        					{
-        						$corpoMsg .= "A sua nova password é : " . $_POST['password'] . " deverá utiliza-la no seu próximo login. ";
-        						
-        						$uPassword = 'UPDATE cliente SET password=\''.$_POST['password'].'\' WHERE idcliente ='.$_SESSION['cliente_id'] ;
+        									$uTelef = 'UPDATE cliente SET telefone='.$_POST['numerotel'].' WHERE idcliente ='.$_SESSION['cliente_id'] ;
+        									$utelefSuc = mysqli_query($link,$uTelef);
+        									if(!$utelefSuc)
+        									{
+        										echo 'Erro na query #1 Altera dados.';
+        										mysqli_rollback($link);
+        									}
+        								}   
+        								if(empty($_POST['password']))
+        								{
+        								}
+        								else
+        								{
+        									$corpoMsg .= "A sua nova password é : " . $_POST['password'] . " deverá utiliza-la no seu próximo login. ";
 
-        						$uPwdSucess = mysqli_query($link,$uPassword);
-        						if(!$uPwdSucess)
-        						{
-        							echo 'Erro na query #2 Altera dados.';
-        							mysqli_rollback($link);
-        						}
-        					}
-        					
-                            if(empty($_POST['password']) && $_POST['email'] == $mail && $_POST['numerotel'] == $telefone)
-                            {
-                                echo 'Os seus dados não foram alterados.';
-                            }
-        					else if($_POST['email'] != $mail)
-        					{
-        						$corpoMsg .= " O seu novo email é: " . $_POST['email'];
-								//Altera o email para um novo mail
-        						$mail  = $_POST['email'];
+        									$uPassword = 'UPDATE cliente SET password=\''.$_POST['password'].'\' WHERE idcliente ='.$_SESSION['cliente_id'] ;
 
-        						$uMail = 'UPDATE cliente SET email=\''.$_POST['email'].'\' WHERE idcliente ='.$_SESSION['cliente_id'] ;
-        						$uMailSuc = mysqli_query($link,$uMail);
-        						if(!$uMailSuc)
-        						{
-        							echo 'Erro na query #3 Altera dados.';
-        							mysqli_rollback($link);
-        						}
-        						else
-        						{
-        							mailConfim('Os seus novos dados.',$corpoMsg, $mail);
-        							echo "Irá receber um email no seu novo email, com os seus novos dados.";
-        							mysqli_commit($link);
-        							echo "<meta http-equiv='refresh' content='5'>";
+        									$uPwdSucess = mysqli_query($link,$uPassword);
+        									if(!$uPwdSucess)
+        									{
+        										echo 'Erro na query #2 Altera dados.';
+        										mysqli_rollback($link);
+        									}
+        								}
 
-        						}
-        					}
-        					else if($_POST['numerotel'] != $telefone || isset($_POST['password']))
-        					{	
-        						mailConfim('Os seus novos dados.',$corpoMsg, $_POST['email']);
-        						echo "Irá receber um email com os seus novos dados.";
+        								if(empty($_POST['password']) && $_POST['email'] == $mail && $_POST['numerotel'] == $telefone)
+        								{
+        									echo 'Os seus dados não foram alterados.';
+        								}
+        								else if($_POST['email'] != $mail)
+        								{
+        									$corpoMsg .= " O seu novo email é: " . $_POST['email'];
+	                                //Altera o email para um novo mail
+        									$mail  = $_POST['email'];
 
-        						mysqli_commit($link);        	
-        						echo "<meta http-equiv='refresh' content='5'>";
-        						
-        					}
-        				}
-        				?>	
-        				<table>
-        					<tr>
-        						<td>
-        							<div class="col-md-12">
-        								<button type="submit" id="validateButton" name="submit" class="btn btn-default">Alterar Dados</button>                      
-        							</div>
+        									$uMail = 'UPDATE cliente SET email=\''.$_POST['email'].'\' WHERE idcliente ='.$_SESSION['cliente_id'] ;
+        									$uMailSuc = mysqli_query($link,$uMail);
+        									if(!$uMailSuc)
+        									{
+        										echo 'Erro na query #3 Altera dados.';
+        										mysqli_rollback($link);
+        									}
+        									else
+        									{
+        										mailConfim('Os seus novos dados.',$corpoMsg, $mail);
+        										echo "Irá receber um email no seu novo email, com os seus novos dados.";
+        										mysqli_commit($link);
+        										echo "<meta http-equiv='refresh' content='5'>";
 
-        						</td>
-        					</tr>
-        				</table>
+        									}
+        								}
+        								else if($_POST['numerotel'] != $telefone || isset($_POST['password']))
+        								{   
+        									mailConfim('Os seus novos dados.',$corpoMsg, $_POST['email']);
+        									echo "Irá receber um email com os seus novos dados.";
+
+        									mysqli_commit($link);           
+        									echo "<meta http-equiv='refresh' content='5'>";
+
+        								}
+        							}
+        							?>  
+        						</tr>
+        						<tr>
+        							<td>
+        								<div class="col-md-12 sbmt_btt_padding">
+        									<button type="submit" id="submitButton_Alt" name="submitButton_Alt" class="btn btn-default ">Alterar Dados</button>                      
+        								</div>
+
+        							</td>
+        						</tr>
+        					</table>
+
+        				</form>
         			</div>
-        		</form>
-                   </div>
+        		</div>      
         	</div>
         </div>
     </div>
 </div>
-</div>
+
 <!-- /.container-fluid -->
 
 <!-- /#page-wrapper -->
@@ -263,13 +266,13 @@ else
     <script type="text/javascript" src="../js/bootstrap-datetimepicker.min.js"></script>
 
 
-<!-- jQuery Bootstrap Form Validator -->
-<link rel="stylesheet" href="/formvalidation/css/formValidation.css"/>
-<script type="text/javascript" src="/formvalidation/js/formValidation.js"></script>
-<script type="text/javascript" src="/formvalidation/js/framework/bootstrap.js"></script>
-<!--Validação de input números de telefone plugin pro form validation-->
+    <!-- jQuery Bootstrap Form Validator -->
+    <link rel="stylesheet" href="/formvalidation/css/formValidation.css"/>
+    <script type="text/javascript" src="/formvalidation/js/formValidation.js"></script>
+    <script type="text/javascript" src="/formvalidation/js/framework/bootstrap.js"></script>
+    <!--Validação de input números de telefone plugin pro form validation-->
 
-
+    
 
 </body>
 </html>

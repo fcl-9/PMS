@@ -248,10 +248,15 @@ ul.alert-dropdown {
     width: 240px;
 }
 .corpo, .corpo-user{
-    padding-top: 70px;
+    padding-top: 50px;
 }
 .buttons{
+    padding-top:  50px;
     padding-left: 50px;
+}
+.sbmt_btt_padding
+{
+    padding-bottom: 10px;
 }
 /*
 tr {

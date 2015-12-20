@@ -12,7 +12,7 @@
 
   <!-- Bootstrap core CSS -->
   <link href="/css/bootstrap.min.css" rel="stylesheet">
-
+  <link href="/css/forgotpass.css" rel="stylesheet">
   <!-- Custom styles for this template -->
   <link href="/css/carousel.css" rel="stylesheet">
   <link href="/css/bootstrap-datetimepicker.css" rel="stylesheet">
@@ -40,10 +40,10 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav navbar-right">
-                <li  class="active"><a href="#home" class="page-scroll" 	>Home    </a></li>
-                <li><a href="#reserva" class="page-scroll" 	>Reservas</a></li>
+                <li  class="active"><a href="index.php#home" class="page-scroll" 	>Home    </a></li>
+                <li><a href="index.php#reserva" class="page-scroll" 	>Reservas</a></li>
                 <li><a href="login.php"					>Login   </a></li>
-                <li><a href="#sobre" class="page-scroll"	>Sobre   
+                <li><a href="index.php#sobre" class="page-scroll"	>Sobre   
                 </a></li>
               </ul>
             </div>
@@ -53,8 +53,37 @@
       </div>
     </div>
 
-<form action="recovery.php" method="POST">
-Número de telemóvel: <input type="text" name="numerotel" size="20" />
-<input type="submit" name="ForgotPassword" value="Recuperar senha" />
+    <link rel="stylesheet" href="/css/intlTelInput.css" />
+
+<form id="contactForm" class="form-horizontal centrar" action="recovery.php" class="centrar" method="POST">
+    <div class="form-group">
+        <label class="col-xs-3 control-label">Número de telefone</label>
+        <div class="col-xs-3">
+            <input type="tel" class="form-control" name="numerotel" />
+            <br>
+             <button type="submit" id="btn_submit" name="submit" class="btn btn-default">Recuperar palavra passe</button> 
+        </div>
+    </div>
 </form>
-</html>
+
+
+
+
+
+<script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="/js/holder.min.js"></script>
+
+    <!-- Scrolling Nav JavaScript -->
+    <script src="/js/jquery.easing.min.js"></script>
+    <script src="/js/scrolling-nav.js"></script>
+    <!--Traduz datapicker pra pt e data atual-->
+    <script src="/js/moment.js"></script>
+    <script type="text/javascript" src="/js/locale/pt.js"></script>
+    <!-- jQuery Bootstrap Form Validator -->
+    <link rel="stylesheet" href="/formvalidation/css/formValidation.css"/>
+    <script type="text/javascript" src="/formvalidation/js/formValidation.js"></script>
+    <script type="text/javascript" src="/formvalidation/js/framework/bootstrap.js"></script>
+   
+    </html>
