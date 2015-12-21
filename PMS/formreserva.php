@@ -164,8 +164,9 @@ if(empty($_POST))
                         echo $mesasJuntas[$i].', ';
                       }  
                     }
-                    $arrayString = serialize($mesasJuntas);
+                    $arrayString = base64_encode(serialize($mesasJuntas)); // Transforma o array em string para poder ser passado pelo POST
                     echo '<input type="hidden" name="selMesa" value="'.$arrayString.'">';
+                    echo '<input type="hidden" name ="necessarioJuntar" value="1">'; // Indica que é necessário juntar mesas. É utilizado para a inserção na BD
                   }
                   else
                   {
@@ -184,9 +185,9 @@ if(empty($_POST))
                           if($row['capacidade'] >= $_POST['selNumPes'])
                           {
                             echo '<option>'.$row['numero'].'</option>';
-
                           }
                         }
+                        echo '<input type="hidden" name ="necessarioJuntar" value="0">';
                         mysqli_close($link);
                       ?>
                     </select>

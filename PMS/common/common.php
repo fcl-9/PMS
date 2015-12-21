@@ -30,40 +30,45 @@ function addReserva($link,$numtel,$numPessoas,$numMesa,$data,$hora,$idFunc)
 	$getId = mysqli_query($link,$queryVerUser);
 	if($getId)
 	{
+		print_r($numMesa);
 		$idCli = mysqli_fetch_array($getId);
 		$queryInsRes = "INSERT INTO `reserva`(`idreserva`, `hora`, `data`, `funcionario_idfuncionario`, `cliente_idcliente`) VALUES (NULL,'".$hora."','".$data."',".(($idFunc=='')?"NULL":("'".$idFunc."'")).",".$idCli['idcliente'].")";
 		$reservaDone = mysqli_query($link,$queryInsRes);
 		if($reservaDone)
 		{
 			//Encontra o id da mesa a adicionar
-			$queryAddMesa = 'SELECT numero FROM mesa WHERE numero ='.$numMesa;
-			$getIdMesa = mysqli_query($link,$queryAddMesa);
-			if(!$getIdMesa)
+			for($i = 0; $i < count($numMesa);$i++)
 			{
-				echo 'Erro ao executar query #3'. mysqli_error($link);
-				return false;
-				//die;
+				$queryAddMesa = 'SELECT numero FROM mesa WHERE numero ='.$numMesa[$i];
+				$getIdMesa = mysqli_query($link,$queryAddMesa);
+				if(!$getIdMesa)
+				{
+					echo 'Erro ao executar query #3'. mysqli_error($link);
+					return false;
+					//die;
+				}
+				//Recebe o id da reserva feita neste momento
+				$getIdRes = "SELECT idreserva FROM reserva WHERE hora = '".$hora."' AND data ='".$data."' AND cliente_idcliente=".$idCli['idcliente']."";		 
+				$getIdRes = mysqli_query($link,$getIdRes);
+				if(!$getIdRes)
+				{
+					echo 'Erro ao executar query #4'. mysqli_error($link);
+					return false;
+					//die;
+				}
+				//Transofrmar em array associativo
+				$idReserva = mysqli_fetch_array($getIdRes);
+				//echo $idReserva['idreserva'].'<br>';
+				$queryMesaRes = 'INSERT INTO `reserva_has_mesa`(`reserva_idreserva`, `mesa_numero`, `num_pessoas`) VALUES ('.$idReserva['idreserva'].','.$numMesa[$i].','.$numPessoas.')';
+				$reservaFinish = mysqli_query($link,$queryMesaRes);
+				if(!$reservaFinish)
+				{
+					echo 'Erro ao executar query #7'. mysqli_error($link);
+					return false;
+					//die;
+				}
 			}
-			//Recebe o id da reserva feita neste momento
-			$getIdRes = "SELECT idreserva FROM reserva WHERE hora = '".$hora."' AND data ='".$data."' AND cliente_idcliente=".$idCli['idcliente']."";		 
-			$getIdRes = mysqli_query($link,$getIdRes);
-			if(!$getIdRes)
-			{
-				echo 'Erro ao executar query #4'. mysqli_error($link);
-				return false;
-				//die;
-			}
-			//Transofrmar em array associativo
-			$idReserva = mysqli_fetch_array($getIdRes);
-			//echo $idReserva['idreserva'].'<br>';
-			$queryMesaRes = 'INSERT INTO `reserva_has_mesa`(`reserva_idreserva`, `mesa_numero`, `num_pessoas`) VALUES ('.$idReserva['idreserva'].','.$numMesa.','.$numPessoas.')';
-			$reservaFinish = mysqli_query($link,$queryMesaRes);
-			if(!$reservaFinish)
-			{
-				echo 'Erro ao executar query #7'. mysqli_error($link);
-				return false;
-				//die;
-			}
+			
 			return true; 
 		}
 		else
