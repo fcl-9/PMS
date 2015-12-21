@@ -12,7 +12,6 @@ $apelido = mysql_real_escape_string($_POST['sobrenome']);
 $email = mysql_real_escape_string($_POST['email']);
 $numero = mysql_real_escape_string($_POST['numerotel']);
 $data_hora = mysql_real_escape_string($_POST['datahora']);
-$numMesa = mysql_real_escape_string($_POST['selMesa']);
 $numPessoas = mysql_real_escape_string($_POST['selNumPes']);
 
 $nome = stripslashes($nome);
@@ -20,13 +19,42 @@ $apelido = stripslashes($apelido);
 $email = stripslashes($email);
 $numero = stripslashes($numero);
 $data_hora = stripslashes($data_hora);
-$numMesa = stripslashes($numMesa);
 $numPessoas = stripslashes($numPessoas);
 $password = random_password(8);
 
 $numero = telefone($numero);
 
 $dateArray =converteDataHora($data_hora);
+
+
+// Tratamento das mesas
+if($_POST['necessarioJuntar'] == 1)
+{
+	$numMesa = unserialize(base64_decode($_POST['selMesa']));  //Se for necessário juntar volto a colocar as mesas num array para mais fácil manipulação
+}
+else
+{
+	$numMesa = array(0=>$_POST['selMesa']);
+}
+
+// Caso não seja preenchida mesa gera mesa aleatória
+if($_POST['selMesa'] == '')
+{
+	$mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$dateArray['hora']."' AND r.data ='".$dateArray['data']."' AND rhm.reserva_idreserva = r.idreserva)";
+    $mesasLivres = mysqli_query($link, $mesasLivres);
+    if(!$mesasLivres)
+    {
+    	echo 'ERRO '.mysqli_error($link).'<br>';
+    }
+    while($numerosMesa = mysqli_fetch_assoc($mesasLivres))
+    {
+    	if($numerosMesa['capacidade'] >= $_POST['selNumPes'])
+    	{
+    		$numMesa = array(0=>$numerosMesa['numero']);
+    		break;
+    	}
+    }
+}
 
 $queryVerUser = 'SELECT * FROM cliente WHERE telefone = \''.$numero.'\' AND email = \''.$email.'\'';
 $verUser = mysqli_query($link,$queryVerUser);
