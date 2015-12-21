@@ -149,21 +149,33 @@ else
         							<?php
         							if(isset($_POST['submitButton_Alt']))
         							{
-
+        								$true = false;
         								mysqli_autocommit($link,false);
         								$corpoMsg = "Os seus dados foram alterados. ";
         								if(telefone($_POST['numerotel']) != $telefone )
         								{
-        									$corpoMsg .= " O seu novo número de telefone é: ".$_POST['numerotel']." utilize-o para fazer login. ";
-
-        									$uTelef = 'UPDATE cliente SET telefone='.$_POST['numerotel'].' WHERE idcliente ='.$_SESSION['cliente_id'] ;
-        									$utelefSuc = mysqli_query($link,$uTelef);
-        									if(!$utelefSuc)
+        									$queryVerificaSeNumEmUso = "SELECT * FROM cliente WHERE telefone = ".telefone($_POST['numerotel']);
+        									$numTelefs = mysqli_query($link, $queryVerificaSeNumEmUso);
+        									if(mysqli_num_rows($numTelefs) == 0)
         									{
-        										echo 'Erro na query #1 Altera dados.';
-        										mysqli_rollback($link);
+	        									$corpoMsg .= " O seu novo número de telefone é: ".$_POST['numerotel']." utilize-o para fazer login. ";
+
+	        									$uTelef = 'UPDATE cliente SET telefone='.$_POST['numerotel'].' WHERE idcliente ='.$_SESSION['cliente_id'] ;
+	        									$utelefSuc = mysqli_query($link,$uTelef);
+	        									if(!$utelefSuc)
+	        									{
+	        										echo 'Erro na query #1 Altera dados.';
+	        										mysqli_rollback($link);
+	        									}
+        									}
+        									else
+        									{
+        										echo 'O número de telefone já se encontra em utilização';
+        										$true = true;
         									}
         								}   
+        							if($true == false)
+        							{
         								if(empty($_POST['password']))
         								{
         								}
@@ -217,6 +229,7 @@ else
 
         								}
         							}
+        						}
         							?>  
         						</tr>
         						<tr>
