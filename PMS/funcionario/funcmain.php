@@ -154,7 +154,7 @@ if(isset($_POST['cancelar'])) {
                                 <input type='hidden' name='numPessoas' value=<?php echo "'" . $array_listareserva['capacidade'] . "'"; ?> />
                                 <input type='hidden' name='numMesa' value=<?php echo "'" . $array_listareserva['numero'] . "'"; ?> />
                                 <input type='hidden' name='hora' value=<?php echo "'" . $array_listareserva['hora'] . "'"; ?> />
-                                <input type="submit" value='Alterar' />
+                                <input type="submit" name="alterar"value='alterar' />
                             </form>
                         </td>
                         <td>
