@@ -106,10 +106,6 @@ if(isset($_POST['cancelar'])) {
                             </div>
                             <div class="panel-body">
                                 <?php
-                                    if($_GET['id'] == 'alterSuccess')
-                                    {
-                                        echo "A sua reserva foi alterada";
-                                    }
                                     $query = sprintf("
                                         SELECT DISTINCT idreserva AS id, hora, data, cliente_idcliente, num_pessoas, mesa_numero
                                         FROM reserva, reserva_has_mesa 

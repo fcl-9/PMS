@@ -2,22 +2,17 @@
 require_once('common/database.php');
 require_once('common/common.php');
 session_start();
+$varShowMessagem = false;
 if(empty($_SESSION['cliente_id'])) 
 {
-    header("Location: login.php");
+	header("Location: login.php");
 }
 else
-{
-	if(empty($_POST['alterar']) && empty($_POST['alt_reserva']))
-	{
-		  header("Location: userpage.php");
+{	
 	}
-	elseif(isset($_POST['alt_reserva']))
+	if(isset($_POST['alterar']))
 	{
- 		 header("Location: userpage.php?id=alterSuccess");
-	}
-	else
-	{
+		$idReserva = $_POST['alterar'];
 		$queryGetDataReservas = 'SELECT * FROM reserva_has_mesa WHERE reserva_idreserva ='.$_POST['alterar'];
 		$resultDataReser = mysqli_query($link,$queryGetDataReservas);
 		if(!$resultDataReser)
@@ -27,50 +22,82 @@ else
 		else
 		{
 			$resultDataReser = mysqli_fetch_assoc($resultDataReser);
-			$numMesa = $resultDataReser['mesa_numero'];
 			$numPessoas = $resultDataReser['num_pessoas'] ;
-
 			$queryReserva = 'SELECT * FROM reserva WHERE idreserva = '.$_POST['alterar'];
 			$getReservaDados = mysqli_query($link,$queryReserva);
 			if(!$getReservaDados)
-			{echo 'Erro na query #4';}
+				{echo 'Erro na query #4';}
 			$getReservaDados = mysqli_fetch_assoc($getReservaDados);
-			$horamarcada = juntaDataHora($getReservaDados['data'],$getReservaDados['hora']);
 		}
 	}
-    $queryClient = 'SELECT * FROM cliente WHERE idcliente = '.$_SESSION['cliente_id'];
-    $getCli = mysqli_query($link, $queryClient);
-    $data = mysqli_fetch_assoc($getCli);
-    $nome = $data['nome'];
-    $sobrenome = $data['sobrenome'];
-    $telefone = $data['telefone'];
-    $mail = $data['email'];
-    
+
+	if(isset($_POST['ver_disp']))
+	{
+		$getReservaDados = converteDataHora($_POST['datahora']);
+		//Mensagem e verifica de mesas disponiveis 
+		$mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$getReservaDados['hora']."' AND r.data ='".$getReservaDados['data']."' AND rhm.reserva_idreserva = r.idreserva)";
+		$mesasLivres = mysqli_query($link, $mesasLivres);
+		$capacidadeDisponivel = 0;
+		$contaMesasJuntas = 0;
+		while($row = mysqli_fetch_assoc($mesasLivres))
+		{
+			$capacidadeDisponivel =  $capacidadeDisponivel + $row['capacidade'];
+			if($row['capacidade'] >= $_POST['selNumPes'])
+			{
+				$precisoJuntar = 0;
+			}
+			else
+			{
+				$precisoJuntar = 1;
+			}
+		}
+		if($capacidadeDisponivel >= $_POST['selNumPes'])
+		{
+			
+			?>
+
+			<form id="form" action="userpage_alterarserva_stp2.php" method="POST">
+				<input type="hidden" name="idreserva" value=<?php echo $_POST['idreserva'];?>>
+				<input type="hidden" name="data" value=<?php echo $getReservaDados['data'];?>>
+				<input type="hidden" name="hora" value=<?php echo $getReservaDados['hora'];?>>
+				<input type="hidden" name="selNumPes" value=<?php echo $_POST['selNumPes'];?>>
+				<input type="hidden" name="juntar" value=<?php echo $precisoJuntar;?>>
+			</form>
+			<script>
+				document.getElementById('form').submit();
+			</script>
+			<?php
+								           //header("Location: formreserva.php");
+		}
+		else
+		{
+			$varShowMessagem = true;
+		}	
 }
 ?>
 <html lang="en">
 
 <head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
 
-    <title>Utilizador</title>
+	<title>Utilizador</title>
 
-    <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<!-- Bootstrap Core CSS -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom CSS -->
-    <link href="css/sb-admin.css" rel="stylesheet">
+	<!-- Custom CSS -->
+	<link href="css/sb-admin.css" rel="stylesheet">
 
-    <!-- Custom Fonts -->
-    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="/css/bootstrap-datetimepicker.css" rel="stylesheet">
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!-- Custom Fonts -->
+	<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="/css/bootstrap-datetimepicker.css" rel="stylesheet">
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -85,23 +112,23 @@ else
 
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="index.php">
-                <img alt="Brand" src="images\drawing2.png">
-            </a>
-        </div>
-        <!-- Top Menu Items -->
-        <ul class="nav navbar-right top-nav">
-            <p class="navbar-text" >Bem-Vindo(a), <?php echo $_SESSION['cliente_nome']; ?>!</p>
-        </ul>
-        <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+    	<!-- Brand and toggle get grouped for better mobile display -->
+    	<div class="navbar-header">
+    		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+    			<span class="sr-only">Toggle navigation</span>
+    			<span class="icon-bar"></span>
+    			<span class="icon-bar"></span>
+    			<span class="icon-bar"></span>
+    		</button>
+    		<a class="navbar-brand" href="index.php">
+    			<img alt="Brand" src="images\drawing2.png">
+    		</a>
+    	</div>
+    	<!-- Top Menu Items -->
+    	<ul class="nav navbar-right top-nav">
+    		<p class="navbar-text" >Bem-Vindo(a), <?php echo $_SESSION['cliente_nome']; ?>!</p>
+    	</ul>
+    	<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <!--<div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li class="active">
@@ -122,123 +149,97 @@ else
             <!-- /.navbar-collapse -->
         </nav>
         <div class="corpo-user">
-            <div class="col-md-3 buttons" id="buttons">
-         
-                <div class="botao">
+        	<div class="col-md-3 buttons" id="buttons">
 
-                    <a class="btn btn-warning" href="userpage.php?id="><span class="glyphicon glyphicon-home"></span> Voltar</a>
+        		<div class="botao">
 
-                </div >
+        			<a class="btn btn-warning" href="userpage.php?id="><span class="glyphicon glyphicon-home"></span> Voltar</a>
 
-                <div class="botao">
+        		</div >
 
-                    <a class="btn btn-success" href="userpage_alteradados.php"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
+        		<div class="botao">
 
-                </div>
-                <div class="botao">            
+        			<a class="btn btn-success" href="userpage_alteradados.php"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
 
-                    <a class="btn btn-danger" href="logout.php"><span class="glyphicon glyphicon-off"></span> Terminar Sessão</a>
+        		</div>
+        		<div class="botao">            
 
-                </div>
+        			<a class="btn btn-danger" href="logout.php"><span class="glyphicon glyphicon-off"></span> Terminar Sessão</a>
 
-
-            </div>
+        		</div>
 
 
-            <div class="corpo">
-                <div class="col-md-9 container-fluid">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><i class="fa"></i> Alterar Reserva</h3>
-                        </div>
-                        <div class="panel-body">
-                            <form id="alt_reserva" method="POST">
-                                <div class="row">
-                                    <div class="col-md-4 form-group"> 
-                                        <label for="reserva">Reserva:</label> 
-                                        <input type="number" class="form-control" name="reserva" id="reserva" value="<?php echo $_POST['alterar']?>" placeholder="ID Reserva" readonly="">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 form-group"> 
-                                        <label for="nome">Nome:</label>
-                                        <input type="text" class="form-control" name="nome" id="nome" value="<?php echo $nome ?>" placeholder="Nome"  readonly="">
-                                    </div>
-                                    <div class="col-md-6 form-group"> 
-                                        <label for="sobrenome">Sobrenome:</label>
-                                        <input type="text" class="form-control" name="sobrenome" id="sobrenome" value="<?php echo $sobrenome ?>" placeholder="Sobrenome" readonly="">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 form-group">           
-                                        <label for="email">Email:</label>
-                                        <input type="email" class="form-control" name="email" id="email" value="<?php echo $mail ?>" placeholder="Email" readonly="">
-                                    </div>
-                                    <div class="col-md-6 form-group telErroIcon">
-                                        <label for="numerotel">Telefone:</label></label><br>
-                                        <input type="text" class="form-control teste"  name="numerotel" value="<?php echo $telefone ?>" id="numerotel" placeholder="Número telefone" readonly="">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class='col-sm-6'>
-                                        <div class="form-group errorIcon">
-                                            <label for="datetimepicker1">Data e Hora: </label>
-                                            <div class='input-group date' id='datetimepicker1' name="datetimepicker1">
-                                                <input type='text' class="form-control" name="datahora" placeholder="Data e Hora" />
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 form-group">
-                                        <div class="form-group">
-                                            <label for="selMesa">Número de Mesa:</label>
-                                            <select class="form-control" id="selMesa">
-                                                <option><?php echo $numMesa ?></option>
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 form-group">
-                                        <div class="form-group selectNumPess">
-                                            <label for="selNumPes">Número de Pessoas:</label>
-                                            <select class="form-control" id="selNumPes" name="selNumPes">
-                                                <option><?php echo $numPessoas ?></option>
-                                                <option>1 </option>
-                                                <option>2 </option>
-                                                <option>3 </option>
-                                                <option>4 </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <table>
-                                        <tr>
-                                            <td>
-                                                <div class="col-md-12">
-                                                   <button type="submit" id="submt" name="alt_reserva" value="alterado" class="btn btn-default">Concluir Reserva</button>                      
-                                               </div>
-                                           </td>
-                                           <td>
-                                            <div class="col-md-12">
-                                               <!-- <button type="submit" id="btn_submit" name="cancel" class="btn btn-default">Cancelar</button> -->
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+        	</div>
+
+
+        	<div class="corpo">
+        		<div class="col-md-9 container-fluid">
+        			<div class="panel panel-default">
+        				<div class="panel-heading">
+        					<h3 class="panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><i class="fa"></i> Alterar Reserva</h3>
+        				</div>
+        				<div class="panel-body">
+        					<form id="alt_reserva" method="POST">
+        					<input type="hidden" name="idreserva" value=<?php echo $idReserva;?>>
+        						<div class="row">
+        							<div class='col-sm-6'>
+        								<div class="form-group errorIcon">
+        									<label for="datetimepicker1">Data e Hora: </label>
+        									<div class='input-group date' id='datetimepicker1' name="datetimepicker1">
+        										<input type='text' class="form-control" name="datahora" placeholder="Data e Hora" />
+        										<span class="input-group-addon">
+        											<span class="glyphicon glyphicon-calendar"></span>
+        										</span>
+        									</div>
+        								</div>
+        							</div>
+
+        							<div class="col-md-3 form-group">
+        								<div class="form-group selectNumPess">
+        									<label for="selNumPes">Número de Pessoas:</label>
+        									<select class="form-control" id="selNumPes" name="selNumPes">
+        										<option><?php echo $numPessoas ?></option>
+        										<option>1 </option>
+        										<option>2 </option>
+        										<option>3 </option>
+        										<option>4 </option>
+        										<option>5 </option>
+        										<option>6 </option>
+        										<option>7 </option>
+        										<option>8 </option>
+        									</select>
+        								</div>
+        							</div>
+        							<?php
+        							if($varShowMessagem == true)
+        								{
+        									echo 'Não existem mesas disponiveis para a hora e data a que está a efetuar a sua reserva.';
+        								}
+        							?>
+        							<table>
+        								<tr>
+        									<td>
+        										<div class="col-md-12">
+        											<button type="submit" id="submt" name="ver_disp" value="disponibilidade" class="btn btn-default">Verificar disponibilidade</button>                      
+        										</div>
+        									</td>
+        									<td>
+        										<div class="col-md-12">
+        											<!-- <button type="submit" id="btn_submit" name="cancel" class="btn btn-default">Cancelar</button> -->
+        										</div>
+        									</td>
+        								</tr>
+        							</table>
+        						</div>
+        					</form>
+        				</div>
+        			</div>
+        		</div>
+        	</div>
         </div>
-    </div>
-    <!-- /.container-fluid -->
+        <!-- /.container-fluid -->
 
-    <!-- /#page-wrapper -->
+        <!-- /#page-wrapper -->
 
     <!--</div>
     <!-- /.container-fluid -->
@@ -265,26 +266,26 @@ else
     <script type="text/javascript" src="/js/bootstrap-datetimepicker.min.js"></script>
     
 
-     <script type="text/javascript">
-        var datestring = <?php echo json_encode(juntaDataHora($getReservaDados['data'],$getReservaDados['hora'])); ?>;
-            var date = new Date(datestring);
-            var dateToday = new Date();
-            dateToday.setMinutes(date.getMinutes() + 50);
+    <script type="text/javascript">
+    	var datestring = <?php echo json_encode(juntaDataHora($getReservaDados['data'],$getReservaDados['hora'])); ?>;
+    	var date = new Date(datestring);
+    	var dateToday = new Date();
+    	dateToday.setMinutes(dateToday.getMinutes() + 50);
 
-            $(function () {
-                $('#datetimepicker1').datetimepicker({
-                  locale: 'pt',
-                  format: 'YYYY-MM-DD HH:mm',
-                  useCurrent: false,
-                  minDate: dateToday,
-                  defaultDate:  date,
-                  enabledHours: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
-                  sideBySide:true}).on('changeDate', function(e) {
+    	$(function () {
+    		$('#datetimepicker1').datetimepicker({
+    			locale: 'pt',
+    			format: 'YYYY-MM-DD HH:mm',
+    			useCurrent: false,
+    			minDate: dateToday,
+    			defaultDate:  date,
+    			enabledHours: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+    			sideBySide:true}).on('changeDate', function(e) {
                   // Revalidate the date field
-                 $('#dateRangeForm').formValidation('revalidateField', 'datahora');
-        });
-            });
-        </script>
+                  $('#datetimepicker1').formValidation('revalidateField', 'datahora');
+              });
+    		});
+    </script>
 
 
 
