@@ -221,6 +221,11 @@ if(empty($_POST))
       <div class="col-md-6">
           <img class="img-responsive" src="/images/numeros_mesa.png" />
       </div>
+	   <div class="botao">
+
+        			<a class="btn btn-success" href="userpage.php?id="><span class="glyphicon"></span> Voltar</a>
+
+        		</div >
     </section>
 
 <!-- /END THE FEATURETTES -->

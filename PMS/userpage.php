@@ -105,11 +105,21 @@ if(isset($_POST['cancelar'])) {
                                 <h3 class="panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><i class="fa"></i> Reservas Efetuadas</h3>
                             </div>
                             <div class="panel-body">
+							
                                 <?php
+								
+								 $querydata="SELECT CURDATE()";
+								 $result_data= mysqli_query($link, $querydata);
+								  $data=mysqli_fetch_array($result_data)[0];
+								//$intervalodias = gmdate("Y-m-d",time()+ 1);
+								$intervaloTempo = gmdate("H:i:s", time() +60);
+								  
+								  
+									  
                                     $query = sprintf("
                                         SELECT DISTINCT idreserva AS id, hora, data, cliente_idcliente, num_pessoas, mesa_numero
-                                        FROM reserva, reserva_has_mesa 
-                                        WHERE cliente_idcliente = '%s' AND ativo = 1 AND reserva_idreserva = idreserva", mysqli_real_escape_string($link, $_SESSION['cliente_id']));
+                                        FROM reserva, reserva_has_mesa,cliente 
+                                        WHERE cliente_idcliente = '%s' AND ativo = '1' AND reserva_idreserva = idreserva and ((reserva.data = \"".$data."\" and reserva.hora>=\"".$intervaloTempo."\")or reserva.data > \"".$data."\")", mysqli_real_escape_string($link, $_SESSION['cliente_id']));
                                     $result = mysqli_query($link, $query);
                                     if (!$result) {
                                         die("Query error: " . mysqli_error($link));

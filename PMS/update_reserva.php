@@ -7,11 +7,11 @@ $flag = true;
 if(isset($_POST['datahora'],$_POST['selMesa'],$_POST['selNumPes'],$_POST['reserva']))
 {
 
-$data_hora = mysqli_real_escape_string($_POST['datahora']);
-$numero = mysqli_real_escape_string($_POST['numerotel']);
-$numPessoas = mysqli_real_escape_string($_POST['selNumPes']);
+$data_hora = mysqli_real_escape_string($link,$_POST['datahora']);
+$numero = mysqli_real_escape_string($link,$_POST['numerotel']);
+$numPessoas = mysqli_real_escape_string($link,$_POST['selNumPes']);
 $numero = stripslashes($numero);
-$email = mysqli_real_escape_string($_POST['email']);
+$email = mysqli_real_escape_string($link,$_POST['email']);
 
 
 $data_hora = stripslashes($data_hora);
