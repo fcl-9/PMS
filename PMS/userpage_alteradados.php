@@ -119,11 +119,11 @@ else
         						<div class="row">
         							<div class="col-md-6 form-group"> 
         								<label for="nome">Nome:</label>
-        								<input type="text" class="form-control" name="nome" id="nome" value="<?php echo $nome ?>" placeholder="Nome"  >
+        								<input type="text" class="form-control" name="nome" id="nome" value="<?php echo $nome ?>" placeholder="Nome"  readonly>
         							</div>
         							<div class="col-md-6 form-group"> 
         								<label for="sobrenome">Sobrenome:</label>
-        								<input type="text" class="form-control" name="sobrenome" id="sobrenome" value="<?php echo $sobrenome ?>" placeholder="Sobrenome" >
+        								<input type="text" class="form-control" name="sobrenome" id="sobrenome" value="<?php echo $sobrenome ?>" placeholder="Sobrenome" readonly>
         							</div>
         						</div>
         						
@@ -140,7 +140,7 @@ else
         						<div class="row">
         							<div class="col-md-6 form-group">
         								<label for="password">Palavra Passe:</label></label><br>
-        								<input type="text" class="form-control"  name="password" id="password" placeholder="Palavra Passe" >
+        								<input type="password" class="form-control"  name="password" id="password" placeholder="Palavra Passe" >
         							</div>
         						</div>
         					</div>
@@ -157,6 +157,18 @@ else
         								mysqli_autocommit($link,false);
         								$corpoMsg = "Os seus dados foram alterados. ";
                                         $telErr = "";
+
+                                        if(empty($_POST["email"]))
+                                        {
+                                            echo 'O email introduzido não é valido.<br>';
+                                            $true = true;
+                                        }
+                                        else
+                                        {
+                                            if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+                                            echo 'O email introduzido não é valido.<br>';
+                                            $true = true;
+                                        }
                                         
                                         if(preg_match("/^[0-9]{9}+$/", telefone($_POST['numerotel']))===1)
                                         { 
@@ -178,73 +190,71 @@ else
         								    	}
         								    	else
         								    	{
-        								    		echo 'O número de telefone já se encontra em utilização';
+        								    		echo 'O número de telefone já se encontra em utilização.<br>';
         								    		$true = true;
         								    	}
         								     }
                                         }
                                         else
-                                            {
-                                                echo 'Só podem ser introduzidos números.';
-                                                $true = true;
-                                            } 
-                            
-                                
+                                        {
+                                            echo 'O número de telefone introduzido não é válido! Deve introduzir apenas carateres numéricos.<br>';
+                                            $true = true;
+                                        } 
+            							if($true == false)
+            							{
+            								if(empty($_POST['password']))
+            								{
+            								}
+            								else
+            								{
+            									$corpoMsg .= "A sua nova password é : " . $_POST['password'] . " deverá utiliza-la no seu próximo login. ";
 
-        							if($true == false)
-        							{
-        								if(empty($_POST['password']))
-        								{
-        								}
-        								else
-        								{
-        									$corpoMsg .= "A sua nova password é : " . $_POST['password'] . " deverá utiliza-la no seu próximo login. ";
+            									$uPassword = 'UPDATE cliente SET password=\''.$_POST['password'].'\' WHERE idcliente ='.$_SESSION['cliente_id'] ;
 
-        									$uPassword = 'UPDATE cliente SET password=\''.$_POST['password'].'\' WHERE idcliente ='.$_SESSION['cliente_id'] ;
+            									$uPwdSucess = mysqli_query($link,$uPassword);
+            									if(!$uPwdSucess)
+            									{
+            										echo 'Erro na query #2 Altera dados.';
+            										mysqli_rollback($link);
+            									}
+            								}
 
-        									$uPwdSucess = mysqli_query($link,$uPassword);
-        									if(!$uPwdSucess)
-        									{
-        										echo 'Erro na query #2 Altera dados.';
-        										mysqli_rollback($link);
-        									}
-        								}
+            								if(empty($_POST['password']) && $_POST['email'] == $mail && $_POST['numerotel'] == $telefone)
+            								{
+            									echo 'Os seus dados não foram alterados.';
+            								}
+            								else if($_POST['email'] != $mail)
+            								{
+            									$corpoMsg .= " O seu novo email é: " . $_POST['email'];
+    	                                //Altera o email para um novo mail
+            									$mail  = $_POST['email'];
 
-        								if(empty($_POST['password']) && $_POST['email'] == $mail && $_POST['numerotel'] == $telefone)
-        								{
-        									echo 'Os seus dados não foram alterados.';
-        								}
-        								else if($_POST['email'] != $mail)
-        								{
-        									$corpoMsg .= " O seu novo email é: " . $_POST['email'];
-	                                //Altera o email para um novo mail
-        									$mail  = $_POST['email'];
+            									$uMail = 'UPDATE cliente SET email=\''.$_POST['email'].'\' WHERE idcliente ='.$_SESSION['cliente_id'] ;
+            									$uMailSuc = mysqli_query($link,$uMail);
+            									if(!$uMailSuc)
+            									{
+            										echo 'Erro na query #3 Altera dados.';
+            										mysqli_rollback($link);
+            									}
+            									else
+            									{
+            										mailConfim('Os seus novos dados.',$corpoMsg, $mail);
+            										echo "Irá receber um email no seu novo email, com os seus novos dados.";
+            										mysqli_commit($link);
+            										echo "<meta http-equiv='refresh' content='5'>";
 
-        									$uMail = 'UPDATE cliente SET email=\''.$_POST['email'].'\' WHERE idcliente ='.$_SESSION['cliente_id'] ;
-        									$uMailSuc = mysqli_query($link,$uMail);
-        									if(!$uMailSuc)
-        									{
-        										echo 'Erro na query #3 Altera dados.';
-        										mysqli_rollback($link);
-        									}
-        									else
-        									{
-        										mailConfim('Os seus novos dados.',$corpoMsg, $mail);
-        										echo "Irá receber um email no seu novo email, com os seus novos dados.";
-        										mysqli_commit($link);
-        										echo "<meta http-equiv='refresh' content='5'>";
+            									}
+            								}
+            								else if($_POST['numerotel'] != $telefone || isset($_POST['password']))
+            								{   
+            									mailConfim('Os seus novos dados.',$corpoMsg, $_POST['email']);
+            									echo "Irá receber um email com os seus novos dados.";
 
-        									}
-        								}
-        								else if($_POST['numerotel'] != $telefone || isset($_POST['password']))
-        								{   
-        									mailConfim('Os seus novos dados.',$corpoMsg, $_POST['email']);
-        									echo "Irá receber um email com os seus novos dados.";
+            									mysqli_commit($link);           
+            									echo "<meta http-equiv='refresh' content='5'>";
 
-        									mysqli_commit($link);           
-        									echo "<meta http-equiv='refresh' content='5'>";
-
-        								}
+            								}
+                                        }
         							}
         						}
         							?>  
