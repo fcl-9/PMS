@@ -1,6 +1,6 @@
 <?php
-require_once('/common/database.php');
-require_once('/common/common.php');
+require_once('common/database.php');
+require_once('common/common.php');
 //Desativa commit automático, so no fim de todo o processo o utilizador 
 mysqli_autocommit($link,false);
 $flag = true;
@@ -111,6 +111,7 @@ if(mysqli_num_rows($verUser) == 1)
 				$corpoMsg .= sprintf("http://localhost/ativar.php?%s",$url);
 				
 				mailConfim('Confirmação de Reserva Dom Petisco.',$corpoMsg,$email);
+				echo 'Irá receber um email para ativar a sua reserva.';
 				//redirecionar para a página principal
 				header( "refresh:3;url=index.html" );
 			}
@@ -160,6 +161,7 @@ else
 					
 					//envia link de confirmação.
 					mailConfim('Confirmacao de Reserva Dom Petisco.',$corpoMsg,$email);
+					echo 'Irá receber um email para ativar a sua reserva.';
 					//rederecionar para a página principal.
 					header( "refresh:3;url=index.html" );
 				}
