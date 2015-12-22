@@ -119,7 +119,7 @@ if(isset($_POST['cancelar'])) {
                                     $query = sprintf("
                                         SELECT DISTINCT idreserva AS id, hora, data, cliente_idcliente, num_pessoas, mesa_numero
                                         FROM reserva, reserva_has_mesa,cliente 
-                                        WHERE cliente_idcliente = '%s' AND ativo = '1' AND reserva_idreserva = idreserva and reserva.data>=\"".$data."\" and reserva.hora>=\"".$intervaloTempo."\"", mysqli_real_escape_string($link, $_SESSION['cliente_id']));
+                                        WHERE cliente_idcliente = '%s' AND ativo = '1' AND reserva_idreserva = idreserva and ((reserva.data = \"".$data."\" and reserva.hora>=\"".$intervaloTempo."\")or reserva.data > \"".$data."\")", mysqli_real_escape_string($link, $_SESSION['cliente_id']));
                                     $result = mysqli_query($link, $query);
                                     if (!$result) {
                                         die("Query error: " . mysqli_error($link));
