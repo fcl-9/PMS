@@ -1,6 +1,7 @@
 <?php
 require_once('common/database.php');
 require_once('common/common.php');
+
 session_start();
 if(empty($_SESSION['cliente_id'])) 
 {
@@ -147,33 +148,49 @@ else
         						<tr>
 
         							<?php
+                                    
+                                
+                                
         							if(isset($_POST['submitButton_Alt']))
         							{
         								$true = false;
         								mysqli_autocommit($link,false);
         								$corpoMsg = "Os seus dados foram alterados. ";
-        								if(telefone($_POST['numerotel']) != $telefone )
-        								{
-        									$queryVerificaSeNumEmUso = "SELECT * FROM cliente WHERE telefone = ".telefone($_POST['numerotel']);
-        									$numTelefs = mysqli_query($link, $queryVerificaSeNumEmUso);
-        									if(mysqli_num_rows($numTelefs) == 0)
-        									{
-	        									$corpoMsg .= " O seu novo número de telefone é: ".$_POST['numerotel']." utilize-o para fazer login. ";
+                                        $telErr = "";
+                                        
+                                        if(preg_match("/^[0-9]{9}+$/", telefone($_POST['numerotel']))===1)
+                                        { 
+                                             if(telefone($_POST['numerotel']) != $telefone )
+        								     {
+        								    	$queryVerificaSeNumEmUso = "SELECT * FROM cliente WHERE telefone = ".telefone($_POST['numerotel']);
+        								    	$numTelefs = mysqli_query($link, $queryVerificaSeNumEmUso);
+        								    	if(mysqli_num_rows($numTelefs) == 0)
+        								    	{
+	        							    		$corpoMsg .= " O seu novo número de telefone é: ".$_POST['numerotel']." utilize-o para fazer login. ";
+    
+	        							    		$uTelef = 'UPDATE cliente SET telefone='.$_POST['numerotel'].' WHERE idcliente ='.$_SESSION['cliente_id'] ;
+	        							    		$utelefSuc = mysqli_query($link,$uTelef);
+	        							    		if(!$utelefSuc)
+	        							    		{
+	        							    			echo 'Erro na query #1 Altera dados.';
+	        							    			mysqli_rollback($link);
+	        							    		}
+        								    	}
+        								    	else
+        								    	{
+        								    		echo 'O número de telefone já se encontra em utilização';
+        								    		$true = true;
+        								    	}
+        								     }
+                                        }
+                                        else
+                                            {
+                                                echo 'Só podem ser introduzidos números.';
+                                                $true = true;
+                                            } 
+                            
+                                
 
-	        									$uTelef = 'UPDATE cliente SET telefone='.$_POST['numerotel'].' WHERE idcliente ='.$_SESSION['cliente_id'] ;
-	        									$utelefSuc = mysqli_query($link,$uTelef);
-	        									if(!$utelefSuc)
-	        									{
-	        										echo 'Erro na query #1 Altera dados.';
-	        										mysqli_rollback($link);
-	        									}
-        									}
-        									else
-        									{
-        										echo 'O número de telefone já se encontra em utilização';
-        										$true = true;
-        									}
-        								}   
         							if($true == false)
         							{
         								if(empty($_POST['password']))
