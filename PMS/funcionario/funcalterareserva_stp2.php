@@ -113,7 +113,7 @@ else
     					<div class="row">
     						<div class="col-md-4 form-group"> 
     							<label for="reserva">Reserva:</label> 
-    							<input type="number" class="form-control" name="reserva" id="reserva" value="<?php echo $_POST['idreserva'] ?>" placeholder="ID Reserva" readonly="">
+    							<input type="number" class="form-control" name="reserva" id="reserva" value="<?php echo $_POST['idReserva'] ?>" placeholder="ID Reserva" readonly="">
     						</div>
     					</div>
     					<div class="row">

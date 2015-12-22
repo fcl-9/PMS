@@ -131,7 +131,7 @@ if(isset($_POST['cancelar'])) {
                     $data=mysqli_fetch_array($result_data)[0];
                     $intervaloTempo = gmdate("H:i:s", time() -60);
 
-$query_listareserva = "SELECT * FROM cliente, reserva, reserva_has_mesa, mesa WHERE reserva.cliente_idcliente=cliente.idcliente and reserva_has_mesa.reserva_idreserva=reserva.idreserva  and reserva_has_mesa.mesa_numero=mesa.numero and reserva.ativo='1' and reserva.data=\"".$data."\" and reserva.hora>=\"".$intervaloTempo."\"";
+                    $query_listareserva = "SELECT * FROM cliente, reserva, reserva_has_mesa, mesa WHERE reserva.cliente_idcliente=cliente.idcliente and reserva_has_mesa.reserva_idreserva=reserva.idreserva  and reserva_has_mesa.mesa_numero=mesa.numero and reserva.ativo='1' and reserva.data=\"".$data."\" and reserva.hora>=\"".$intervaloTempo."\"";
 
                     $result_listareserva = mysqli_query($link, $query_listareserva);
                     if(!$result_listareserva)
