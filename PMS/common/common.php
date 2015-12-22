@@ -30,7 +30,6 @@ function addReserva($link,$numtel,$numPessoas,$numMesa,$data,$hora,$idFunc)
 	$getId = mysqli_query($link,$queryVerUser);
 	if($getId)
 	{
-		print_r($numMesa);
 		$idCli = mysqli_fetch_array($getId);
 		$queryInsRes = "INSERT INTO `reserva`(`idreserva`, `hora`, `data`, `funcionario_idfuncionario`, `cliente_idcliente`) VALUES (NULL,'".$hora."','".$data."',".(($idFunc=='')?"NULL":("'".$idFunc."'")).",".$idCli['idcliente'].")";
 		$reservaDone = mysqli_query($link,$queryInsRes);
@@ -79,9 +78,7 @@ function addReserva($link,$numtel,$numPessoas,$numMesa,$data,$hora,$idFunc)
 }
 function updateReserva($link,$numPessoas,$numMesa,$data,$hora,$idReserva)
 {
-		print_r($numMesa);
 		$queryInsRes = "UPDATE `reserva` SET data = '".$data."', hora = '".$hora."' WHERE idreserva = ".$idReserva;
-		echo $queryInsRes;
 		$reservaAtualizada = mysqli_query($link,$queryInsRes);
 		if($reservaAtualizada)
 		{

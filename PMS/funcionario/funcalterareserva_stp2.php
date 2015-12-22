@@ -109,7 +109,7 @@ else
     				<h3 class="panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><i class="fa"></i>Alterar Reserva</h3>
     			</div>
     			<div class="panel-body">
-    				<form id="alt_reserva" method="POST">
+    				<form id="alt_reserva" action="update_reserva.php" method="POST">
     					<div class="row">
     						<div class="col-md-4 form-group"> 
     							<label for="reserva">Reserva:</label> 
@@ -151,13 +151,69 @@ else
     						<div class="col-md-3 form-group">
     							<div class="form-group">
     								<label for="selMesa">Número de Mesa:</label>
-    								<select class="form-control" id="selMesa">
-    									<option selected="selected"><?php echo $_POST['numMesa'];?></option>
-    									<option>1</option>
-    									<option>2</option>
-    									<option>3</option>
-    									<option>4</option>
+                                    <?php
+                                            print_r($_POST);
+                                            if($_POST["juntar"] == 1)
+                                            {
+                                                $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$_POST['hora']."' AND r.data ='".$_POST['data']."' AND rhm.reserva_idreserva = r.idreserva)";
+                                                $mesasLivres = mysqli_query($link, $mesasLivres);
+                                                $capacidadeJuntas = 0;
+                                                $mesasJuntas = array();
+                                                $indiceMesas = 0;
+                                                if(!$mesasLivres)
+                                                {
+                                                    echo 'ERRO '.mysqli_error($link).'<br>';
+                                                }
+                                                while($row = mysqli_fetch_assoc($mesasLivres))
+                                                {
+                                                    if($capacidadeJuntas < $_POST['selNumPes'])
+                                                    {
+                                                        $capacidadeJuntas = $capacidadeJuntas + $row['capacidade'];
+                                                        $mesasJuntas[$indiceMesas] = $row['numero'];
+                                                        $indiceMesas++;
+                                                    }
+                                                }
+                                                echo 'As caraterísticas da sua reserva não lhe permitem selecionar a mesa. No entanto se continuar com a sua reserva serão juntas as seguintes mesas: ';
+                                                for($i = 0; $i < count($mesasJuntas); $i++)
+                                                {
+                                                    if($i == count($mesasJuntas) - 1)
+                                                    {
+                                                        echo $mesasJuntas[$i].'.';
+                                                    }
+                                                    else
+                                                    {
+                                                        echo $mesasJuntas[$i].', ';
+                                                    }  
+                                                }
+                    $arrayString = base64_encode(serialize($mesasJuntas)); // Transforma o array em string para poder ser passado pelo POST
+                    echo '<input type="hidden" name="selMesa" value="'.$arrayString.'">';
+                    echo '<input type="hidden" name ="necessarioJuntar" value="1">'; // Indica que é necessário juntar mesas. É utilizado para a inserção na BD
+                }
+                else
+                {
+                    ?>
+    								<select class="form-control" id="selMesa" name ="selMesa">
+    									<option></option>
+    									<?php
+                                            $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$_POST['hora']."' AND r.data ='".$_POST['data']."' AND rhm.reserva_idreserva = r.idreserva)";
+                                            $mesasLivres = mysqli_query($link, $mesasLivres);
+                                            if(!$mesasLivres)
+                                            {
+                                                echo 'ERRO '.mysqli_error($link).'<br>';
+                                            }
+                                            while($row = mysqli_fetch_assoc($mesasLivres))
+                                            {
+                                                if($row['capacidade'] >= $_POST['selNumPes'])
+                                                {
+                                                    echo '<option>'.$row['numero'].'</option>';
+                                                }
+                                            }
+                                            echo '<input type="hidden" name ="necessarioJuntar" value="0">';
+                                            ?>
     								</select>
+                                    <?php
+                }
+                ?>
     							</div>
     						</div>
     						<div class="col-md-3 form-group">
