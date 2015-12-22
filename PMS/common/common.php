@@ -39,14 +39,6 @@ function addReserva($link,$numtel,$numPessoas,$numMesa,$data,$hora,$idFunc)
 			//Encontra o id da mesa a adicionar
 			for($i = 0; $i < count($numMesa);$i++)
 			{
-				$queryAddMesa = 'SELECT numero FROM mesa WHERE numero ='.$numMesa[$i];
-				$getIdMesa = mysqli_query($link,$queryAddMesa);
-				if(!$getIdMesa)
-				{
-					echo 'Erro ao executar query #3'. mysqli_error($link);
-					return false;
-					//die;
-				}
 				//Recebe o id da reserva feita neste momento
 				$getIdRes = "SELECT idreserva FROM reserva WHERE hora = '".$hora."' AND data ='".$data."' AND cliente_idcliente=".$idCli['idcliente']."";		 
 				$getIdRes = mysqli_query($link,$getIdRes);
@@ -85,6 +77,83 @@ function addReserva($link,$numtel,$numPessoas,$numMesa,$data,$hora,$idFunc)
 		//die;
 	}
 }
+function updateReserva($link,$numPessoas,$numMesa,$data,$hora,$idReserva)
+{
+		print_r($numMesa);
+		$queryInsRes = "UPDATE `reserva` SET data = '".$data."', hora = '".$hora."' WHERE idreserva = ".$idReserva;
+		echo $queryInsRes;
+		$reservaAtualizada = mysqli_query($link,$queryInsRes);
+		if($reservaAtualizada)
+		{
+			//Verifico quantas mesas estão associadas a reserva que vou alterar
+			$verificaMesas = "SELECT * FROM reserva_has_mesa WHERE reserva_idreserva = ".$idReserva;
+			$verificaMesas = mysqli_query($link,$verificaMesas);
+			//Atualiza a relação muitos para muitos entre mesa e reserva
+			for($i = 0; $i < count($numMesa);$i++)
+			{				
+				if(count($numMesa) >= mysqli_num_rows($verificaMesas))
+				{
+					if($i==0)
+					{
+						$queryMesaRes = 'UPDATE `reserva_has_mesa` SET mesa_numero = '.$numMesa[$i].', num_pessoas = '.$numPessoas.' WHERE reserva_idreserva = '.$idReserva;
+						$mesaAtualizada = mysqli_query($link,$queryMesaRes);
+						if(!$mesaAtualizada)
+						{
+							echo 'Erro ao executar query #8'. mysqli_error($link);
+							return false;
+							//die;
+						}
+					}
+					else
+					{
+						$queryMesaRes = 'INSERT INTO `reserva_has_mesa`(`reserva_idreserva`, `mesa_numero`, `num_pessoas`) VALUES ('.$idReserva.','.$numMesa[$i].','.$numPessoas.')';
+						$reservaFinish = mysqli_query($link,$queryMesaRes);
+						if(!$reservaFinish)
+						{
+							echo 'Erro ao executar query #9'. mysqli_error($link);
+							return false;
+							//die;
+						}
+					}
+				}
+				else
+				{
+						if($i==0)
+						{
+							$queryMesaRes = 'DELETE * FROM reserva_has_mesa  WHERE reserva_idreserva = '.$idReserva;
+							$reservaFinish = mysqli_query($link,$queryMesaRes);
+							if(!$reservaFinish)
+							{
+								echo 'Erro ao executar query #10'. mysqli_error($link);
+								return false;
+								//die;
+							}
+						}
+						
+						$queryMesaRes = 'INSERT INTO `reserva_has_mesa`(`reserva_idreserva`, `mesa_numero`, `num_pessoas`) VALUES ('.$idReserva.','.$numMesa[$i].','.$numPessoas.')';
+						$reservaFinish = mysqli_query($link,$queryMesaRes);
+						if(!$reservaFinish)
+						{
+							echo 'Erro ao executar query #11'. mysqli_error($link);
+							return false;
+							//die;
+						}
+					
+				}
+				
+			}
+			
+			return true; 
+		}
+		else
+		{
+			echo 'Erro ao executar query #9'. mysqli_error($link);
+			return false;
+			//die;
+		}
+	
+}
+
 	/*Envia um email ao cliente recebe o assunto o corpo da mensagem, ainda o email do cliente.*/
 	function mailConfim($assunto,$corpoMsg,$emailCli)
 	{

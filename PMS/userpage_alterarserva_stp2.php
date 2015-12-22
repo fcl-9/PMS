@@ -126,7 +126,7 @@ else
         					<h3 class="panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><i class="fa"></i> Alterar Reserva</h3>
         				</div>
         				<div class="panel-body">
-        					<form id="alt_reserva" method="POST">
+        					<form id="alt_reserva" action="update_reserva.php" method="POST">
         						<div class="row">
         							<div class="col-md-4 form-group"> 
         								<label for="reserva">Reserva:</label> 
@@ -169,6 +169,7 @@ else
         								<div class="form-group">
         									<label for="selMesa">Número de Mesa:</label>
         									<?php
+        									print_r($_POST);
         									if($_POST["juntar"] == 1)
         									{
         										$mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$_POST['hora']."' AND r.data ='".$_POST['data']."' AND rhm.reserva_idreserva = r.idreserva)";
