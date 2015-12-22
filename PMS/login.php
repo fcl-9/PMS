@@ -8,8 +8,8 @@ if(isset($_SESSION['cliente_id']))
 	header("Location: userpage.php?id=");
 }
 if(isset($_POST['numerotel'],$_POST['inputPassword'])){
-	$numerotel = mysqli_real_escape_string($_POST['numerotel']);
-	$inputPassword = mysqli_real_escape_string($_POST['inputPassword']);
+	$numerotel = mysqli_real_escape_string($link, $_POST['numerotel']);
+	$inputPassword = mysqli_real_escape_string($link, $_POST['inputPassword']);
 
 	$numerotel = stripslashes($numerotel);
 	$inputPassword = stripslashes($inputPassword);
