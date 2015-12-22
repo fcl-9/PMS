@@ -87,6 +87,7 @@ if(isset($_POST['cancelar'])) {
 
 
     $querydata="SELECT CURDATE()";
+    
     $result_data= mysqli_query($link, $querydata);
     $query_reservas = "SELECT * FROM reserva";
     $result_reservas = mysqli_query($link, $query_reservas);
@@ -128,7 +129,9 @@ if(isset($_POST['cancelar'])) {
                     <?php
 
                     $data=mysqli_fetch_array($result_data)[0];
-                    $query_listareserva = "SELECT DISTINCT * FROM cliente, reserva, reserva_has_mesa, mesa WHERE reserva.cliente_idcliente=cliente.idcliente and reserva_has_mesa.reserva_idreserva=reserva.idreserva  and reserva_has_mesa.mesa_numero=mesa.numero and reserva.ativo='1' and reserva.data=\"".$data."\"";
+                    $intervaloTempo = gmdate("H:i:s", time() -60);
+
+$query_listareserva = "SELECT * FROM cliente, reserva, reserva_has_mesa, mesa WHERE reserva.cliente_idcliente=cliente.idcliente and reserva_has_mesa.reserva_idreserva=reserva.idreserva  and reserva_has_mesa.mesa_numero=mesa.numero and reserva.ativo='1' and reserva.data=\"".$data."\" and reserva.hora>=\"".$intervaloTempo."\"";
 
                     $result_listareserva = mysqli_query($link, $query_listareserva);
                     if(!$result_listareserva)
