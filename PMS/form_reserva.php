@@ -7,12 +7,12 @@ $flag = true;
 if(isset( $_POST['nome'], $_POST['sobrenome'], $_POST['email'],$_POST['numerotel'],$_POST['datahora'],$_POST['selMesa'],$_POST['selNumPes']))
 {
 
-$nome = mysql_real_escape_string($_POST['nome']);
-$apelido = mysql_real_escape_string($_POST['sobrenome']);
-$email = mysql_real_escape_string($_POST['email']);
-$numero = mysql_real_escape_string($_POST['numerotel']);
-$data_hora = mysql_real_escape_string($_POST['datahora']);
-$numPessoas = mysql_real_escape_string($_POST['selNumPes']);
+$nome = mysqli_real_escape_string($_POST['nome']);
+$apelido = mysqli_real_escape_string($_POST['sobrenome']);
+$email = mysqli_real_escape_string($_POST['email']);
+$numero = mysqli_real_escape_string($_POST['numerotel']);
+$data_hora = mysqli_real_escape_string($_POST['datahora']);
+$numPessoas = mysqli_real_escape_string($_POST['selNumPes']);
 
 $nome = stripslashes($nome);
 $apelido = stripslashes($apelido);

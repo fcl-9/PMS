@@ -4,16 +4,14 @@ require_once('/common/common.php');
 //Desativa commit automático, so no fim de todo o processo o utilizador 
 mysqli_autocommit($link,false);
 $flag = true;
-echo 'PASSEI 6';
 if(isset($_POST['datahora'],$_POST['selMesa'],$_POST['selNumPes'],$_POST['reserva']))
 {
-	echo 'PASSEI 5';
 
-$data_hora = mysql_real_escape_string($_POST['datahora']);
-$numero = mysql_real_escape_string($_POST['numerotel']);
-$numPessoas = mysql_real_escape_string($_POST['selNumPes']);
+$data_hora = mysqli_real_escape_string($_POST['datahora']);
+$numero = mysqli_real_escape_string($_POST['numerotel']);
+$numPessoas = mysqli_real_escape_string($_POST['selNumPes']);
 $numero = stripslashes($numero);
-$email = mysql_real_escape_string($_POST['email']);
+$email = mysqli_real_escape_string($_POST['email']);
 
 
 $data_hora = stripslashes($data_hora);
@@ -32,7 +30,7 @@ if($_POST['necessarioJuntar'] == 1)
 else
 {
 	$numMesa = array(0=>$_POST['selMesa']);
-	echo 'PASSEI 4';
+
 }
 
 // Caso não seja preenchida mesa gera mesa aleatória
@@ -53,17 +51,14 @@ if($_POST['selMesa'] == '')
     	}
     }
 }
-echo 'PASSEI 3';
 	
 			//efetua a reserva && envia e-mail
 			if(!updateReserva($link,$numPessoas,$numMesa,$dateArray["data"],$dateArray["hora"],$_POST['reserva']))
 			{
-				echo 'PASSEI 1';
 				mysqli_rollback($link);
 			}
 			else
 			{
-				echo 'PASSEI 2';
 				mysqli_commit($link);
 				//Info from the user
 				$queryVerUser = 'SELECT c.idcliente, c.nome, c.sobrenome FROM cliente AS c WHERE c.telefone = \''.$numero.'\'';
@@ -73,8 +68,9 @@ echo 'PASSEI 3';
 				$corpoMsg = "Caro(a) ".$idCli["nome"]." ".$idCli["sobrenome"]."\nA sua reserva foi alterada para o dia ".$dateArray["data"]." às ".$dateArray["hora"]."\nObrigado pela sua preferência!";
 				
 				mailConfim('Confirmação de Alteração de Reserva Dom Petisco.',$corpoMsg,$email);
+				echo 'Foi enviado um email de confirmção com os novos dados da sua reserva.'; 
 				//redirecionar para a página principal
-				//header( "refresh:3;url=userpage.php" );
+				header( "refresh:3;url=userpage.php" );
 			}
 		
 	
