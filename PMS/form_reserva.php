@@ -7,12 +7,12 @@ $flag = true;
 if(isset( $_POST['nome'], $_POST['sobrenome'], $_POST['email'],$_POST['numerotel'],$_POST['datahora'],$_POST['selMesa'],$_POST['selNumPes']))
 {
 
-$nome = mysqli_real_escape_string($_POST['nome']);
-$apelido = mysqli_real_escape_string($_POST['sobrenome']);
-$email = mysqli_real_escape_string($_POST['email']);
-$numero = mysqli_real_escape_string($_POST['numerotel']);
-$data_hora = mysqli_real_escape_string($_POST['datahora']);
-$numPessoas = mysqli_real_escape_string($_POST['selNumPes']);
+$nome = mysqli_real_escape_string($link,$_POST['nome']);
+$apelido = mysqli_real_escape_string($link,$_POST['sobrenome']);
+$email = mysqli_real_escape_string($link,$_POST['email']);
+$numero = mysqli_real_escape_string($link,$_POST['numerotel']);
+$data_hora = mysqli_real_escape_string($link,$_POST['datahora']);
+$numPessoas = mysqli_real_escape_string($link,$_POST['selNumPes']);
 
 $nome = stripslashes($nome);
 $apelido = stripslashes($apelido);
@@ -62,13 +62,13 @@ $verUser = mysqli_query($link,$queryVerUser);
 if(mysqli_num_rows($verUser) == 1)
 {
 	//verificar se ele tenta fazer reserva na mesma hora e no mesmo dia
-	$queryUserMail = 'SELECT email FROM cliente WHERE telefone = \''.$numero.'\'';
+	$queryUserMail = 'SELECT idcliente, email FROM cliente WHERE telefone = \''.$numero.'\'';
 	$resmail = mysqli_query($link,$queryUserMail);
 	$resmail = mysqli_fetch_array($resmail);
 	//Verifica se email introduzido match com o da base de dados.
 	if($resmail['email'] == $email)
 	{
-		$queryResAnteriores = 'SELECT * FROM reserva as r, cliente as c WHERE c.idcliente = r.cliente_idcliente AND r.hora = \''.$dateArray["hora"].'\' AND r.data = \''.$dateArray["data"].'\'';
+		$queryResAnteriores = 'SELECT * FROM reserva as r, cliente as c WHERE r.cliente_idcliente='.$resmail['idcliente'].' AND r.hora = \''.$dateArray["hora"].'\' AND r.data = \''.$dateArray["data"].'\'';
 		$reservaAnteriores = mysqli_query($link,$queryResAnteriores);
 		if(!$reservaAnteriores)
 		{
