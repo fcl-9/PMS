@@ -50,7 +50,6 @@ if($_POST['selMesa'] == '')
     	}
     }
 }
-	
 			//efetua a reserva && envia e-mail
 			if(!updateReserva($link,$numPessoas,$numMesa,$dateArray["data"],$dateArray["hora"],$_POST['reserva']))
 			{

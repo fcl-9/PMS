@@ -144,7 +144,7 @@ if(isset($_POST['cancelar'])) {
                         <td> <?php echo $array_listareserva["nome"] ?> </td>
                         <td> <?php echo $array_listareserva["data"] ?></td>
                         <td> <?php echo $array_listareserva["hora"] ?></td>
-                        <td> <?php echo $array_listareserva["capacidade"] ?></td>
+                        <td> <?php echo $array_listareserva["num_pessoas"] ?></td>
                         <td> <?php echo $array_listareserva["numero"] ?></td>
                         <td>
                             <form id='alterar_reserva' action='funcalterareserva.php' method='POST'>
