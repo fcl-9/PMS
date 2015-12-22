@@ -86,57 +86,28 @@ function updateReserva($link,$numPessoas,$numMesa,$data,$hora,$idReserva)
 			$verificaMesas = "SELECT * FROM reserva_has_mesa WHERE reserva_idreserva = ".$idReserva;
 			$verificaMesas = mysqli_query($link,$verificaMesas);
 			//Atualiza a relação muitos para muitos entre mesa e reserva
+			$queryMesaRes = 'DELETE FROM reserva_has_mesa  WHERE reserva_idreserva = '.$idReserva;
+			$reservaFinish = mysqli_query($link,$queryMesaRes);
+			if(!$reservaFinish)
+			{
+				echo 'Erro ao executar query #10'. mysqli_error($link);
+				return false;
+				//die;
+			}
 			for($i = 0; $i < count($numMesa);$i++)
 			{				
-				if(count($numMesa) >= mysqli_num_rows($verificaMesas))
-				{
-					if($i==0)
-					{
-						$queryMesaRes = 'UPDATE `reserva_has_mesa` SET mesa_numero = '.$numMesa[$i].', num_pessoas = '.$numPessoas.' WHERE reserva_idreserva = '.$idReserva;
-						$mesaAtualizada = mysqli_query($link,$queryMesaRes);
-						if(!$mesaAtualizada)
-						{
-							echo 'Erro ao executar query #8'. mysqli_error($link);
-							return false;
-							//die;
-						}
-					}
-					else
-					{
-						$queryMesaRes = 'INSERT INTO `reserva_has_mesa`(`reserva_idreserva`, `mesa_numero`, `num_pessoas`) VALUES ('.$idReserva.','.$numMesa[$i].','.$numPessoas.')';
-						$reservaFinish = mysqli_query($link,$queryMesaRes);
-						if(!$reservaFinish)
-						{
-							echo 'Erro ao executar query #9'. mysqli_error($link);
-							return false;
-							//die;
-						}
-					}
-				}
-				else
-				{
-						if($i==0)
-						{
-							$queryMesaRes = 'DELETE * FROM reserva_has_mesa  WHERE reserva_idreserva = '.$idReserva;
-							$reservaFinish = mysqli_query($link,$queryMesaRes);
-							if(!$reservaFinish)
-							{
-								echo 'Erro ao executar query #10'. mysqli_error($link);
-								return false;
-								//die;
-							}
-						}
-						
-						$queryMesaRes = 'INSERT INTO `reserva_has_mesa`(`reserva_idreserva`, `mesa_numero`, `num_pessoas`) VALUES ('.$idReserva.','.$numMesa[$i].','.$numPessoas.')';
-						$reservaFinish = mysqli_query($link,$queryMesaRes);
-						if(!$reservaFinish)
-						{
-							echo 'Erro ao executar query #11'. mysqli_error($link);
-							return false;
-							//die;
-						}
+				
+					$queryMesaRes = 'INSERT INTO `reserva_has_mesa`(`reserva_idreserva`, `mesa_numero`, `num_pessoas`) VALUES ('.$idReserva.','.$numMesa[$i].','.$numPessoas.')';
 					
-				}
+					echo $queryMesaRes;
+					$reservaFinish = mysqli_query($link,$queryMesaRes);
+					if(!$reservaFinish)
+					{
+						echo 'Erro ao executar query #9'. mysqli_error($link);
+						return false;
+						//die;
+					}
+				
 				
 			}
 			
