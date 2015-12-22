@@ -152,7 +152,6 @@ else
     							<div class="form-group">
     								<label for="selMesa">Número de Mesa:</label>
                                     <?php
-                                            print_r($_POST);
                                             if($_POST["juntar"] == 1)
                                             {
                                                 $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$_POST['hora']."' AND r.data ='".$_POST['data']."' AND rhm.reserva_idreserva = r.idreserva)";

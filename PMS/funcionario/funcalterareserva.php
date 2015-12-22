@@ -207,7 +207,6 @@ else
    </table>
 </div>
 </form>
-<?php print_r($_POST);?>
 </div>
 </div>
 </div>

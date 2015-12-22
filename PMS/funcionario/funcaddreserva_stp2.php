@@ -12,7 +12,6 @@ if(empty($_SESSION['funcionario_id']))
 }
 else
 {
-    print_r($_POST);
     if((empty($_POST['nome']) || empty($_POST['sobrenome']) || empty($_POST['email']) || empty($_POST['numerotel']) || empty($_POST['datahora']) || empty($_POST['selNumPes']))&&isset($_POST['finish']))
     {
         $printMsgVal = true;
@@ -185,8 +184,6 @@ else
                             $getIdRes = "SELECT idreserva FROM reserva WHERE hora = '".$dateArray["hora"]."' AND data ='".$dateArray["data"]."' AND cliente_idcliente=".$idCli['idcliente']."";      
                             $getIdRes = mysqli_query($link,$getIdRes);
                             $idReserva = mysqli_fetch_array($getIdRes);
-
-                            print_r($idReserva);
 
                             $ativaReserva = "UPDATE reserva SET ativo = 1 WHERE idreserva=".$idReserva['idreserva'];
                             $ativaReserva = mysqli_query($link,$ativaReserva);
