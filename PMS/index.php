@@ -19,7 +19,12 @@ if(isset($_POST['ver_disponibilidade']))
     {*/
       //Verifica se as mesas que ainda estão disponiveis permitem que um utilizador possa utilizar essas  mesas.
       //Verifica se existem mesas disponiveis apesar de já existirem reservas.
-      $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$getHoraForm['hora']."' AND r.data ='".$getHoraForm['data']."' AND rhm.reserva_idreserva = r.idreserva)";
+      
+      $limiteInicial = strtotime($getHoraForm["hora"])-5400; //1h30min sao 5400 segundos
+      $limiteInicial = date("H:i:s",$limiteInicial);
+      $limiteFinal = strtotime($getHoraForm["hora"])+5400;
+      $limiteFinal = date("H:i:s",$limiteFinal);
+      $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora BETWEEN '".$limiteInicial."' AND '".$limiteFinal."' AND r.data ='".$getHoraForm['data']."' AND rhm.reserva_idreserva = r.idreserva)";
       $mesasLivres = mysqli_query($link, $mesasLivres);
       $capacidadeDisponivel = 0;
       $contaMesasJuntas = 0;

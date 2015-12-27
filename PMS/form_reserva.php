@@ -68,9 +68,9 @@ if(mysqli_num_rows($verUser) == 1)
 	//Verifica se email introduzido match com o da base de dados.
 	if($resmail['email'] == $email)
 	{
-		$limiteInicial = strtotime($dateArray["hora"])-1800;
+		$limiteInicial = strtotime($dateArray["hora"])-5400; //1h30min sao 5400 segundos
 		$limiteInicial = date("H:i:s",$limiteInicial);
-		$limiteFinal = strtotime($dateArray["hora"])+1800;
+		$limiteFinal = strtotime($dateArray["hora"])+5400;
 		$limiteFinal = date("H:i:s",$limiteFinal);
 		$queryResAnteriores = 'SELECT * FROM reserva as r, cliente as c WHERE r.cliente_idcliente='.$resmail['idcliente'].' AND r.hora BETWEEN \''.$limiteInicial.'\' AND \''.$limiteFinal.'\' AND r.data = \''.$dateArray["data"].'\'';
 		$reservaAnteriores = mysqli_query($link,$queryResAnteriores);

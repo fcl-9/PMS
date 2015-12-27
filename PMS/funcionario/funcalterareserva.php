@@ -3,60 +3,74 @@ require_once('../common/database.php');
 require_once('../common/common.php');
 session_start();
 $varShowMessagem = false;
+$checkCampos = false;
 if(empty($_SESSION['funcionario_id'])) 
 {
     header("Location: login.php");
 }
 else
 {
+
     if(isset($_POST['alterar']))
     {
-        $idReserva = $_POST['idReserva'];
-        $idCliente = $_POST['idCliente'];
+          $idReserva = $_POST['idReserva'];
+          $idCliente = $_POST['idCliente'];
+          $numPessoas = $_POST['numPessoas'];
     }
     if(isset($_POST['ver_disp']))
     {
-        $getReservaDados = converteDataHora($_POST['datahora']);
-        //Mensagem e verifica de mesas disponiveis 
-        $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$getReservaDados['hora']."' AND r.data ='".$getReservaDados['data']."' AND rhm.reserva_idreserva = r.idreserva)";
-        $mesasLivres = mysqli_query($link, $mesasLivres);
-        $capacidadeDisponivel = 0;
-        $contaMesasJuntas = 0;
-        while($row = mysqli_fetch_assoc($mesasLivres))
-        {
-            $capacidadeDisponivel =  $capacidadeDisponivel + $row['capacidade'];
-            if($row['capacidade'] >= $_POST['selNumPes'])
-            {
-                $precisoJuntar = 0;
-            }
-            else
-            {
-                $precisoJuntar = 1;
-            }
-        }
-        if($capacidadeDisponivel >= $_POST['selNumPes'])
-        {
-
-            ?>
-
-            <form id="form" action="funcalterareserva_stp2.php" method="POST">
-                 <input type="hidden" name="idCliente" value=<?php echo $_POST['idCliente'] ;?>>
-                <input type="hidden" name="idreserva" value=<?php echo $_POST['idreserva'] ;?>>
-                <input type="hidden" name="data" value=<?php echo $getReservaDados['data'];?>>
-                <input type="hidden" name="hora" value=<?php echo $getReservaDados['hora'];?>>
-                <input type="hidden" name="selNumPes" value=<?php echo $_POST['selNumPes'];?>>
-                <input type="hidden" name="juntar" value=<?php echo $precisoJuntar;?>>
-            </form>
-            <script>
-            document.getElementById('form').submit();
-            </script>
-            <?php
-                                           //header("Location: formreserva.php");
-        }
+      if(empty($_POST['selNumPes']) || empty($_POST['datahora']))
+      {
+        $checkCampos = true;
+      }
         else
         {
-            $varShowMessagem = true;
-        }   
+          $getReservaDados = converteDataHora($_POST['datahora']);
+          //Mensagem e verifica de mesas disponiveis
+          $limiteInicial = strtotime($getHoraForm["hora"])-5400; //1h30min sao 5400 segundos
+          $limiteInicial = date("H:i:s",$limiteInicial);
+          $limiteFinal = strtotime($getHoraForm["hora"])+5400;
+          $limiteFinal = date("H:i:s",$limiteFinal); 
+          $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora BETWEEN '".$limiteInicial."' AND '".$limiteFinal."' AND r.data ='".$getReservaDados['data']."' AND rhm.reserva_idreserva = r.idreserva)";
+          $mesasLivres = mysqli_query($link, $mesasLivres);
+          $capacidadeDisponivel = 0;
+          $contaMesasJuntas = 0;
+          while($row = mysqli_fetch_assoc($mesasLivres))
+          {
+              $capacidadeDisponivel =  $capacidadeDisponivel + $row['capacidade'];
+              if($row['capacidade'] >= $_POST['selNumPes'])
+              {
+                  $precisoJuntar = 0;
+              }
+              else
+              {
+                  $precisoJuntar = 1;
+              }
+          }
+          if($capacidadeDisponivel >= $_POST['selNumPes'])
+          {
+
+              ?>
+
+              <form id="form" action="funcalterareserva_stp2.php" method="POST">
+                   <input type="hidden" name="idCliente" value=<?php echo $_POST['idCliente'] ;?>>
+                  <input type="hidden" name="idReserva" value=<?php echo $_POST['idReserva'] ;?>>
+                  <input type="hidden" name="data" value=<?php echo $getReservaDados['data'];?>>
+                  <input type="hidden" name="hora" value=<?php echo $getReservaDados['hora'];?>>
+                  <input type="hidden" name="selNumPes" value=<?php echo $_POST['selNumPes'];?>>
+                  <input type="hidden" name="juntar" value=<?php echo $precisoJuntar;?>>
+              </form>
+              <script>
+              document.getElementById('form').submit();
+              </script>
+              <?php
+                                             //header("Location: formreserva.php");
+          }
+          else
+          {
+              $varShowMessagem = true;
+          }   
+      }
     }
 }
     ?>
@@ -140,8 +154,12 @@ else
         </div>
         <div class="panel-body">
             <form id="alt_reserva" method="POST">
-                    <input type="hidden" name="idreserva" value=<?php echo $idReserva;?>>
-                        <input type="hidden" name="idCliente" value=<?php echo $idCliente;?>>
+                    <input type="hidden" name="idReserva" value=<?php echo $_POST['idReserva'];?>>
+                        <input type="hidden" name="idCliente" value=<?php echo $_POST['idCliente'];?>>
+                                             <input type="hidden" name="data" value=<?php echo $_POST['data'];?>>
+                      <input type="hidden" name="hora" value=<?php echo $_POST['hora'];?>>
+
+                    <input type="hidden" name="numPessoas" value=<?php echo $_POST['numPessoas'];?>>
                <div class="row">
                   <div class='col-sm-6'>
                      <div class="form-group errorIcon">
@@ -158,7 +176,7 @@ else
                  <div class="form-group selectNumPess">
                     <label for="selNumPes">Número de Pessoas:</label>
                     <select class="form-control" id="selNumPes" name="selNumPes">
-                       <option selected="selected"><?php echo $_POST['numPessoas'];?></option>
+                       <option selected="selected"><?php echo  $_POST['numPessoas'] ;?></option>
                        <option>1</option>
                        <option>2</option>
                        <option>3</option>
@@ -173,13 +191,19 @@ else
            <?php
            if($varShowMessagem == true)
            {
-           echo 'Não existem mesas disponiveis para a hora e data a que está a efetuar a sua reserva.';
-             }
+              echo 'Não existem mesas disponiveis para a hora e data a que está a efetuar a sua reserva.';
+            }
+            if($checkCampos == true )
+            {
+              echo "Por favor verifique se preencheu todos os campos.";
+            }
+                      
              ?>
        <table>
          <tr>
             <td>
                <div class="col-md-12">
+
                    <button type="submit" id="ver_disp"  name="ver_disp"  value="ver_disp"class="btn btn-default">Verificar disponibilidade</button>     					
                </div>
            </td>

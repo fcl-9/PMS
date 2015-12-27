@@ -4,6 +4,7 @@ require('../common/common.php');
 session_start();
 $printMsgVal = false;
 $sucessoNaReserva = false;
+$checkTelefone = false;
 $checkEmail = false;
 $reservaMade = false;
 if(empty($_SESSION['funcionario_id'])) 
@@ -12,7 +13,6 @@ if(empty($_SESSION['funcionario_id']))
 }
 else
 {
-    print_r($_POST);
     if((empty($_POST['nome']) || empty($_POST['sobrenome']) || empty($_POST['email']) || empty($_POST['numerotel']) || empty($_POST['datahora']) || empty($_POST['selNumPes']))&&isset($_POST['finish']))
     {
         $printMsgVal = true;
@@ -26,192 +26,211 @@ else
         //Desativa commit automático, so no fim de todo o processo o utilizador 
         mysqli_autocommit($link,false);
         $flag = true;
-
-        if(isset( $_POST['nome'], $_POST['sobrenome'], $_POST['email'],$_POST['numerotel'],$_POST['datahora'],$_POST['selMesa'],$_POST['selNumPes']))
+        if(isset($_POST['email'],$_POST['numerotel']))
         {
-            $nome = mysqli_real_escape_string($link, $_POST['nome']);
-            $apelido = mysqli_real_escape_string($link, $_POST['sobrenome']);
-            $email = mysqli_real_escape_string($link, $_POST['email']);
-            $numero = mysqli_real_escape_string($link, $_POST['numerotel']);
-            $data_hora = mysqli_real_escape_string($link, $_POST['datahora']);
-            $numMesa = mysqli_real_escape_string($link, $_POST['selMesa']);
-            $numPessoas = mysqli_real_escape_string($link, $_POST['selNumPes']);
-
-            $nome = stripslashes($nome);
-            $apelido = stripslashes($apelido);
-            $email = stripslashes($email);
-            $numero = stripslashes($numero);
-            $data_hora = stripslashes($data_hora);
-            $numMesa = stripslashes($numMesa);
-            $numPessoas = stripslashes($numPessoas);
-            $password = random_password(8);
-            $numero = telefone($numero);
-
-            $dateArray =converteDataHora($_POST['datahora']);
-
-            $queryVerUser = 'SELECT * FROM cliente WHERE telefone = \''.$numero.'\' AND email = \''.$email.'\'';
-            $verUser = mysqli_query($link,$queryVerUser);
-            //Verificar se o utilizador já existe
-            if(mysqli_num_rows($verUser) == 1)
+            if(preg_match("/^[0-9]{15}+$/", telefone($_POST['numerotel']))===0)
             {
-                //verificar se ele tenta fazer reserva na mesma hora e no mesmo dia
-                $queryUserMail = 'SELECT email FROM cliente WHERE telefone = \''.$numero.'\'';
-                $resmail = mysqli_query($link,$queryUserMail);
-                $resmail = mysqli_fetch_array($resmail);
-                //Verifica se email introduzido match com o da base de dados.
-                if($resmail['email'] == $email)
-                {
-                    $queryResAnteriores = 'SELECT * FROM reserva as r, cliente as c WHERE c.idcliente = r.cliente_idcliente AND r.hora = \''.$dateArray["hora"].'\' AND r.data = \''.$dateArray["data"].'\'';
-                    $reservaAnteriores = mysqli_query($link,$queryResAnteriores);
-                    if(!$reservaAnteriores)
-                    {
-                        echo 'Erro na query #1' . mysqli_error($link);
-                        mysqli_rollback($link);
-                        //die;
-                    }
-                    if(mysqli_num_rows($reservaAnteriores) > 0)
-                    {
-                        //falha a reserva
-                        $reservaMade = true;
-                    }
-                    else
-                    {   
-                        //efetua a reserva && envia e-mail
-                        if($_POST['selMesa'] == '')
-                        {
-                            $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$dateArray['hora']."' AND r.data ='".$dateArray['data']."' AND rhm.reserva_idreserva = r.idreserva)";
-                            $mesasLivres = mysqli_query($link, $mesasLivres);
-                            if(!$mesasLivres)
-                            {
-                                echo 'ERRO '.mysqli_error($link).'<br>';
-                            }
-                            while($numerosMesa = mysqli_fetch_assoc($mesasLivres))
-                            {
-                                if($numerosMesa['capacidade'] >= $_POST['selNumPes'])
-                                {
-                                    $numMesa = array(0=>$numerosMesa['numero']);
-                                    break;
-                                }
-                            }
-                        }
-                        if(!addReserva($link,$numero,$numPessoas,$numMesa,$dateArray["data"],$dateArray["hora"],$_SESSION['funcionario_id']))
-                        {
-                            mysqli_rollback($link);
-                        }
-                        else
-                        {
-                            mysqli_commit($link);
-                            //Info from the user
-                            $queryVerUser = 'SELECT c.idcliente FROM cliente AS c WHERE c.telefone = \''.$numero.'\'';
-                            $getId = mysqli_query($link,$queryVerUser);
-                            $idCli = mysqli_fetch_array($getId);
-
-                            //info from the reservation
-                            $getIdRes = "SELECT idreserva FROM reserva WHERE hora = '".$dateArray["hora"]."' AND data ='".$dateArray["data"]."' AND cliente_idcliente=".$idCli['idcliente']."";      
-                            $getIdRes = mysqli_query($link,$getIdRes);
-                            $idReserva = mysqli_fetch_array($getIdRes);
-
-                            $ativaReserva = "UPDATE reserva SET ativo = 1 WHERE idreserva=".$idReserva['idreserva'];
-                            $ativaReserva = mysqli_query($link,$ativaReserva);
-                            if(!$ativaReserva)
-                            {
-                                echo "ERRO #9".mysqli_error($link);
-                                mysqli_rollback($link);
-                            }
-                            else
-                            {
-                                mysqli_commit($link);
-                                $sucessoNaReserva = true;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    //email introduzido está mal pois n tá de acordo com o que está na bd
-                    $checkEmail = true;
-
-                    $valorConvertido = converteDataHora($_POST['datahora']);
-                    $_POST['data']  = $valorConvertido['data'];
-                    $_POST['hora'] =  $valorConvertido['hora'];
-                    $_POST['juntar'] = $_POST['juntar'] ;
-                }
+                $checkTelefone=true;
             }
-            else
+            if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL))
             {
-                $queryUserMail = 'SELECT email FROM cliente WHERE telefone = \''.$numero.'\'';
-                $resmail = mysqli_query($link,$queryUserMail);
-                if(mysqli_num_rows($resmail) == 0)
+              $checkEmail = true;
+            }
+        }
+        else
+        {
+            if(isset( $_POST['nome'], $_POST['sobrenome'], $_POST['email'],$_POST['numerotel'],$_POST['datahora'],$_POST['selMesa'],$_POST['selNumPes']))
+            {
+                $nome = mysqli_real_escape_string($link, $_POST['nome']);
+                $apelido = mysqli_real_escape_string($link, $_POST['sobrenome']);
+                $email = mysqli_real_escape_string($link, $_POST['email']);
+                $numero = mysqli_real_escape_string($link, $_POST['numerotel']);
+                $data_hora = mysqli_real_escape_string($link, $_POST['datahora']);
+                $numPessoas = mysqli_real_escape_string($link, $_POST['selNumPes']);
+
+                $nome = stripslashes($nome);
+                $apelido = stripslashes($apelido);
+                $email = stripslashes($email);
+                $numero = stripslashes($numero);
+                $data_hora = stripslashes($data_hora);
+                $numPessoas = stripslashes($numPessoas);
+                $password = random_password(8);
+                $numero = telefone($numero);
+
+                $dateArray =converteDataHora($_POST['datahora']);
+
+                // Tratamento das mesas
+                if($_POST['necessarioJuntar'] == 1)
                 {
-                    //registo um utilizador
-                    if(!addCliente($link,$nome,$password,$numero,$apelido,$email))
+                    $numMesa = unserialize(base64_decode($_POST['selMesa']));  //Se for necessário juntar volto a colocar as mesas num array para mais fácil manipulação
+                }
+                else
+                {
+                    $numMesa = array(0=>$_POST['selMesa']);
+                }
+
+                $queryVerUser = 'SELECT * FROM cliente WHERE telefone = \''.$numero.'\' AND email = \''.$email.'\'';
+                $verUser = mysqli_query($link,$queryVerUser);
+                //Verificar se o utilizador já existe
+                if(mysqli_num_rows($verUser) == 1)
+                {
+                    //verificar se ele tenta fazer reserva na mesma hora e no mesmo dia
+                    $queryUserMail = 'SELECT email FROM cliente WHERE telefone = \''.$numero.'\'';
+                    $resmail = mysqli_query($link,$queryUserMail);
+                    $resmail = mysqli_fetch_array($resmail);
+                    //Verifica se email introduzido match com o da base de dados.
+                    if($resmail['email'] == $email)
                     {
-                        echo 'Erro na query #2' . mysqli_error($link);
-                        mysqli_rollback($link);
-                        //die;
-                    }
-                    else
-                    {
-                        if($_POST['selMesa'] == '')
+                        $queryResAnteriores = 'SELECT * FROM reserva as r, cliente as c WHERE c.idcliente = r.cliente_idcliente AND r.hora = \''.$dateArray["hora"].'\' AND r.data = \''.$dateArray["data"].'\'';
+                        $reservaAnteriores = mysqli_query($link,$queryResAnteriores);
+                        if(!$reservaAnteriores)
                         {
-                            $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$dateArray['hora']."' AND r.data ='".$dateArray['data']."' AND rhm.reserva_idreserva = r.idreserva)";
-                            $mesasLivres = mysqli_query($link, $mesasLivres);
-                            if(!$mesasLivres)
-                            {
-                                echo 'ERRO '.mysqli_error($link).'<br>';
-                            }
-                            while($numerosMesa = mysqli_fetch_assoc($mesasLivres))
-                            {
-                                if($numerosMesa['capacidade'] >= $_POST['selNumPes'])
-                                {
-                                    $numMesa = array(0=>$numerosMesa['numero']);
-                                    break;
-                                }
-                            }
-                        }
-                        if(!addReserva($link,$numero,$numPessoas,$numMesa,$dateArray["data"],$dateArray["hora"],$_SESSION['funcionario_id']))
-                        {
+                            echo 'Erro na query #1' . mysqli_error($link);
                             mysqli_rollback($link);
+                            //die;
+                        }
+                        if(mysqli_num_rows($reservaAnteriores) > 0)
+                        {
+                            //falha a reserva
+                            $reservaMade = true;
                         }
                         else
-                        {
-                            mysqli_commit($link);
-                            //Info from the user
-                            $queryVerUser = 'SELECT c.idcliente FROM cliente AS c WHERE c.telefone = \''.$numero.'\'';
-                            $getId = mysqli_query($link,$queryVerUser);
-                            $idCli = mysqli_fetch_array($getId);
-
-                            //info from the reservation
-                            $getIdRes = "SELECT idreserva FROM reserva WHERE hora = '".$dateArray["hora"]."' AND data ='".$dateArray["data"]."' AND cliente_idcliente=".$idCli['idcliente']."";      
-                            $getIdRes = mysqli_query($link,$getIdRes);
-                            $idReserva = mysqli_fetch_array($getIdRes);
-
-                            print_r($idReserva);
-
-                            $ativaReserva = "UPDATE reserva SET ativo = 1 WHERE idreserva=".$idReserva['idreserva'];
-                            $ativaReserva = mysqli_query($link,$ativaReserva);
-                            if(!$ativaReserva)
+                        {   
+                            //efetua a reserva && envia e-mail
+                            if($_POST['selMesa'] == '')
                             {
-                                echo "ERRO #8".mysqli_error($link);
+                                $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$dateArray['hora']."' AND r.data ='".$dateArray['data']."' AND rhm.reserva_idreserva = r.idreserva)";
+                                $mesasLivres = mysqli_query($link, $mesasLivres);
+                                if(!$mesasLivres)
+                                {
+                                    echo 'ERRO '.mysqli_error($link).'<br>';
+                                }
+                                while($numerosMesa = mysqli_fetch_assoc($mesasLivres))
+                                {
+                                    if($numerosMesa['capacidade'] >= $_POST['selNumPes'])
+                                    {
+                                        $numMesa = array(0=>$numerosMesa['numero']);
+                                        break;
+                                    }
+                                }
+                            }
+                            if(!addReserva($link,$numero,$numPessoas,$numMesa,$dateArray["data"],$dateArray["hora"],$_SESSION['funcionario_id']))
+                            {
                                 mysqli_rollback($link);
                             }
                             else
                             {
                                 mysqli_commit($link);
-                                $sucessoNaReserva = true;
+                                //Info from the user
+                                $queryVerUser = 'SELECT c.idcliente FROM cliente AS c WHERE c.telefone = \''.$numero.'\'';
+                                $getId = mysqli_query($link,$queryVerUser);
+                                $idCli = mysqli_fetch_array($getId);
+
+                                //info from the reservation
+                                $getIdRes = "SELECT idreserva FROM reserva WHERE hora = '".$dateArray["hora"]."' AND data ='".$dateArray["data"]."' AND cliente_idcliente=".$idCli['idcliente']."";      
+                                $getIdRes = mysqli_query($link,$getIdRes);
+                                $idReserva = mysqli_fetch_array($getIdRes);
+
+                                $ativaReserva = "UPDATE reserva SET ativo = 1 WHERE idreserva=".$idReserva['idreserva'];
+                                $ativaReserva = mysqli_query($link,$ativaReserva);
+                                if(!$ativaReserva)
+                                {
+                                    echo "ERRO #9".mysqli_error($link);
+                                    mysqli_rollback($link);
+                                }
+                                else
+                                {
+                                    mysqli_commit($link);
+                                    $sucessoNaReserva = true;
+                                }
                             }
                         }
+                    }
+                    else
+                    {
+                        //email introduzido está mal pois n tá de acordo com o que está na bd
+                        $checkEmail = true;
+
+                        $valorConvertido = converteDataHora($_POST['datahora']);
+                        $_POST['data']  = $valorConvertido['data'];
+                        $_POST['hora'] =  $valorConvertido['hora'];
+                        $_POST['juntar'] = $_POST['juntar'] ;
                     }
                 }
                 else
                 {
-                    //Telefone deve estar mal pois o mail já existe na base de dados
-                    $checkEmail =true;
-                    $valorConvertido = converteDataHora($_POST['datahora']);
-                    $_POST['data']  = $valorConvertido['data'];
-                    $_POST['hora'] =  $valorConvertido['hora'];
-                    $_POST['juntar'] = $_POST['juntar'] ;
-                    //echo 'Verifique se introduziu os dados corretamente.';
+                    $queryUserMail = 'SELECT email FROM cliente WHERE telefone = \''.$numero.'\'';
+                    $resmail = mysqli_query($link,$queryUserMail);
+                    if(mysqli_num_rows($resmail) == 0)
+                    {
+                        //registo um utilizador
+                        if(!addCliente($link,$nome,$password,$numero,$apelido,$email))
+                        {
+                            echo 'Erro na query #2' . mysqli_error($link);
+                            mysqli_rollback($link);
+                            //die;
+                        }
+                        else
+                        {
+                            if($_POST['selMesa'] == '')
+                            {
+                                $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$dateArray['hora']."' AND r.data ='".$dateArray['data']."' AND rhm.reserva_idreserva = r.idreserva)";
+                                $mesasLivres = mysqli_query($link, $mesasLivres);
+                                if(!$mesasLivres)
+                                {
+                                    echo 'ERRO '.mysqli_error($link).'<br>';
+                                }
+                                while($numerosMesa = mysqli_fetch_assoc($mesasLivres))
+                                {
+                                    if($numerosMesa['capacidade'] >= $_POST['selNumPes'])
+                                    {
+                                        $numMesa = array(0=>$numerosMesa['numero']);
+                                        break;
+                                    }
+                                }
+                            }
+                            if(!addReserva($link,$numero,$numPessoas,$numMesa,$dateArray["data"],$dateArray["hora"],$_SESSION['funcionario_id']))
+                            {
+                                mysqli_rollback($link);
+                            }
+                            else
+                            {
+                                mysqli_commit($link);
+                                //Info from the user
+                                $queryVerUser = 'SELECT c.idcliente FROM cliente AS c WHERE c.telefone = \''.$numero.'\'';
+                                $getId = mysqli_query($link,$queryVerUser);
+                                $idCli = mysqli_fetch_array($getId);
+
+                                //info from the reservation
+                                $getIdRes = "SELECT idreserva FROM reserva WHERE hora = '".$dateArray["hora"]."' AND data ='".$dateArray["data"]."' AND cliente_idcliente=".$idCli['idcliente']."";      
+                                $getIdRes = mysqli_query($link,$getIdRes);
+                                $idReserva = mysqli_fetch_array($getIdRes);
+
+                                $ativaReserva = "UPDATE reserva SET ativo = 1 WHERE idreserva=".$idReserva['idreserva'];
+                                $ativaReserva = mysqli_query($link,$ativaReserva);
+                                if(!$ativaReserva)
+                                {
+                                    echo "ERRO #8".mysqli_error($link);
+                                    mysqli_rollback($link);
+                                }
+                                else
+                                {
+                                    mysqli_commit($link);
+                                    $sucessoNaReserva = true;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //Telefone deve estar mal pois o mail já existe na base de dados
+                        $checkEmail =true;
+                        $valorConvertido = converteDataHora($_POST['datahora']);
+                        $_POST['data']  = $valorConvertido['data'];
+                        $_POST['hora'] =  $valorConvertido['hora'];
+                        $_POST['juntar'] = $_POST['juntar'] ;
+                        //echo 'Verifique se introduziu os dados corretamente.';
+                    }
                 }
             }
         }
@@ -339,7 +358,11 @@ else
                     <?php
                     if($_POST["juntar"] == 1)
                     {
-                        $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$_POST['hora']."' AND r.data ='".$_POST['data']."' AND rhm.reserva_idreserva = r.idreserva)";
+                        $limiteInicial = strtotime($_POST["hora"])-5400; //1h30min sao 5400 segundos
+                        $limiteInicial = date("H:i:s",$limiteInicial);
+                        $limiteFinal = strtotime($_POST["hora"])+5400;
+                        $limiteFinal = date("H:i:s",$limiteFinal);
+                        $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora BETWEEN '".$limiteInicial."' AND '".$limiteFinal."' AND r.data ='".$_POST['data']."' AND rhm.reserva_idreserva = r.idreserva)";
                         $mesasLivres = mysqli_query($link, $mesasLivres);
                         $capacidadeJuntas = 0;
                         $mesasJuntas = array();
@@ -427,12 +450,20 @@ else
         }
         if(  $checkEmail == true)
         {
-         echo 'Verifique se introduziu os dados corretamente.';
-     }
-     if($reservaMade == true)
-     {
-         echo 'Já tem uma reserva para a mesma hora e para o mesmo dia.';
-     }
+            echo 'Verifique se introduziu os dados corretamente.';
+        }
+        if($reservaMade == true)
+        {
+            echo 'Já tem uma reserva para a mesma hora e para o mesmo dia.';
+        }
+        if($checkEmail==true)
+        {
+            echo 'Verifique se introduziu um endereço de e-mail válido';
+        }
+        if($checkTelefone==true)
+        {
+            echo 'Verifique se introduziu um número de telefone válido';
+        }
      ?>
  </div>
  <table>

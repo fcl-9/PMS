@@ -113,7 +113,7 @@ else
     					<div class="row">
     						<div class="col-md-4 form-group"> 
     							<label for="reserva">Reserva:</label> 
-    							<input type="number" class="form-control" name="reserva" id="reserva" value="<?php echo $_POST['idreserva'] ?>" placeholder="ID Reserva" readonly="">
+    							<input type="number" class="form-control" name="reserva" id="reserva" value="<?php echo $_POST['idReserva'] ?>" placeholder="ID Reserva" readonly="">
     						</div>
     					</div>
     					<div class="row">
@@ -152,10 +152,13 @@ else
     							<div class="form-group">
     								<label for="selMesa">Número de Mesa:</label>
                                     <?php
-                                            print_r($_POST);
                                             if($_POST["juntar"] == 1)
                                             {
-                                                $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$_POST['hora']."' AND r.data ='".$_POST['data']."' AND rhm.reserva_idreserva = r.idreserva)";
+                                                $limiteInicial = strtotime($_POST["hora"])-5400; //1h30min sao 5400 segundos
+                                                $limiteInicial = date("H:i:s",$limiteInicial);
+                                                $limiteFinal = strtotime($_POST["hora"])+5400;
+                                                $limiteFinal = date("H:i:s",$limiteFinal);
+                                                $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora BETWEEN '".$limiteInicial."' AND '".$limiteFinal."' AND r.data ='".$_POST['data']."' AND rhm.reserva_idreserva = r.idreserva)";
                                                 $mesasLivres = mysqli_query($link, $mesasLivres);
                                                 $capacidadeJuntas = 0;
                                                 $mesasJuntas = array();
