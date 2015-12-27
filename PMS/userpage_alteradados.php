@@ -87,19 +87,19 @@ else
         		</div>-->
         		<div class="botao">
 
-        			<a class="btn btn-warning" href="userpage.php?id="><span class="glyphicon glyphicon-home"></span> Voltar</a>
+        			<a class="btn btn-warning btn_user" href="userpage.php?id="><span class="glyphicon glyphicon-home"></span> Voltar</a>
 
         		</div >
 
 
         		<div class="botao">
 
-        			<a class="btn btn-success" href="userpage_alteradados.php"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
+        			<a class="btn btn-success btn_user" href="userpage_alteradados.php"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
 
         		</div>
         		<div class="botao">            
 
-        			<a class="btn btn-danger" href="logout.php"><span class="glyphicon glyphicon-off"></span> Terminar Sessão</a>
+        			<a class="btn btn-danger btn_user" href="logout.php"><span class="glyphicon glyphicon-off"></span> Terminar Sessão</a>
 
         		</div>
 
