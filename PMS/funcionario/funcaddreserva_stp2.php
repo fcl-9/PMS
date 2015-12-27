@@ -26,16 +26,13 @@ else
         //Desativa commit automático, so no fim de todo o processo o utilizador 
         mysqli_autocommit($link,false);
         $flag = true;
-        if(isset($_POST['email'],$_POST['numerotel']))
+        if(isset($_POST['finish']) && preg_match("/^[0-9]{5,15}+$/", telefone($_POST['numerotel']))===0)
         {
-            if(preg_match("/^[0-9]{15}+$/", telefone($_POST['numerotel']))===0)
-            {
-                $checkTelefone=true;
-            }
-            if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL))
-            {
-              $checkEmail = true;
-            }
+            $checkTelefone=true;
+        }
+        else if (isset($_POST['finish']) && !filter_var($_POST["email"], FILTER_VALIDATE_EMAIL))
+        {
+            $checkEmail = true;
         }
         else
         {
@@ -81,7 +78,11 @@ else
                     //Verifica se email introduzido match com o da base de dados.
                     if($resmail['email'] == $email)
                     {
-                        $queryResAnteriores = 'SELECT * FROM reserva as r, cliente as c WHERE c.idcliente = r.cliente_idcliente AND r.hora = \''.$dateArray["hora"].'\' AND r.data = \''.$dateArray["data"].'\'';
+                        $limiteInicial = strtotime($dateArray["hora"])-5400; //1h30min sao 5400 segundos
+                        $limiteInicial = date("H:i:s",$limiteInicial);
+                        $limiteFinal = strtotime($dateArray["hora"])+5400;
+                        $limiteFinal = date("H:i:s",$limiteFinal);
+                        $queryResAnteriores = 'SELECT * FROM reserva as r, cliente as c WHERE r.cliente_idcliente='.$resmail['idcliente'].' AND r.hora BETWEEN \''.$limiteInicial.'\' AND \''.$limiteFinal.'\' AND r.data = \''.$dateArray["data"].'\'';
                         $reservaAnteriores = mysqli_query($link,$queryResAnteriores);
                         if(!$reservaAnteriores)
                         {
@@ -99,7 +100,11 @@ else
                             //efetua a reserva && envia e-mail
                             if($_POST['selMesa'] == '')
                             {
-                                $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora = '".$dateArray['hora']."' AND r.data ='".$dateArray['data']."' AND rhm.reserva_idreserva = r.idreserva)";
+                                $limiteInicial = strtotime($dateArray["hora"])-5400; //1h30min sao 5400 segundos
+                                $limiteInicial = date("H:i:s",$limiteInicial);
+                                $limiteFinal = strtotime($dateArray["hora"])+5400;
+                                $limiteFinal = date("H:i:s",$limiteFinal);
+                                $mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora BETWEEN \''.$limiteInicial.'\' AND \''.$limiteFinal.'\' AND r.data ='".$dateArray['data']."' AND rhm.reserva_idreserva = r.idreserva)";
                                 $mesasLivres = mysqli_query($link, $mesasLivres);
                                 if(!$mesasLivres)
                                 {
@@ -318,6 +323,8 @@ else
                 </div>
                 <div class="panel-body">
                     <form id="add_reserva" method="POST">
+                        <input type="hidden" name="hora" value=<?php echo $_POST["hora"];?>>
+                        <input type="hidden" name="data" value=<?php echo $_POST["data"];?>>
                        <div class="row">
                           <div class="col-md-6 form-group"> 
                              <label for="nome">Nome:</label>
@@ -447,6 +454,7 @@ else
         if($sucessoNaReserva == true)
         {
             echo 'Reserva concluida com sucesso';
+            echo '<meta http-equiv="refresh" content="1;url=index.php"/>';
         }
         if(  $checkEmail == true)
         {

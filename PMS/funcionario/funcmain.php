@@ -36,6 +36,8 @@ if(isset($_POST['cancelar'])) {
     <!-- Custom Fonts -->
     <link href="../css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
+    <link href="/css/bootstrap-datetimepicker.css" rel="stylesheet">
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -85,11 +87,19 @@ if(isset($_POST['cancelar'])) {
 <div class="corpo">
     <?php	
 
-
-    $querydata="SELECT CURDATE()";
+    if(empty($_POST))
+    {
+        $querydata="SELECT CURDATE()";
     
-    $result_data= mysqli_query($link, $querydata);
-    $query_reservas = "SELECT * FROM reserva";
+        $result_data= mysqli_query($link, $querydata);
+        $data=mysqli_fetch_array($result_data)[0];
+    }
+    else
+    {
+        $data = $_POST['data'];
+    }
+   
+    $query_reservas = "SELECT * FROM reserva WHERE data = '".$data."'";
     $result_reservas = mysqli_query($link, $query_reservas);
     if(!$result_reservas)
     {
@@ -98,7 +108,7 @@ if(isset($_POST['cancelar'])) {
 
     if (mysqli_num_rows($result_reservas) == 0)
     {
-      echo "Não tem reservas para o dia de hoje";
+      echo "Não tem reservas para o dia pretendido";
 
   }
   else
@@ -110,7 +120,25 @@ if(isset($_POST['cancelar'])) {
             <h3 class="panel-title"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span><i class="fa"></i> Reservas Efetuadas</h3>
         </div>
         <div class="panel-body">
-            <div class="table-responsive">
+            <div class="col-md-6 col-md-offset-3">
+            <form class="form-inline" method="POST">
+                    <div class="form-group">
+                        <label for="datetimepicker1">Data: </label>
+                    </div>
+                    <div class='form-group input-group date' id='datetimepicker1' name="datetimepicker1">
+                        <input type='text' class="form-control" id="data" name="data" placeholder="Data" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                
+                
+                    <button type="submit" id="btn_submit" name="ver_reservas" value="ver_reservas" class="btn btn-info btn2">Verificar reservas</button>
+                
+            </form>
+        </div>
+            <br>
+            <div class="col-md-12 table-responsive">
                 <table class="table table-bordered table-hover table-striped">
                    <thead>
                       <tr class="info">
@@ -127,12 +155,17 @@ if(isset($_POST['cancelar'])) {
 
                   <tbody>
                     <?php
-
-                    $data=mysqli_fetch_array($result_data)[0];
                     $intervaloTempo = gmdate("H:i:s", time() -60);
+                    if(gmdate("Y-m-d",time())==$data)
+                    {
+                        $query_listareserva = "SELECT * FROM cliente, reserva, reserva_has_mesa, mesa WHERE reserva.cliente_idcliente=cliente.idcliente and reserva_has_mesa.reserva_idreserva=reserva.idreserva  and reserva_has_mesa.mesa_numero=mesa.numero and reserva.ativo='1' and reserva.data=\"".$data."\" and reserva.hora>=\"".$intervaloTempo."\"";
 
-                    $query_listareserva = "SELECT * FROM cliente, reserva, reserva_has_mesa, mesa WHERE reserva.cliente_idcliente=cliente.idcliente and reserva_has_mesa.reserva_idreserva=reserva.idreserva  and reserva_has_mesa.mesa_numero=mesa.numero and reserva.ativo='1' and reserva.data=\"".$data."\" and reserva.hora>=\"".$intervaloTempo."\"";
-
+                    }
+                    else
+                    {
+                        $query_listareserva = "SELECT * FROM cliente, reserva, reserva_has_mesa, mesa WHERE reserva.cliente_idcliente=cliente.idcliente and reserva_has_mesa.reserva_idreserva=reserva.idreserva  and reserva_has_mesa.mesa_numero=mesa.numero and reserva.ativo='1' and reserva.data=\"".$data."\"";
+                    }
+                    
                     $result_listareserva = mysqli_query($link, $query_listareserva);
                     if(!$result_listareserva)
                     {
@@ -200,6 +233,25 @@ if(isset($_POST['cancelar'])) {
 
     <!-- Bootstrap Core JavaScript -->
     <script src="../js/bootstrap.min.js"></script>
+     <!--Traduz datapicker pra pt e data atual-->
+    <script src="/js/moment.js"></script>
+    <script type="text/javascript" src="/js/locale/pt.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script type="text/javascript">
+      var date = new Date();
+
+      $(function () {
+        $('#datetimepicker1').datetimepicker({
+          locale: 'pt',
+          format: 'YYYY-MM-DD',
+          minDate:  date,
+        }).on('changeDate', function(e) {
+                  // Revalidate the date field
+                  $('#dateRangeForm').formValidation('revalidateField', 'data');
+                });
+        });
+    </script>
 
 
 </body>

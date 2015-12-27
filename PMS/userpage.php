@@ -78,7 +78,7 @@ if(isset($_POST['cancelar'])) {
         <div class="col-md-3 buttons" id="buttons">
             
               <div class="botao">
-                        <a  class="btn btn-primary" href="index.php#reserva"><span class="glyphicon glyphicon-refresh"></span> Reservar </a>
+                        <a  class="btn btn-primary btn_user" href="index.php#reserva"><span class="glyphicon glyphicon-refresh"></span> Reservar </a>
                 </div>
 
           <!--        <div class="botao">
@@ -87,12 +87,12 @@ if(isset($_POST['cancelar'])) {
             -->
                 <div class="botao">
 
-                        <a class="btn btn-success" href="userpage_alteradados.php"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
+                        <a class="btn btn-success btn_user" href="userpage_alteradados.php"><span class="glyphicon glyphicon-user"></span> Alterar Dados do Cliente</a>
 
                 </div>
                 <div class="botao">            
 
-                        <a class="btn btn-danger" href="logout.php"><span class="glyphicon glyphicon-off"></span> Terminar Sessão</a>
+                        <a class="btn btn-danger btn_user" href="logout.php"><span class="glyphicon glyphicon-off"></span> Terminar Sessão</a>
 
                 </div>
             
