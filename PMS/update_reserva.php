@@ -1,6 +1,6 @@
 <?php
-require_once('/common/database.php');
-require_once('/common/common.php');
+require_once('common/database.php');
+require_once('common/common.php');
 //Desativa commit automático, so no fim de todo o processo o utilizador 
 mysqli_autocommit($link,false);
 $flag = true;
