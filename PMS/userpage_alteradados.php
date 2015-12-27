@@ -170,7 +170,7 @@ else
                                             $true = true;
                                         }
                                         
-                                        if(preg_match("/^[0-9]{9}+$/", telefone($_POST['numerotel']))===1)
+                                        if(preg_match("/^[0-9]{15}+$/", telefone($_POST['numerotel']))===1)
                                         { 
                                              if(telefone($_POST['numerotel']) != $telefone )
         								     {
