@@ -29,7 +29,7 @@ if(isset($_POST['numerotel'],$_POST['inputPassword'])){
 			
 		}
 		else{
-			echo "Os campos que introduziram estão incorretas. Certifique-se que colocou os campos corretos.";
+			echo '<p align="center">	Os campos que introduziram estão incorretas. Certifique-se que colocou os campos corretos.</p>';
 		}
 	}
 	else{

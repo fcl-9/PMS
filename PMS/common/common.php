@@ -167,4 +167,22 @@ function updateReserva($link,$numPessoas,$numMesa,$data,$hora,$idReserva)
 		$dataHora = $data.' '.$hora;
 		return substr($dataHora,0,-3);
 	}
+
+	
+function sendSMS($numero, $mensagem) {
+	$username = urlencode("dompetisco");
+	$password = urlencode("dompetisco123");
+	$api_id = urlencode("3578366");
+	$to = urlencode("".$numero);
+	$message = urlencode($mensagem);
+
+	$result = file_get_contents("https://api.clickatell.com/http/sendmsg"
+	. "?user=$username&password=$password&api_id=$api_id&to=$to&text=$message");
+
+	if($result) {
+		return true;
+	} else {
+		return false;
+	}
+}
 ?>

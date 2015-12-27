@@ -41,9 +41,9 @@ else
 if($_POST['selMesa'] == '')
 {
 	$limiteInicial = strtotime($dateArray["hora"])-5400; //1h30min sao 5400 segundos
-	$limiteInicial = date("H:i:s",$limiteInicial);
+	$limiteInicial = gmdate("H:i:s",$limiteInicial);
 	$limiteFinal = strtotime($dateArray["hora"])+5400;
-	$limiteFinal = date("H:i:s",$limiteFinal);
+	$limiteFinal = gmdate("H:i:s",$limiteFinal);
 	$mesasLivres = "SELECT m.numero, m.capacidade FROM mesa AS m WHERE m.numero NOT IN (SELECT rhm.mesa_numero FROM reserva_has_mesa as rhm , reserva as r WHERE r.hora BETWEEN \''.$limiteInicial.'\' AND \''.$limiteFinal.'\' AND r.data ='".$dateArray['data']."' AND rhm.reserva_idreserva = r.idreserva)";
     $mesasLivres = mysqli_query($link, $mesasLivres);
     if(!$mesasLivres)
@@ -73,9 +73,9 @@ if(mysqli_num_rows($verUser) == 1)
 	if($resmail['email'] == $email)
 	{
 		$limiteInicial = strtotime($dateArray["hora"])-5400; //1h30min sao 5400 segundos
-		$limiteInicial = date("H:i:s",$limiteInicial);
+		$limiteInicial = gmdate("H:i:s",$limiteInicial);
 		$limiteFinal = strtotime($dateArray["hora"])+5400;
-		$limiteFinal = date("H:i:s",$limiteFinal);
+		$limiteFinal = gmdate("H:i:s",$limiteFinal);
 		$queryResAnteriores = 'SELECT * FROM reserva as r, cliente as c WHERE r.cliente_idcliente='.$resmail['idcliente'].' AND r.hora BETWEEN \''.$limiteInicial.'\' AND \''.$limiteFinal.'\' AND r.data = \''.$dateArray["data"].'\'';
 		$reservaAnteriores = mysqli_query($link,$queryResAnteriores);
 		if(!$reservaAnteriores)

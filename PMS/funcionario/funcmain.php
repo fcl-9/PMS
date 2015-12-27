@@ -87,7 +87,7 @@ if(isset($_POST['cancelar'])) {
 <div class="corpo">
     <?php	
 
-    if(empty($_POST))
+    if(empty($_POST['data']))
     {
         $querydata="SELECT CURDATE()";
     

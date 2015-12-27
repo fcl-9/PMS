@@ -2,6 +2,7 @@
 require('../common/database.php');
 require('../common/common.php');
 session_start();
+$erro = false;
 if(isset($_SESSION['funcionario_id'])) 
 {
   header("Location: funcmain.php");
@@ -29,7 +30,7 @@ if(isset($_POST['numerotel'],$_POST['inputPassword']))
     }
     else
     {
-      echo "Os campos que introduziram estão incorretas. Certifique-se que colocou os campos corretos.";
+     $erro = true;
     }
   }
   else{
@@ -99,7 +100,11 @@ if(isset($_POST['numerotel'],$_POST['inputPassword']))
 
     <div class="container ">
     <form id="form_login" action="index.php" method="POST">
-
+   <?php if($erro == true)
+    {
+     	echo '<p align="center">	Os campos que introduziram estão incorretas. Certifique-se que colocou os campos corretos.</p>';
+    }
+    ?>
 
 		<div class="row form-group">
           <div class="col-sm-3 col-sm-offset-4">
@@ -132,15 +137,6 @@ if(isset($_POST['numerotel'],$_POST['inputPassword']))
     </form>
     </div> <!-- /container -->
     
-
-      <div class="navbar-fixed-bottom">
-        
-      	<!-- FOOTER -->
-      <footer class="container text-center footer">
-         <p>&copy; 2015/2016 PMS GRUPO 2. &middot; </p>
-      </footer>
-      </div>
-
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
