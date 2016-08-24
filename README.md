@@ -8,3 +8,5 @@ This is a website that uses bootstrap and makes it possible for people to make r
 We've used #Scrum# methodology in this project.
 
 For the SMS part need to thank to @diogoaguiar that payed for the SMS's.
+
+Graded by Frederica Gonçalves @ University of Madeira
